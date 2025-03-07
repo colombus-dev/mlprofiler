@@ -1,0 +1,38 @@
+{
+	"type": "json_schema",
+	"json_schema": {
+		"name": "classified_lines",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"class": {
+					"enum": {{ steps_taxonomy|tojson }},
+					"description": "The classification result according to the supported taxonomy."
+				},
+				"library_name": {
+					"type": "string",
+					"description": "The library name used in the code line."
+				},
+				"function_or_class_name": {
+					"type": "string",
+					"description": "The function or class name used in the code line."
+				},
+				"algorithm_name": {
+					"type": "string",
+					"description": "The algorithm name used in the code line."
+				},
+				"algorithm_family": {
+					"type": "string",
+					"description": "The algorithm family used in the code line."
+				}
+			},
+			"required": [
+				"class",
+				"library_name",
+				"function_or_class_name",
+				"algorithm_name",
+				"algorithm_family"
+			]
+		}
+	}
+}
