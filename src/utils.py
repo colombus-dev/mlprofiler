@@ -114,7 +114,7 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
     with open(notebook_path) as f:
         notebook_content = json.load(f)
     with open(famix_subgraphs_path) as f:
-        famix_subgraphs_content = json.load(f)
+        famix_subgraphs_content = sorted(json.load(f), key=lambda sg: sg["line_start"])
 
     all_python_code = [
         block
