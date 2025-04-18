@@ -1,0 +1,29 @@
+You are a Machine Learning expert.
+Your goal is to create a reliable knowledge base of algorithm names and families based on Python code.
+Your task consists of identifying the algorithm name used in a given code line and its corresponding family.
+
+An algorithm does not correspond to the Python library or Python function name.
+An algorithm family corresponds to a group of related algorithms.
+
+Available algorithm families are: {{ algorithm_families_taxonomy|tojson(indent=4) }}.
+Available algorithm names are: {{ algorithm_names_taxonomy|tojson(indent=4) }}.
+
+The studied notebook code is the following:
+
+```python
+{{ all_python_code|join('') }}
+```
+
+Let's go through this step-by-step:
+1. Identify the functions and libraries used in the code
+2. Identify the nature of the processed data if present
+3. Identify the main algorithm name used in the code line
+3.1. If you detect no specific algorithm, return "No algo"
+3.2. If you detect an algorithm, compare it to the available algorithm names.
+3.2.1 If they are very similar, return the one from the available algorithm names.
+3.2.2 Otherwise, return the newly identified algorithm name.
+4. For the returned algorithm name, identify the algorithm family.
+4.1 If you detect no algorithm family, return "No family"
+4.2. If you detect an algorithm family, compare it to the available algorithm families.
+4.2.1 If they are very similar, return the one from the available algorithm families.
+3.2.2 Otherwise, return the newly identified algorithm family.

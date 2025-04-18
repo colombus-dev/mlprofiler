@@ -23,6 +23,15 @@ classification_response_schema_template = env.get_template(
     "classification_response_schema.jinja"
 )
 
+algorithms_system_prompt_template = env.get_template("algorithms/system_prompt.jinja")
+algorithms_user_prompt_template = env.get_template("algorithms/user_prompt.jinja")
+algorithms_classification_response_schema_template = env.get_template(
+    "algorithms/classification_response_schema.jinja"
+)
+
+with open("resources/algorithms.json") as f:
+    available_algorithms = json.load(f)
+
 # loading the stages/steps
 # source: https://github.com/secure-software-engineering/HeaderGen/blob/1ea52265ca4e76bb202a2deb26f3b9394d3caa95/framework_models/__init__.py#L28
 with open("resources/phases_groups.json") as f:
@@ -32,6 +41,9 @@ with open("resources/phases_groups.json") as f:
 # loading the LLM classification response schema
 classification_response_schema = classification_response_schema_template.render(
     steps_taxonomy=steps_taxonomy
+)
+algorithms_classification_response_schema = (
+    algorithms_classification_response_schema_template.render()
 )
 
 # LLM client
@@ -53,28 +65,6 @@ def _cell_source_as_list(source: list[str] | str):
         the source cell content
     """
     return source if isinstance(source, list) else [source]
-
-
-def _retrieve_stage_for_step(
-    stages_steps_taxonomy: dict[str, str], step: str
-) -> str | None:
-    """Retrieve the stage corresponding to the given step.
-
-    Parameters
-    ----------
-    stages_steps_taxonomy : dict[str, str]
-        the stages-to-steps taxonomy
-    step : str
-        the step to retrieve the corresponding stage
-
-    Returns
-    -------
-    str | None
-        the stage if found
-    """
-    for k, v in stages_steps_taxonomy.items():
-        if step in v:
-            return k
 
 
 def save_result(json_profile: dict, original_file: Path, profile_out_dir: Path | None):
@@ -114,7 +104,9 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
     with open(notebook_path) as f:
         notebook_content = json.load(f)
     with open(famix_subgraphs_path) as f:
-        famix_subgraphs_content = sorted(json.load(f), key=lambda sg: sg["line_start"])
+        famix_subgraphs_content = sorted(
+            json.load(f)["sous_graphs"], key=lambda sg: sg["line_start"]
+        )
 
     all_python_code = [
         block
@@ -125,6 +117,11 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
 
     system_prompt_content = system_prompt_template.render(
         steps_taxonomy=steps_taxonomy, all_python_code=all_python_code
+    )
+    algorithms_system_prompt_content = algorithms_system_prompt_template.render(
+        algorithm_families_taxonomy=available_algorithms["algoFamilies"],
+        algorithm_names_taxonomy=available_algorithms["algoNames"],
+        all_python_code=all_python_code,
     )
 
     for subgraph in (pbar := tqdm(famix_subgraphs_content)):
@@ -147,33 +144,72 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
 
         classified_line = json.loads(completion.choices[0].message.content)
 
+        algorithms_user_prompt_content = algorithms_user_prompt_template.render(
+            python_code_line=line
+        )
+        algorithms_completion = client.chat.completions.create(
+            model="qwen/qwen2.5-coder-7b-instruct",
+            messages=[
+                {
+                    "role": "system",
+                    "content": algorithms_system_prompt_content,
+                },
+                {"role": "user", "content": algorithms_user_prompt_content},
+            ],
+            response_format=json.loads(algorithms_classification_response_schema),
+            temperature=0,  # 0 for ~ determinism
+        )
+
+        algorithms_classified_line = json.loads(
+            algorithms_completion.choices[0].message.content
+        )
+
         res = {
-            "algoFamily": classified_line["algorithm_family"],
-            "algoName": classified_line["algorithm_name"],
+            "algoFamily": algorithms_classified_line["algorithm_family"],
+            "algoName": algorithms_classified_line["algorithm_name"],
             "library": subgraph["library"],
             "function": subgraph["function"],
             "tasks": [{"name": line, "tasks": []}],
         }
+
+        if (
+            algorithms_classified_line["algorithm_family"]
+            not in available_algorithms["algoFamilies"]
+        ):
+            available_algorithms["algoFamilies"].append(
+                algorithms_classified_line["algorithm_family"]
+            )
+        if (
+            algorithms_classified_line["algorithm_name"]
+            not in available_algorithms["algoNames"]
+        ):
+            available_algorithms["algoNames"].append(
+                algorithms_classified_line["algorithm_name"]
+            )
+
+        with open("resources/algorithms.json", "w") as f:
+            json.dump(available_algorithms, f, indent=4)
+
         current_step = (
             classified_line["class"]
             if classified_line["class"] in steps_taxonomy
             else "Others"
         )
-        current_stage = _retrieve_stage_for_step(stages_steps_taxonomy, current_step)
+        if current_step == "Library Loading" and subgraph["step_name"] != "import":
+            current_step = "Others"
+        if subgraph["step_name"] == "import":
+            current_step = "Library Loading"
 
-        if prev_stage == current_stage:
-            if prev_step == current_step:
-                json_profile[-1]["tasks"][-1]["tasks"].append(res)
-            else:
-                json_profile[-1]["tasks"].append({"name": current_step, "tasks": [res]})
+        if prev_step == current_step:
+            json_profile[-1]["tasks"].append(res)
         else:
             json_profile.append(
                 {
-                    "name": current_stage,
-                    "tasks": [{"name": current_step, "tasks": [res]}],
+                    "name": current_step,
+                    "tasks": [res],
                 }
             )
-        prev_stage = current_stage
+
         prev_step = current_step
 
     return json_profile

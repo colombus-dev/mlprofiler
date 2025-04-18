@@ -1,1806 +1,1664 @@
-[
-	{
-	  "source": "from keras import layers",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 96
-		  }
-		],
-		"importOf": "layers",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 95,
-		"endPos": "195",
-		"numberOfLinesOfCode": 1,
-		"startPos": "172",
-		"package": "tensorflow.keras.layers",
-		"importedEntity": {
-		  "ref": 97
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 7,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "layers",
-	  "line_start": 7
-	},
-	{
-	  "source": "from sklearn.preprocessing import LabelEncoder",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 50
-		  }
-		],
-		"importOf": "LabelEncoder",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 51,
-		"endPos": "352",
-		"numberOfLinesOfCode": 1,
-		"startPos": "307",
-		"package": "sklearn.preprocessing.LabelEncoder",
-		"importedEntity": {
-		  "ref": 142
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 12,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "sklearn.preprocessing.LabelEncoder",
-	  "function": "LabelEncoder",
-	  "line_start": 12
-	},
-	{
-	  "source": "import numpy as np",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 182
-		  }
-		],
-		"importOf": "numpy",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": false,
-		"id": 181,
-		"endPos": "38",
-		"numberOfLinesOfCode": 1,
-		"startPos": "21",
-		"alias": "np",
-		"package": "numpy",
-		"importedEntity": {
-		  "ref": 183
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 2,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "numpy",
-	  "function": "numpy",
-	  "line_start": 2
-	},
-	{
-	  "source": "from tensorflow import keras",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 79
-		  }
-		],
-		"importOf": "keras",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 80,
-		"endPos": "170",
-		"numberOfLinesOfCode": 1,
-		"startPos": "143",
-		"package": "tensorflow.keras",
-		"importedEntity": {
-		  "ref": 35
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 6,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras",
-	  "function": "keras",
-	  "line_start": 6
-	},
-	{
-	  "source": "from sklearn.preprocessing import LabelEncoder",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 224
-		  }
-		],
-		"importOf": "LabelEncoder",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 223,
-		"endPos": "117",
-		"numberOfLinesOfCode": 1,
-		"startPos": "72",
-		"package": "sklearn.preprocessing.LabelEncoder",
-		"importedEntity": {
-		  "ref": 142
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 4,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "sklearn.preprocessing.LabelEncoder",
-	  "function": "LabelEncoder",
-	  "line_start": 4
-	},
-	{
-	  "source": "from keras import metrics",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 244
-		  }
-		],
-		"importOf": "metrics",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 243,
-		"endPos": "305",
-		"numberOfLinesOfCode": 1,
-		"startPos": "281",
-		"package": "tensorflow.keras.metrics",
-		"importedEntity": {
-		  "ref": 34
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 11,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.metrics",
-	  "function": "metrics",
-	  "line_start": 11
-	},
-	{
-	  "source": "import tensorflow as tf",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 383
-		  }
-		],
-		"importOf": "tensorflow",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": false,
-		"id": 343,
-		"endPos": "141",
-		"numberOfLinesOfCode": 1,
-		"startPos": "119",
-		"alias": "tf",
-		"package": "tensorflow",
-		"importedEntity": {
-		  "ref": 89
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 5,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow",
-	  "function": "tensorflow",
-	  "line_start": 5
-	},
-	{
-	  "source": "from keras import activations",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 404
-		  }
-		],
-		"importOf": "activations",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 358,
-		"endPos": "225",
-		"numberOfLinesOfCode": 1,
-		"startPos": "197",
-		"package": "tensorflow.keras.activations",
-		"importedEntity": {
-		  "ref": 405
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 8,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.activations",
-	  "function": "activations",
-	  "line_start": 8
-	},
-	{
-	  "source": "from keras import optimizers",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 435
-		  }
-		],
-		"importOf": "optimizers",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 114,
-		"endPos": "279",
-		"numberOfLinesOfCode": 1,
-		"startPos": "252",
-		"package": "tensorflow.keras.optimizers",
-		"importedEntity": {
-		  "ref": 374
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 10,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.optimizers",
-	  "function": "optimizers",
-	  "line_start": 10
-	},
-	{
-	  "source": "import pandas as pd",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 361
-		  }
-		],
-		"importOf": "pandas",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": false,
-		"id": 362,
-		"endPos": "19",
-		"numberOfLinesOfCode": 1,
-		"startPos": "1",
-		"alias": "pd",
-		"package": "pandas",
-		"importedEntity": {
-		  "ref": 284
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 1,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "pandas",
-	  "function": "pandas",
-	  "line_start": 1
-	},
-	{
-	  "source": "from keras import losses",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 115
-		  }
-		],
-		"importOf": "losses",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": true,
-		"id": 116,
-		"endPos": "250",
-		"numberOfLinesOfCode": 1,
-		"startPos": "227",
-		"package": "tensorflow.keras.losses",
-		"importedEntity": {
-		  "ref": 421
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 9,
-	  "step_impl_id": 1,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.losses",
-	  "function": "losses",
-	  "line_start": 9
-	},
-	{
-	  "source": "import matplotlib.pyplot as plt",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Import",
-		"allTagAssociations": [
-		  {
-			"ref": 5
-		  }
-		],
-		"importOf": "pyplot",
-		"importingEntity": {
-		  "ref": 10
-		},
-		"isFromImport": false,
-		"id": 6,
-		"endPos": "70",
-		"numberOfLinesOfCode": 1,
-		"startPos": "40",
-		"alias": "plt",
-		"package": "matplotlib.pyplot",
-		"importedEntity": {
-		  "ref": 67
-		}
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 3,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "pyplot",
-	  "line_start": 3
-	},
-	{
-	  "source": "optimizers.Adam()",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 7
-		  }
-		],
-		"signature": "optimizers.Adam()",
-		"function": "Adam",
-		"id": 8,
-		"candidates": [
-		  {
-			"ref": 85
-		  }
-		],
-		"endPos": "1548",
-		"numberOfLinesOfCode": 1,
-		"arguments": "",
-		"startPos": "1532",
-		"library": "tensorflow.keras.optimizers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 37,
-	  "step_impl_id": 8,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.optimizers",
-	  "function": "Adam",
-	  "line_start": 37
-	},
-	{
-	  "source": "plt.show()",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 140
-		  }
-		],
-		"signature": "plt.show()",
-		"function": "show",
-		"id": 139,
-		"candidates": [
-		  {
-			"ref": 141
-		  }
-		],
-		"endPos": "2544",
-		"numberOfLinesOfCode": 1,
-		"arguments": "",
-		"startPos": "2535",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 58,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "show",
-	  "line_start": 58
-	},
-	{
-	  "source": "layers.TextVectorization(output_mode='tf_idf', split=\"whitespace\", ngrams=None, standardize=\"lower\")",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 147
-		  }
-		],
-		"signature": "layers.TextVectorization(output_mode='tf_idf', split=\"whitespace\", ngrams=None, standardize=\"lower\")",
-		"function": "TextVectorization",
-		"id": 30,
-		"candidates": [
-		  {
-			"ref": 148
-		  }
-		],
-		"endPos": "1101",
-		"numberOfLinesOfCode": 1,
-		"arguments": "output_mode='tf_idf'\nsplit=\"whitespace\"\nngrams=None\nstandardize=\"lower\"",
-		"startPos": "1002",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 27,
-	  "step_impl_id": 5,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "TextVectorization",
-	  "line_start": 27
-	},
-	{
-	  "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\")",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 152
-		  }
-		],
-		"signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\")",
-		"function": "read_csv",
-		"id": 151,
-		"candidates": [
-		  {
-			"ref": 153
-		  }
-		],
-		"endPos": "460",
-		"numberOfLinesOfCode": 1,
-		"arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\"",
-		"startPos": "370",
-		"library": "pandas"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 14,
-	  "step_impl_id": 3,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "pandas",
-	  "function": "read_csv",
-	  "line_start": 14
-	},
-	{
-	  "source": "layers.Dense(32, activation=activations.relu)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 174
-		  }
-		],
-		"signature": "layers.Dense(32, activation=activations.relu)",
-		"function": "Dense",
-		"id": 173,
-		"candidates": [
-		  {
-			"ref": 175
-		  }
-		],
-		"endPos": "1275",
-		"numberOfLinesOfCode": 1,
-		"arguments": "32\nactivation=activations.relu",
-		"startPos": "1231",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 31,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "Dense",
-	  "line_start": 31
-	},
-	{
-	  "source": "plt.show()",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 31
-		  }
-		],
-		"signature": "plt.show()",
-		"function": "show",
-		"id": 32,
-		"candidates": [
-		  {
-			"ref": 141
-		  }
-		],
-		"endPos": "2165",
-		"numberOfLinesOfCode": 1,
-		"arguments": "",
-		"startPos": "2156",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 49,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "show",
-	  "line_start": 49
-	},
-	{
-	  "source": "model.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), callbacks=[early_stopping])",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 212
-		  }
-		],
-		"signature": "model.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), callbacks=[early_stopping])",
-		"function": "fit",
-		"id": 108,
-		"candidates": [
-		  {
-			"ref": 213
-		  }
-		],
-		"endPos": "1831",
-		"numberOfLinesOfCode": 1,
-		"arguments": "X_train\ny_train\nepochs=20\nvalidation_data=(X_val, y_val)\ncallbacks=[early_stopping]",
-		"startPos": "1734",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 39,
-	  "step_impl_id": 8,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "fit",
-	  "line_start": 39
-	},
-	{
-	  "source": "plt.ylabel('Accuracy')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 219
-		  }
-		],
-		"signature": "plt.ylabel('Accuracy')",
-		"function": "ylabel",
-		"id": 220,
-		"candidates": [
-		  {
-			"ref": 240
-		  }
-		],
-		"endPos": "2520",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Accuracy'",
-		"startPos": "2499",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 56,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "ylabel",
-	  "line_start": 56
-	},
-	{
-	  "source": "plt.plot(history.history['val_loss'], label='Validation Loss')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 288
-		  }
-		],
-		"signature": "plt.plot(history.history['val_loss'], label='Validation Loss')",
-		"function": "plot",
-		"id": 287,
-		"candidates": [
-		  {
-			"ref": 72
-		  }
-		],
-		"endPos": "2072",
-		"numberOfLinesOfCode": 1,
-		"arguments": "history.history['val_loss']\nlabel='Validation Loss'",
-		"startPos": "2011",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 44,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "plot",
-	  "line_start": 44
-	},
-	{
-	  "source": "layers.Dropout(0.5)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 294
-		  }
-		],
-		"signature": "layers.Dropout(0.5)",
-		"function": "Dropout",
-		"id": 293,
-		"candidates": [
-		  {
-			"ref": 154
-		  }
-		],
-		"endPos": "1382",
-		"numberOfLinesOfCode": 1,
-		"arguments": "0.5",
-		"startPos": "1364",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 34,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "Dropout",
-	  "line_start": 34
-	},
-	{
-	  "source": "plt.ylabel('Loss')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 307
-		  }
-		],
-		"signature": "plt.ylabel('Loss')",
-		"function": "ylabel",
-		"id": 194,
-		"candidates": [
-		  {
-			"ref": 240
-		  }
-		],
-		"endPos": "2141",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Loss'",
-		"startPos": "2124",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 47,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "ylabel",
-	  "line_start": 47
-	},
-	{
-	  "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\")",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 325
-		  }
-		],
-		"signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\")",
-		"function": "read_csv",
-		"id": 324,
-		"candidates": [
-		  {
-			"ref": 153
-		  }
-		],
-		"endPos": "668",
-		"numberOfLinesOfCode": 1,
-		"arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\"",
-		"startPos": "579",
-		"library": "pandas"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 16,
-	  "step_impl_id": 3,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "pandas",
-	  "function": "read_csv",
-	  "line_start": 16
-	},
-	{
-	  "source": "layers.Dropout(0.5)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 123
-		  }
-		],
-		"signature": "layers.Dropout(0.5)",
-		"function": "Dropout",
-		"id": 124,
-		"candidates": [
-		  {
-			"ref": 154
-		  }
-		],
-		"endPos": "1302",
-		"numberOfLinesOfCode": 1,
-		"arguments": "0.5",
-		"startPos": "1284",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 32,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "Dropout",
-	  "line_start": 32
-	},
-	{
-	  "source": "keras.Input(shape=(1,), dtype=tf.string)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 349
-		  }
-		],
-		"signature": "keras.Input(shape=(1,), dtype=tf.string)",
-		"function": "Input",
-		"id": 231,
-		"candidates": [
-		  {
-			"ref": 177
-		  }
-		],
-		"endPos": "1198",
-		"numberOfLinesOfCode": 1,
-		"arguments": "shape=(1,)\ndtype=tf.string",
-		"startPos": "1159",
-		"library": "tensorflow.keras"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 29,
-	  "step_impl_id": 5,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras",
-	  "function": "Input",
-	  "line_start": 29
-	},
-	{
-	  "source": "plt.title('Learning Curves')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 360
-		  }
-		],
-		"signature": "plt.title('Learning Curves')",
-		"function": "title",
-		"id": 359,
-		"candidates": [
-		  {
-			"ref": 329
-		  }
-		],
-		"endPos": "2101",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Learning Curves'",
-		"startPos": "2074",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 45,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "title",
-	  "line_start": 45
-	},
-	{
-	  "source": "plt.xlabel('Epochs')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 367
-		  }
-		],
-		"signature": "plt.xlabel('Epochs')",
-		"function": "xlabel",
-		"id": 366,
-		"candidates": [
-		  {
-			"ref": 336
-		  }
-		],
-		"endPos": "2122",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Epochs'",
-		"startPos": "2103",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 46,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "xlabel",
-	  "line_start": 46
-	},
-	{
-	  "source": "plt.figure(figsize=(12, 6))",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 271
-		  }
-		],
-		"signature": "plt.figure(figsize=(12, 6))",
-		"function": "figure",
-		"id": 272,
-		"candidates": [
-		  {
-			"ref": 355
-		  }
-		],
-		"endPos": "2311",
-		"numberOfLinesOfCode": 1,
-		"arguments": "figsize=(12, 6)",
-		"startPos": "2285",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 51,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "figure",
-	  "line_start": 51
-	},
-	{
-	  "source": "trainDataset['Reviews'].astype(str)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 408
-		  }
-		],
-		"signature": "trainDataset['Reviews'].astype(str)",
-		"function": "astype",
-		"id": 317,
-		"candidates": [
-		  {
-			"ref": 409
-		  }
-		],
-		"endPos": "714",
-		"numberOfLinesOfCode": 1,
-		"arguments": "str",
-		"startPos": "680",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 17,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "astype",
-	  "line_start": 17
-	},
-	{
-	  "source": "plt.legend()",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 423
-		  }
-		],
-		"signature": "plt.legend()",
-		"function": "legend",
-		"id": 422,
-		"candidates": [
-		  {
-			"ref": 424
-		  }
-		],
-		"endPos": "2533",
-		"numberOfLinesOfCode": 1,
-		"arguments": "",
-		"startPos": "2522",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 57,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "legend",
-	  "line_start": 57
-	},
-	{
-	  "source": "model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 427
-		  }
-		],
-		"signature": "model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])",
-		"function": "compile",
-		"id": 135,
-		"candidates": [
-		  {
-			"ref": 396
-		  }
-		],
-		"endPos": "2283",
-		"numberOfLinesOfCode": 1,
-		"arguments": "optimizer=keras.optimizers.Adam(learning_rate=0.001)\nloss='binary_crossentropy'\nmetrics=['accuracy']",
-		"startPos": "2167",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 50,
-	  "step_impl_id": 8,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "compile",
-	  "line_start": 50
-	},
-	{
-	  "source": "len(np.unique(y_train))",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 425
-		  }
-		],
-		"signature": "len(np.unique(y_train))",
-		"function": "len",
-		"id": 426,
-		"candidates": [
-		  {
-			"ref": 429
-		  }
-		],
-		"endPos": "987",
-		"numberOfLinesOfCode": 1,
-		"arguments": "np.unique(y_train)",
-		"startPos": "965",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 26,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "len",
-	  "line_start": 26
-	},
-	{
-	  "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\")",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 433
-		  }
-		],
-		"signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\")",
-		"function": "read_csv",
-		"id": 434,
-		"candidates": [
-		  {
-			"ref": 153
-		  }
-		],
-		"endPos": "563",
-		"numberOfLinesOfCode": 1,
-		"arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\"",
-		"startPos": "475",
-		"library": "pandas"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 15,
-	  "step_impl_id": 3,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "pandas",
-	  "function": "read_csv",
-	  "line_start": 15
-	},
-	{
-	  "source": "plt.plot(history.history['loss'], label='Training Loss')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 185
-		  }
-		],
-		"signature": "plt.plot(history.history['loss'], label='Training Loss')",
-		"function": "plot",
-		"id": 186,
-		"candidates": [
-		  {
-			"ref": 72
-		  }
-		],
-		"endPos": "2009",
-		"numberOfLinesOfCode": 1,
-		"arguments": "history.history['loss']\nlabel='Training Loss'",
-		"startPos": "1954",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 43,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "plot",
-	  "line_start": 43
-	},
-	{
-	  "source": "np.unique(y_train)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 245
-		  }
-		],
-		"signature": "np.unique(y_train)",
-		"function": "unique",
-		"id": 246,
-		"candidates": [
-		  {
-			"ref": 331
-		  }
-		],
-		"endPos": "986",
-		"numberOfLinesOfCode": 1,
-		"arguments": "y_train",
-		"startPos": "969",
-		"library": "numpy"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 26,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "numpy",
-	  "function": "unique",
-	  "line_start": 26
-	},
-	{
-	  "source": "vectorizer(input_text)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 454
-		  }
-		],
-		"signature": "vectorizer(input_text)",
-		"function": "vectorizer",
-		"id": 248,
-		"candidates": [
-		  {
-			"ref": 455
-		  }
-		],
-		"endPos": "1225",
-		"numberOfLinesOfCode": 1,
-		"arguments": "input_text",
-		"startPos": "1204",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 30,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "vectorizer",
-	  "line_start": 30
-	},
-	{
-	  "source": "valDataset['Reviews'].astype(str)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 482
-		  }
-		],
-		"signature": "valDataset['Reviews'].astype(str)",
-		"function": "astype",
-		"id": 481,
-		"candidates": [
-		  {
-			"ref": 409
-		  }
-		],
-		"endPos": "789",
-		"numberOfLinesOfCode": 1,
-		"arguments": "str",
-		"startPos": "757",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 19,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "astype",
-	  "line_start": 19
-	},
-	{
-	  "source": "plt.plot(history.history['val_accuracy'], label='Validation Accuracy')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 414
-		  }
-		],
-		"signature": "plt.plot(history.history['val_accuracy'], label='Validation Accuracy')",
-		"function": "plot",
-		"id": 415,
-		"candidates": [
-		  {
-			"ref": 72
-		  }
-		],
-		"endPos": "2447",
-		"numberOfLinesOfCode": 1,
-		"arguments": "history.history['val_accuracy']\nlabel='Validation Accuracy'",
-		"startPos": "2378",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 53,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "plot",
-	  "line_start": 53
-	},
-	{
-	  "source": "keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 207
-		  }
-		],
-		"signature": "keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)",
-		"function": "EarlyStopping",
-		"id": 208,
-		"candidates": [
-		  {
-			"ref": 499
-		  }
-		],
-		"endPos": "1722",
-		"numberOfLinesOfCode": 1,
-		"arguments": "monitor='val_loss'\npatience=3\nrestore_best_weights=True",
-		"startPos": "1635",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 38,
-	  "step_impl_id": 9,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "EarlyStopping",
-	  "line_start": 38
-	},
-	{
-	  "source": "layers.Dense(nbClass, activation=activations.softmax)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 65
-		  }
-		],
-		"signature": "layers.Dense(nbClass, activation=activations.softmax)",
-		"function": "Dense",
-		"id": 66,
-		"candidates": [
-		  {
-			"ref": 175
-		  }
-		],
-		"endPos": "1448",
-		"numberOfLinesOfCode": 1,
-		"arguments": "nbClass\nactivation=activations.softmax",
-		"startPos": "1396",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 35,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "Dense",
-	  "line_start": 35
-	},
-	{
-	  "source": "plt.legend()",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 384
-		  }
-		],
-		"signature": "plt.legend()",
-		"function": "legend",
-		"id": 385,
-		"candidates": [
-		  {
-			"ref": 424
-		  }
-		],
-		"endPos": "2154",
-		"numberOfLinesOfCode": 1,
-		"arguments": "",
-		"startPos": "2143",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 48,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "legend",
-	  "line_start": 48
-	},
-	{
-	  "source": "layers.Dense(32, activation=activations.relu)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 377
-		  }
-		],
-		"signature": "layers.Dense(32, activation=activations.relu)",
-		"function": "Dense",
-		"id": 378,
-		"candidates": [
-		  {
-			"ref": 175
-		  }
-		],
-		"endPos": "1355",
-		"numberOfLinesOfCode": 1,
-		"arguments": "32\nactivation=activations.relu",
-		"startPos": "1311",
-		"library": "tensorflow.keras.layers"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 33,
-	  "step_impl_id": 6,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras.layers",
-	  "function": "Dense",
-	  "line_start": 33
-	},
-	{
-	  "source": "plt.figure(figsize=(12, 6))",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 36
-		  }
-		],
-		"signature": "plt.figure(figsize=(12, 6))",
-		"function": "figure",
-		"id": 37,
-		"candidates": [
-		  {
-			"ref": 355
-		  }
-		],
-		"endPos": "1952",
-		"numberOfLinesOfCode": 1,
-		"arguments": "figsize=(12, 6)",
-		"startPos": "1926",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 42,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "figure",
-	  "line_start": 42
-	},
-	{
-	  "source": "plt.title('Accuracy Curves')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 388
-		  }
-		],
-		"signature": "plt.title('Accuracy Curves')",
-		"function": "title",
-		"id": 389,
-		"candidates": [
-		  {
-			"ref": 329
-		  }
-		],
-		"endPos": "2476",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Accuracy Curves'",
-		"startPos": "2449",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 54,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "title",
-	  "line_start": 54
-	},
-	{
-	  "source": "testDataset['Reviews'].astype(str)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 512
-		  }
-		],
-		"signature": "testDataset['Reviews'].astype(str)",
-		"function": "astype",
-		"id": 110,
-		"candidates": [
-		  {
-			"ref": 409
-		  }
-		],
-		"endPos": "862",
-		"numberOfLinesOfCode": 1,
-		"arguments": "str",
-		"startPos": "829",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 21,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "astype",
-	  "line_start": 21
-	},
-	{
-	  "source": "model.compile(optimizer=optimizers.Adam(), loss=losses.sparse_categorical_crossentropy, metrics=[\"accuracy\"])",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 217
-		  }
-		],
-		"signature": "model.compile(optimizer=optimizers.Adam(), loss=losses.sparse_categorical_crossentropy, metrics=[\"accuracy\"])",
-		"function": "compile",
-		"id": 218,
-		"candidates": [
-		  {
-			"ref": 396
-		  }
-		],
-		"endPos": "1616",
-		"numberOfLinesOfCode": 1,
-		"arguments": "optimizer=optimizers.Adam()\nloss=losses.sparse_categorical_crossentropy\nmetrics=[\"accuracy\"]",
-		"startPos": "1508",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 37,
-	  "step_impl_id": 8,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "compile",
-	  "line_start": 37
-	},
-	{
-	  "source": "model.evaluate(X_test, y_test)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 535
-		  }
-		],
-		"signature": "model.evaluate(X_test, y_test)",
-		"function": "evaluate",
-		"id": 250,
-		"candidates": [
-		  {
-			"ref": 313
-		  }
-		],
-		"endPos": "1879",
-		"numberOfLinesOfCode": 1,
-		"arguments": "X_test\ny_test",
-		"startPos": "1850",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 40,
-	  "step_impl_id": 10,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "evaluate",
-	  "line_start": 40
-	},
-	{
-	  "source": "vectorizer.adapt(X_train)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 528
-		  }
-		],
-		"signature": "vectorizer.adapt(X_train)",
-		"function": "adapt",
-		"id": 417,
-		"candidates": [
-		  {
-			"ref": 490
-		  }
-		],
-		"endPos": "1144",
-		"numberOfLinesOfCode": 1,
-		"arguments": "X_train",
-		"startPos": "1120",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 28,
-	  "step_impl_id": 4,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "adapt",
-	  "line_start": 28
-	},
-	{
-	  "source": "plt.xlabel('Epochs')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 364
-		  }
-		],
-		"signature": "plt.xlabel('Epochs')",
-		"function": "xlabel",
-		"id": 365,
-		"candidates": [
-		  {
-			"ref": 336
-		  }
-		],
-		"endPos": "2497",
-		"numberOfLinesOfCode": 1,
-		"arguments": "'Epochs'",
-		"startPos": "2478",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 55,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "xlabel",
-	  "line_start": 55
-	},
-	{
-	  "source": "keras.optimizers.Adam(learning_rate=0.001)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 451
-		  }
-		],
-		"signature": "keras.optimizers.Adam(learning_rate=0.001)",
-		"function": "Adam",
-		"id": 452,
-		"candidates": [
-		  {
-			"ref": 496
-		  }
-		],
-		"endPos": "2232",
-		"numberOfLinesOfCode": 1,
-		"arguments": "learning_rate=0.001",
-		"startPos": "2191",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 50,
-	  "step_impl_id": 8,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "Adam",
-	  "line_start": 50
-	},
-	{
-	  "source": "print(f\"Loss: {loss}, Accuracy: {accuracy}\")",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 1
-		  }
-		],
-		"signature": "print(f\"Loss: {loss}, Accuracy: {accuracy}\")",
-		"function": "print",
-		"id": 2,
-		"candidates": [
-		  {
-			"ref": 400
-		  }
-		],
-		"endPos": "1924",
-		"numberOfLinesOfCode": 1,
-		"arguments": "f\"Loss: {loss}\nAccuracy: {accuracy}\"",
-		"startPos": "1881",
-		"library": ""
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 41,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "",
-	  "function": "print",
-	  "line_start": 41
-	},
-	{
-	  "source": "plt.plot(history.history['accuracy'], label='Training Accuracy')",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 549
-		  }
-		],
-		"signature": "plt.plot(history.history['accuracy'], label='Training Accuracy')",
-		"function": "plot",
-		"id": 506,
-		"candidates": [
-		  {
-			"ref": 72
-		  }
-		],
-		"endPos": "2376",
-		"numberOfLinesOfCode": 1,
-		"arguments": "history.history['accuracy']\nlabel='Training Accuracy'",
-		"startPos": "2313",
-		"library": "matplotlib.pyplot"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 52,
-	  "step_impl_id": 2,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "matplotlib.pyplot",
-	  "function": "plot",
-	  "line_start": 52
-	},
-	{
-	  "source": "keras.Model(inputs=input_text, outputs=output)",
-	  "value": {
-		"FM3": "Famix-Python-Entities.Invocation",
-		"sender": {
-		  "ref": 10
-		},
-		"allTagAssociations": [
-		  {
-			"ref": 157
-		  }
-		],
-		"signature": "keras.Model(inputs=input_text, outputs=output)",
-		"function": "Model",
-		"id": 156,
-		"candidates": [
-		  {
-			"ref": 420
-		  }
-		],
-		"endPos": "1506",
-		"numberOfLinesOfCode": 1,
-		"arguments": "inputs=input_text\noutputs=output",
-		"startPos": "1461",
-		"library": "tensorflow.keras"
-	  },
-	  "type_sg_id": "todo",
-	  "line_end": 36,
-	  "step_impl_id": 7,
-	  "notebook_id": "notebookIdDemo",
-	  "library": "tensorflow.keras",
-	  "function": "Model",
-	  "line_start": 36
-	}
+{
+  "sous_graphs": [
+    {
+      "line_end": 6,
+      "library": "tensorflow.keras",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "keras",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "keras",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 102,
+        "endPos": "170",
+        "numberOfLinesOfCode": 1,
+        "startPos": "143",
+        "package": "tensorflow.keras",
+        "importedEntity": {
+          "ref": 103
+        }
+      },
+      "pos_end": "170",
+      "line_start": 6,
+      "step_name": "import",
+      "source": "from tensorflow import keras",
+      "pos_start": "143"
+    },
+    {
+      "line_end": 2,
+      "library": "numpy",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "numpy",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "numpy",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": false,
+        "id": 165,
+        "endPos": "38",
+        "numberOfLinesOfCode": 1,
+        "startPos": "21",
+        "alias": "np",
+        "package": "numpy",
+        "importedEntity": {
+          "ref": 105
+        }
+      },
+      "pos_end": "38",
+      "line_start": 2,
+      "step_name": "import",
+      "source": "import numpy as np",
+      "pos_start": "21"
+    },
+    {
+      "line_end": 11,
+      "library": "tensorflow.keras.metrics",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "metrics",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "metrics",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 168,
+        "endPos": "305",
+        "numberOfLinesOfCode": 1,
+        "startPos": "281",
+        "package": "tensorflow.keras.metrics",
+        "importedEntity": {
+          "ref": 169
+        }
+      },
+      "pos_end": "305",
+      "line_start": 11,
+      "step_name": "import",
+      "source": "from keras import metrics",
+      "pos_start": "281"
+    },
+    {
+      "line_end": 4,
+      "library": "sklearn.preprocessing.LabelEncoder",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "LabelEncoder",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "LabelEncoder",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 55,
+        "endPos": "117",
+        "numberOfLinesOfCode": 1,
+        "startPos": "72",
+        "package": "sklearn.preprocessing.LabelEncoder",
+        "importedEntity": {
+          "ref": 170
+        }
+      },
+      "pos_end": "117",
+      "line_start": 4,
+      "step_name": "import",
+      "source": "from sklearn.preprocessing import LabelEncoder",
+      "pos_start": "72"
+    },
+    {
+      "line_end": 5,
+      "library": "tensorflow",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "tensorflow",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "tensorflow",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": false,
+        "id": 186,
+        "endPos": "141",
+        "numberOfLinesOfCode": 1,
+        "startPos": "119",
+        "alias": "tf",
+        "package": "tensorflow",
+        "importedEntity": {
+          "ref": 187
+        }
+      },
+      "pos_end": "141",
+      "line_start": 5,
+      "step_name": "import",
+      "source": "import tensorflow as tf",
+      "pos_start": "119"
+    },
+    {
+      "line_end": 3,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "pyplot",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "pyplot",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": false,
+        "id": 198,
+        "endPos": "70",
+        "numberOfLinesOfCode": 1,
+        "startPos": "40",
+        "alias": "plt",
+        "package": "matplotlib.pyplot",
+        "importedEntity": {
+          "ref": 12
+        }
+      },
+      "pos_end": "70",
+      "line_start": 3,
+      "step_name": "import",
+      "source": "import matplotlib.pyplot as plt",
+      "pos_start": "40"
+    },
+    {
+      "line_end": 9,
+      "library": "tensorflow.keras.losses",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "losses",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "losses",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 125,
+        "endPos": "250",
+        "numberOfLinesOfCode": 1,
+        "startPos": "227",
+        "package": "tensorflow.keras.losses",
+        "importedEntity": {
+          "ref": 118
+        }
+      },
+      "pos_end": "250",
+      "line_start": 9,
+      "step_name": "import",
+      "source": "from keras import losses",
+      "pos_start": "227"
+    },
+    {
+      "line_end": 1,
+      "library": "pandas",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "pandas",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "pandas",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": false,
+        "id": 163,
+        "endPos": "19",
+        "numberOfLinesOfCode": 1,
+        "startPos": "1",
+        "alias": "pd",
+        "package": "pandas",
+        "importedEntity": {
+          "ref": 112
+        }
+      },
+      "pos_end": "19",
+      "line_start": 1,
+      "step_name": "import",
+      "source": "import pandas as pd",
+      "pos_start": "1"
+    },
+    {
+      "line_end": 12,
+      "library": "sklearn.preprocessing.LabelEncoder",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "LabelEncoder",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "LabelEncoder",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 251,
+        "endPos": "352",
+        "numberOfLinesOfCode": 1,
+        "startPos": "307",
+        "package": "sklearn.preprocessing.LabelEncoder",
+        "importedEntity": {
+          "ref": 170
+        }
+      },
+      "pos_end": "352",
+      "line_start": 12,
+      "step_name": "import",
+      "source": "from sklearn.preprocessing import LabelEncoder",
+      "pos_start": "307"
+    },
+    {
+      "line_end": 8,
+      "library": "tensorflow.keras.activations",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "activations",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "activations",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 11,
+        "endPos": "225",
+        "numberOfLinesOfCode": 1,
+        "startPos": "197",
+        "package": "tensorflow.keras.activations",
+        "importedEntity": {
+          "ref": 302
+        }
+      },
+      "pos_end": "225",
+      "line_start": 8,
+      "step_name": "import",
+      "source": "from keras import activations",
+      "pos_start": "197"
+    },
+    {
+      "line_end": 7,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "layers",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "layers",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 109,
+        "endPos": "195",
+        "numberOfLinesOfCode": 1,
+        "startPos": "172",
+        "package": "tensorflow.keras.layers",
+        "importedEntity": {
+          "ref": 228
+        }
+      },
+      "pos_end": "195",
+      "line_start": 7,
+      "step_name": "import",
+      "source": "from keras import layers",
+      "pos_start": "172"
+    },
+    {
+      "line_end": 10,
+      "library": "tensorflow.keras.optimizers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "f1b26036-3322-4c08-a058-6422df4afb30",
+      "function": "optimizers",
+      "value": {
+        "FM3": "Famix-Python-Entities.Import",
+        "importOf": "optimizers",
+        "importingEntity": {
+          "ref": 4
+        },
+        "isFromImport": true,
+        "id": 336,
+        "endPos": "279",
+        "numberOfLinesOfCode": 1,
+        "startPos": "252",
+        "package": "tensorflow.keras.optimizers",
+        "importedEntity": {
+          "ref": 24
+        }
+      },
+      "pos_end": "279",
+      "line_start": 10,
+      "step_name": "import",
+      "source": "from keras import optimizers",
+      "pos_start": "252"
+    },
+    {
+      "line_end": 54,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "xlabel",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.xlabel('Epochs')",
+        "function": "xlabel",
+        "id": 38,
+        "candidates": [
+          {
+            "ref": 39
+          }
+        ],
+        "endPos": "2496",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Epochs'",
+        "startPos": "2477",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2496",
+      "line_start": 54,
+      "step_name": "other",
+      "source": "plt.xlabel('Epochs')",
+      "pos_start": "2477"
+    },
+    {
+      "line_end": 46,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "ylabel",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.ylabel('Loss')",
+        "function": "ylabel",
+        "id": 58,
+        "candidates": [
+          {
+            "ref": 59
+          }
+        ],
+        "endPos": "2140",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Loss'",
+        "startPos": "2123",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2140",
+      "line_start": 46,
+      "step_name": "other",
+      "source": "plt.ylabel('Loss')",
+      "pos_start": "2123"
+    },
+    {
+      "line_end": 51,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "plot",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.plot(history.history['accuracy'], label='Training Accuracy')",
+        "function": "plot",
+        "id": 90,
+        "candidates": [
+          {
+            "ref": 91
+          }
+        ],
+        "endPos": "2375",
+        "numberOfLinesOfCode": 1,
+        "arguments": "history.history['accuracy']\nlabel='Training Accuracy'",
+        "startPos": "2312",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2375",
+      "line_start": 51,
+      "step_name": "other",
+      "source": "plt.plot(history.history['accuracy'], label='Training Accuracy')",
+      "pos_start": "2312"
+    },
+    {
+      "line_end": 35,
+      "library": "tensorflow.keras",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Model",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras",
+        "signature": "keras.Model(inputs=input_text, outputs=output)",
+        "function": "Model",
+        "id": 100,
+        "candidates": [
+          {
+            "ref": 101
+          }
+        ],
+        "endPos": "1505",
+        "numberOfLinesOfCode": 1,
+        "arguments": "inputs=input_text\noutputs=output",
+        "startPos": "1460",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1505",
+      "line_start": 35,
+      "step_name": "other",
+      "source": "keras.Model(inputs=input_text, outputs=output)",
+      "pos_start": "1460"
+    },
+    {
+      "line_end": 18,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "astype",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "valDataset['Reviews'].astype(str)",
+        "function": "astype",
+        "id": 2,
+        "candidates": [
+          {
+            "ref": 134
+          }
+        ],
+        "endPos": "788",
+        "numberOfLinesOfCode": 1,
+        "arguments": "str",
+        "startPos": "756",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "788",
+      "line_start": 18,
+      "step_name": "other",
+      "source": "valDataset['Reviews'].astype(str)",
+      "pos_start": "756"
+    },
+    {
+      "line_end": 53,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "title",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.title('Accuracy Curves')",
+        "function": "title",
+        "id": 135,
+        "candidates": [
+          {
+            "ref": 136
+          }
+        ],
+        "endPos": "2475",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Accuracy Curves'",
+        "startPos": "2448",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2475",
+      "line_start": 53,
+      "step_name": "other",
+      "source": "plt.title('Accuracy Curves')",
+      "pos_start": "2448"
+    },
+    {
+      "line_end": 56,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "legend",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.legend()",
+        "function": "legend",
+        "id": 62,
+        "candidates": [
+          {
+            "ref": 147
+          }
+        ],
+        "endPos": "2532",
+        "numberOfLinesOfCode": 1,
+        "arguments": "",
+        "startPos": "2521",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2532",
+      "line_start": 56,
+      "step_name": "other",
+      "source": "plt.legend()",
+      "pos_start": "2521"
+    },
+    {
+      "line_end": 34,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Dense",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.Dense(nbClass, activation=activations.softmax)",
+        "function": "Dense",
+        "id": 152,
+        "candidates": [
+          {
+            "ref": 153
+          }
+        ],
+        "endPos": "1447",
+        "numberOfLinesOfCode": 1,
+        "arguments": "nbClass\nactivation=activations.softmax",
+        "startPos": "1395",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1447",
+      "line_start": 34,
+      "step_name": "other",
+      "source": "layers.Dense(nbClass, activation=activations.softmax)",
+      "pos_start": "1395"
+    },
+    {
+      "line_end": 52,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "plot",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.plot(history.history['val_accuracy'], label='Validation Accuracy')",
+        "function": "plot",
+        "id": 173,
+        "candidates": [
+          {
+            "ref": 91
+          }
+        ],
+        "endPos": "2446",
+        "numberOfLinesOfCode": 1,
+        "arguments": "history.history['val_accuracy']\nlabel='Validation Accuracy'",
+        "startPos": "2377",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2446",
+      "line_start": 52,
+      "step_name": "other",
+      "source": "plt.plot(history.history['val_accuracy'], label='Validation Accuracy')",
+      "pos_start": "2377"
+    },
+    {
+      "line_end": 26,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "TextVectorization",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.TextVectorization(output_mode='tf_idf', split=\"whitespace\", ngrams=None, standardize=\"lower\")",
+        "function": "TextVectorization",
+        "id": 47,
+        "candidates": [
+          {
+            "ref": 175
+          }
+        ],
+        "endPos": "1100",
+        "numberOfLinesOfCode": 1,
+        "arguments": "output_mode='tf_idf'\nsplit=\"whitespace\"\nngrams=None\nstandardize=\"lower\"",
+        "startPos": "1001",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1100",
+      "line_start": 26,
+      "step_name": "other",
+      "source": "layers.TextVectorization(output_mode='tf_idf', split=\"whitespace\", ngrams=None, standardize=\"lower\")",
+      "pos_start": "1001"
+    },
+    {
+      "line_end": 50,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "figure",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.figure(figsize=(12, 6))",
+        "function": "figure",
+        "id": 176,
+        "candidates": [
+          {
+            "ref": 177
+          }
+        ],
+        "endPos": "2310",
+        "numberOfLinesOfCode": 1,
+        "arguments": "figsize=(12, 6)",
+        "startPos": "2284",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2310",
+      "line_start": 50,
+      "step_name": "other",
+      "source": "plt.figure(figsize=(12, 6))",
+      "pos_start": "2284"
+    },
+    {
+      "line_end": 14,
+      "library": "pandas",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "read_csv",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "pandas",
+        "signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\")",
+        "function": "read_csv",
+        "id": 183,
+        "candidates": [
+          {
+            "ref": 184
+          }
+        ],
+        "endPos": "562",
+        "numberOfLinesOfCode": 1,
+        "arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\"",
+        "startPos": "474",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "562",
+      "line_start": 14,
+      "step_name": "other",
+      "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/val.csv.gz\")",
+      "pos_start": "474"
+    },
+    {
+      "line_end": 28,
+      "library": "tensorflow.keras",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Input",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras",
+        "signature": "keras.Input(shape=(1,), dtype=tf.string)",
+        "function": "Input",
+        "id": 209,
+        "candidates": [
+          {
+            "ref": 210
+          }
+        ],
+        "endPos": "1197",
+        "numberOfLinesOfCode": 1,
+        "arguments": "shape=(1,)\ndtype=tf.string",
+        "startPos": "1158",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1197",
+      "line_start": 28,
+      "step_name": "other",
+      "source": "keras.Input(shape=(1,), dtype=tf.string)",
+      "pos_start": "1158"
+    },
+    {
+      "line_end": 44,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "title",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.title('Learning Curves')",
+        "function": "title",
+        "id": 213,
+        "candidates": [
+          {
+            "ref": 136
+          }
+        ],
+        "endPos": "2100",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Learning Curves'",
+        "startPos": "2073",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2100",
+      "line_start": 44,
+      "step_name": "other",
+      "source": "plt.title('Learning Curves')",
+      "pos_start": "2073"
+    },
+    {
+      "line_end": 40,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "print",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "print(f\"Loss: {loss}, Accuracy: {accuracy}\")",
+        "function": "print",
+        "id": 15,
+        "candidates": [
+          {
+            "ref": 158
+          }
+        ],
+        "endPos": "1923",
+        "numberOfLinesOfCode": 1,
+        "arguments": "f\"Loss: {loss}\nAccuracy: {accuracy}\"",
+        "startPos": "1880",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1923",
+      "line_start": 40,
+      "step_name": "other",
+      "source": "print(f\"Loss: {loss}, Accuracy: {accuracy}\")",
+      "pos_start": "1880"
+    },
+    {
+      "line_end": 47,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "legend",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.legend()",
+        "function": "legend",
+        "id": 217,
+        "candidates": [
+          {
+            "ref": 147
+          }
+        ],
+        "endPos": "2153",
+        "numberOfLinesOfCode": 1,
+        "arguments": "",
+        "startPos": "2142",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2153",
+      "line_start": 47,
+      "step_name": "other",
+      "source": "plt.legend()",
+      "pos_start": "2142"
+    },
+    {
+      "line_end": 45,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "xlabel",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.xlabel('Epochs')",
+        "function": "xlabel",
+        "id": 234,
+        "candidates": [
+          {
+            "ref": 39
+          }
+        ],
+        "endPos": "2121",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Epochs'",
+        "startPos": "2102",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2121",
+      "line_start": 45,
+      "step_name": "other",
+      "source": "plt.xlabel('Epochs')",
+      "pos_start": "2102"
+    },
+    {
+      "line_end": 30,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Dense",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.Dense(32, activation=activations.relu)",
+        "function": "Dense",
+        "id": 17,
+        "candidates": [
+          {
+            "ref": 153
+          }
+        ],
+        "endPos": "1274",
+        "numberOfLinesOfCode": 1,
+        "arguments": "32\nactivation=activations.relu",
+        "startPos": "1230",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1274",
+      "line_start": 30,
+      "step_name": "other",
+      "source": "layers.Dense(32, activation=activations.relu)",
+      "pos_start": "1230"
+    },
+    {
+      "line_end": 16,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "astype",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "trainDataset['Reviews'].astype(str)",
+        "function": "astype",
+        "id": 216,
+        "candidates": [
+          {
+            "ref": 134
+          }
+        ],
+        "endPos": "713",
+        "numberOfLinesOfCode": 1,
+        "arguments": "str",
+        "startPos": "679",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "713",
+      "line_start": 16,
+      "step_name": "other",
+      "source": "trainDataset['Reviews'].astype(str)",
+      "pos_start": "679"
+    },
+    {
+      "line_end": 43,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "plot",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.plot(history.history['val_loss'], label='Validation Loss')",
+        "function": "plot",
+        "id": 212,
+        "candidates": [
+          {
+            "ref": 91
+          }
+        ],
+        "endPos": "2071",
+        "numberOfLinesOfCode": 1,
+        "arguments": "history.history['val_loss']\nlabel='Validation Loss'",
+        "startPos": "2010",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2071",
+      "line_start": 43,
+      "step_name": "other",
+      "source": "plt.plot(history.history['val_loss'], label='Validation Loss')",
+      "pos_start": "2010"
+    },
+    {
+      "line_end": 41,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "figure",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.figure(figsize=(12, 6))",
+        "function": "figure",
+        "id": 227,
+        "candidates": [
+          {
+            "ref": 177
+          }
+        ],
+        "endPos": "1951",
+        "numberOfLinesOfCode": 1,
+        "arguments": "figsize=(12, 6)",
+        "startPos": "1925",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1951",
+      "line_start": 41,
+      "step_name": "other",
+      "source": "plt.figure(figsize=(12, 6))",
+      "pos_start": "1925"
+    },
+    {
+      "line_end": 39,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "evaluate",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "model.evaluate(X_test, y_test)",
+        "function": "evaluate",
+        "id": 254,
+        "candidates": [
+          {
+            "ref": 27
+          }
+        ],
+        "endPos": "1878",
+        "numberOfLinesOfCode": 1,
+        "arguments": "X_test\ny_test",
+        "startPos": "1849",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1878",
+      "line_start": 39,
+      "step_name": "other",
+      "source": "model.evaluate(X_test, y_test)",
+      "pos_start": "1849"
+    },
+    {
+      "line_end": 13,
+      "library": "pandas",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "read_csv",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "pandas",
+        "signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\")",
+        "function": "read_csv",
+        "id": 192,
+        "candidates": [
+          {
+            "ref": 184
+          }
+        ],
+        "endPos": "459",
+        "numberOfLinesOfCode": 1,
+        "arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\"",
+        "startPos": "369",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "459",
+      "line_start": 13,
+      "step_name": "other",
+      "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/train.csv.gz\")",
+      "pos_start": "369"
+    },
+    {
+      "line_end": 55,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "ylabel",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.ylabel('Accuracy')",
+        "function": "ylabel",
+        "id": 114,
+        "candidates": [
+          {
+            "ref": 59
+          }
+        ],
+        "endPos": "2519",
+        "numberOfLinesOfCode": 1,
+        "arguments": "'Accuracy'",
+        "startPos": "2498",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2519",
+      "line_start": 55,
+      "step_name": "other",
+      "source": "plt.ylabel('Accuracy')",
+      "pos_start": "2498"
+    },
+    {
+      "line_end": 27,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "adapt",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "vectorizer.adapt(X_train)",
+        "function": "adapt",
+        "id": 268,
+        "candidates": [
+          {
+            "ref": 269
+          }
+        ],
+        "endPos": "1143",
+        "numberOfLinesOfCode": 1,
+        "arguments": "X_train",
+        "startPos": "1119",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1143",
+      "line_start": 27,
+      "step_name": "other",
+      "source": "vectorizer.adapt(X_train)",
+      "pos_start": "1119"
+    },
+    {
+      "line_end": 57,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "show",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.show()",
+        "function": "show",
+        "id": 272,
+        "candidates": [
+          {
+            "ref": 273
+          }
+        ],
+        "endPos": "2543",
+        "numberOfLinesOfCode": 1,
+        "arguments": "",
+        "startPos": "2534",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2543",
+      "line_start": 57,
+      "step_name": "other",
+      "source": "plt.show()",
+      "pos_start": "2534"
+    },
+    {
+      "line_end": 29,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "vectorizer",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "vectorizer(input_text)",
+        "function": "vectorizer",
+        "id": 107,
+        "candidates": [
+          {
+            "ref": 185
+          }
+        ],
+        "endPos": "1224",
+        "numberOfLinesOfCode": 1,
+        "arguments": "input_text",
+        "startPos": "1203",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1224",
+      "line_start": 29,
+      "step_name": "other",
+      "source": "vectorizer(input_text)",
+      "pos_start": "1203"
+    },
+    {
+      "line_end": 48,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "show",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.show()",
+        "function": "show",
+        "id": 49,
+        "candidates": [
+          {
+            "ref": 273
+          }
+        ],
+        "endPos": "2164",
+        "numberOfLinesOfCode": 1,
+        "arguments": "",
+        "startPos": "2155",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2164",
+      "line_start": 48,
+      "step_name": "other",
+      "source": "plt.show()",
+      "pos_start": "2155"
+    },
+    {
+      "line_end": 37,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "EarlyStopping",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)",
+        "function": "EarlyStopping",
+        "id": 197,
+        "candidates": [
+          {
+            "ref": 261
+          }
+        ],
+        "endPos": "1721",
+        "numberOfLinesOfCode": 1,
+        "arguments": "monitor='val_loss'\npatience=3\nrestore_best_weights=True",
+        "startPos": "1634",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1721",
+      "line_start": 37,
+      "step_name": "other",
+      "source": "keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)",
+      "pos_start": "1634"
+    },
+    {
+      "line_end": 31,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Dropout",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.Dropout(0.5)",
+        "function": "Dropout",
+        "id": 240,
+        "candidates": [
+          {
+            "ref": 229
+          }
+        ],
+        "endPos": "1301",
+        "numberOfLinesOfCode": 1,
+        "arguments": "0.5",
+        "startPos": "1283",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1301",
+      "line_start": 31,
+      "step_name": "other",
+      "source": "layers.Dropout(0.5)",
+      "pos_start": "1283"
+    },
+    {
+      "line_end": 38,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "fit",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "model.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), callbacks=[early_stopping])",
+        "function": "fit",
+        "id": 250,
+        "candidates": [
+          {
+            "ref": 288
+          }
+        ],
+        "endPos": "1830",
+        "numberOfLinesOfCode": 1,
+        "arguments": "X_train\ny_train\nepochs=20\nvalidation_data=(X_val, y_val)\ncallbacks=[early_stopping]",
+        "startPos": "1733",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1830",
+      "line_start": 38,
+      "step_name": "other",
+      "source": "model.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), callbacks=[early_stopping])",
+      "pos_start": "1733"
+    },
+    {
+      "line_end": 33,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Dropout",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.Dropout(0.5)",
+        "function": "Dropout",
+        "id": 271,
+        "candidates": [
+          {
+            "ref": 229
+          }
+        ],
+        "endPos": "1381",
+        "numberOfLinesOfCode": 1,
+        "arguments": "0.5",
+        "startPos": "1363",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1381",
+      "line_start": 33,
+      "step_name": "other",
+      "source": "layers.Dropout(0.5)",
+      "pos_start": "1363"
+    },
+    {
+      "line_end": 32,
+      "library": "tensorflow.keras.layers",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "Dense",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "tensorflow.keras.layers",
+        "signature": "layers.Dense(32, activation=activations.relu)",
+        "function": "Dense",
+        "id": 317,
+        "candidates": [
+          {
+            "ref": 153
+          }
+        ],
+        "endPos": "1354",
+        "numberOfLinesOfCode": 1,
+        "arguments": "32\nactivation=activations.relu",
+        "startPos": "1310",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "1354",
+      "line_start": 32,
+      "step_name": "other",
+      "source": "layers.Dense(32, activation=activations.relu)",
+      "pos_start": "1310"
+    },
+    {
+      "line_end": 15,
+      "library": "pandas",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "read_csv",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "pandas",
+        "signature": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\")",
+        "function": "read_csv",
+        "id": 194,
+        "candidates": [
+          {
+            "ref": 184
+          }
+        ],
+        "endPos": "667",
+        "numberOfLinesOfCode": 1,
+        "arguments": "\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\"",
+        "startPos": "578",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "667",
+      "line_start": 15,
+      "step_name": "other",
+      "source": "pd.read_csv(\"http://www.i3s.unice.fr/~riveill/dataset/Amazon_Unlocked_Mobile/test.csv.gz\")",
+      "pos_start": "578"
+    },
+    {
+      "line_end": 42,
+      "library": "matplotlib.pyplot",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "plot",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "matplotlib.pyplot",
+        "signature": "plt.plot(history.history['loss'], label='Training Loss')",
+        "function": "plot",
+        "id": 41,
+        "candidates": [
+          {
+            "ref": 91
+          }
+        ],
+        "endPos": "2008",
+        "numberOfLinesOfCode": 1,
+        "arguments": "history.history['loss']\nlabel='Training Loss'",
+        "startPos": "1953",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "2008",
+      "line_start": 42,
+      "step_name": "other",
+      "source": "plt.plot(history.history['loss'], label='Training Loss')",
+      "pos_start": "1953"
+    },
+    {
+      "line_end": 20,
+      "library": "",
+      "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+      "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+      "function": "astype",
+      "value": {
+        "FM3": "Famix-Python-Entities.Invocation",
+        "library": "",
+        "signature": "testDataset['Reviews'].astype(str)",
+        "function": "astype",
+        "id": 93,
+        "candidates": [
+          {
+            "ref": 134
+          }
+        ],
+        "endPos": "861",
+        "numberOfLinesOfCode": 1,
+        "arguments": "str",
+        "startPos": "828",
+        "sender": {
+          "ref": 4
+        }
+      },
+      "pos_end": "861",
+      "line_start": 20,
+      "step_name": "other",
+      "source": "testDataset['Reviews'].astype(str)",
+      "pos_start": "828"
+    }
+  ],
+  "json_profile": {},
+  "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+  "project_id": "8ff94ba1-62af-4a45-8967-cfc58eb268be",
+  "name": null,
+  "compositions": [
+    {
+      "components": [
+        {
+          "line_end": 25,
+          "library": "numpy",
+          "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+          "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+          "function": "unique",
+          "value": {
+            "FM3": "Famix-Python-Entities.Invocation",
+            "library": "numpy",
+            "signature": "np.unique(y_train)",
+            "function": "unique",
+            "id": 31,
+            "candidates": [
+              {
+                "ref": 32
+              }
+            ],
+            "endPos": "985",
+            "numberOfLinesOfCode": 1,
+            "arguments": "y_train",
+            "startPos": "968",
+            "sender": {
+              "ref": 4
+            }
+          },
+          "pos_end": "985",
+          "line_start": 25,
+          "step_name": "other",
+          "source": "np.unique(y_train)",
+          "pos_start": "968"
+        }
+      ],
+      "composite": {
+        "line_end": 25,
+        "library": "",
+        "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+        "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+        "function": "len",
+        "value": {
+          "FM3": "Famix-Python-Entities.Invocation",
+          "library": "",
+          "signature": "len(np.unique(y_train))",
+          "function": "len",
+          "id": 223,
+          "candidates": [
+            {
+              "ref": 224
+            }
+          ],
+          "endPos": "986",
+          "numberOfLinesOfCode": 1,
+          "arguments": "np.unique(y_train)",
+          "startPos": "964",
+          "sender": {
+            "ref": 4
+          }
+        },
+        "pos_end": "986",
+        "line_start": 25,
+        "step_name": "other",
+        "source": "len(np.unique(y_train))",
+        "pos_start": "964"
+      }
+    },
+    {
+      "components": [
+        {
+          "line_end": 36,
+          "library": "tensorflow.keras.optimizers",
+          "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+          "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+          "function": "Adam",
+          "value": {
+            "FM3": "Famix-Python-Entities.Invocation",
+            "library": "tensorflow.keras.optimizers",
+            "signature": "optimizers.Adam()",
+            "function": "Adam",
+            "id": 45,
+            "candidates": [
+              {
+                "ref": 23
+              }
+            ],
+            "endPos": "1547",
+            "numberOfLinesOfCode": 1,
+            "arguments": "",
+            "startPos": "1531",
+            "sender": {
+              "ref": 4
+            }
+          },
+          "pos_end": "1547",
+          "line_start": 36,
+          "step_name": "other",
+          "source": "optimizers.Adam()",
+          "pos_start": "1531"
+        }
+      ],
+      "composite": {
+        "line_end": 36,
+        "library": "",
+        "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+        "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+        "function": "compile",
+        "value": {
+          "FM3": "Famix-Python-Entities.Invocation",
+          "library": "",
+          "signature": "model.compile(optimizer=optimizers.Adam(), loss=losses.sparse_categorical_crossentropy, metrics=[\"accuracy\"])",
+          "function": "compile",
+          "id": 284,
+          "candidates": [
+            {
+              "ref": 122
+            }
+          ],
+          "endPos": "1615",
+          "numberOfLinesOfCode": 1,
+          "arguments": "optimizer=optimizers.Adam()\nloss=losses.sparse_categorical_crossentropy\nmetrics=[\"accuracy\"]",
+          "startPos": "1507",
+          "sender": {
+            "ref": 4
+          }
+        },
+        "pos_end": "1615",
+        "line_start": 36,
+        "step_name": "other",
+        "source": "model.compile(optimizer=optimizers.Adam(), loss=losses.sparse_categorical_crossentropy, metrics=[\"accuracy\"])",
+        "pos_start": "1507"
+      }
+    },
+    {
+      "components": [
+        {
+          "line_end": 49,
+          "library": "",
+          "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+          "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+          "function": "Adam",
+          "value": {
+            "FM3": "Famix-Python-Entities.Invocation",
+            "library": "",
+            "signature": "keras.optimizers.Adam(learning_rate=0.001)",
+            "function": "Adam",
+            "id": 119,
+            "candidates": [
+              {
+                "ref": 120
+              }
+            ],
+            "endPos": "2231",
+            "numberOfLinesOfCode": 1,
+            "arguments": "learning_rate=0.001",
+            "startPos": "2190",
+            "sender": {
+              "ref": 4
+            }
+          },
+          "pos_end": "2231",
+          "line_start": 49,
+          "step_name": "other",
+          "source": "keras.optimizers.Adam(learning_rate=0.001)",
+          "pos_start": "2190"
+        }
+      ],
+      "composite": {
+        "line_end": 49,
+        "library": "",
+        "notebook_id": "b7dd0dad-8d71-456a-9c05-a6a8ec114c18",
+        "type_sg_id": "9a748f9f-32ed-4341-9416-64f559741b95",
+        "function": "compile",
+        "value": {
+          "FM3": "Famix-Python-Entities.Invocation",
+          "library": "",
+          "signature": "model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])",
+          "function": "compile",
+          "id": 121,
+          "candidates": [
+            {
+              "ref": 122
+            }
+          ],
+          "endPos": "2282",
+          "numberOfLinesOfCode": 1,
+          "arguments": "optimizer=keras.optimizers.Adam(learning_rate=0.001)\nloss='binary_crossentropy'\nmetrics=['accuracy']",
+          "startPos": "2166",
+          "sender": {
+            "ref": 4
+          }
+        },
+        "pos_end": "2282",
+        "line_start": 49,
+        "step_name": "other",
+        "source": "model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])",
+        "pos_start": "2166"
+      }
+    }
   ]
+}

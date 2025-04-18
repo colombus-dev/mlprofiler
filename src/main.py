@@ -36,7 +36,6 @@ def profile_notebooks(
     log = print if verbose_mode else lambda *x: None
 
     if notebook_file_or_directory.is_dir():
-        report = {}
         errors = {}
         all_notebooks = list(notebook_file_or_directory.rglob("*.ipynb"))
         all_subgraphs = list(famix_subgraphs_file_or_directory.rglob("*_subgraph.json"))

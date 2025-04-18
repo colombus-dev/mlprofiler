@@ -7,6 +7,6 @@ model_identifier="qwen/qwen2.5-coder-7b-instruct"
 lms server start
 
 # loading Qwen2.5-Coder-7B-Instruct-GGUF model with quantization q4_0
-lms load $model
+lms load $model --context-length 8192
 
 echo "LM Studio server is ready!"
