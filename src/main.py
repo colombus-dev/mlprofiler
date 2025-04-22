@@ -1,59 +1,64 @@
-from pathlib import Path
-from typing import Annotated
+from .utils import ParserElement, profile_python_content
 
-import typer
+from typing import Any
 
-from tqdm import tqdm
+from fastapi import FastAPI
+from pydantic import BaseModel
 
-from utils import profile_notebook_file, save_result
-
-
-app = typer.Typer()
+app = FastAPI()
 
 
-@app.command()
-def profile_notebooks(
-    notebook_file_or_directory: Path,
-    famix_subgraphs_file_or_directory: Path,
-    output_directory: Annotated[Path, typer.Argument()] = None,
-    verbose_mode: Annotated[bool, typer.Argument()] = False,
-):
-    """Profile the given notebook(s) (file or directory).
-    When providing a directory, the files contained in the famix subgraphs directory
-    should match *_subgraph.json to be used.
+class LLMResult(BaseModel):
+    parser_element_id: str
+    step_name: str
+    algo_name: str
+    algo_family: str
+
+
+class ProfileNotebookParams(BaseModel):
+    notebook_file_stem: str
+    python_content: str
+    parser_elements: list[ParserElement]
+
+
+class ProfileNotebookResponse(BaseModel):
+    llm_profile: list[ParserElement]
+
+
+@app.post("/profile")
+def profile_notebook(params: ProfileNotebookParams) -> list[Any]:
+    """Mock the given notebook (LLM-like) profiling.
 
     Parameters
     ----------
-    notebook_file_or_directory : Path
-        the notebook file or directory to profile
-    famix_subgraphs_file_or_directory : Path
-        the subgraphs file or directory to use for profiling
-    output_directory : Annotated[Path, typer.Argument], optional
-        the optional output directory to save the profile, by default None
-    verbose_mode : Annotated[bool, typer.Argument], optional
-        should log additional information or not, by default False
-    """
-    log = print if verbose_mode else lambda *x: None
+    params : ProfileNotebookParams
+        the notebook file step (e.g. abc/myfile.ipynb -> myfile),
+        corresponding python code content and Moose parsing result
 
-    if notebook_file_or_directory.is_dir():
-        errors = {}
-        all_notebooks = list(notebook_file_or_directory.rglob("*.ipynb"))
-        all_subgraphs = list(famix_subgraphs_file_or_directory.rglob("*_subgraph.json"))
-        for notebook_file, subgraph_file in (pbar := tqdm(zip(all_notebooks, all_subgraphs))):
-            pbar.set_description(
-                f"Generating profile for {str(notebook_file)[:50].ljust(50)}"
+    Returns
+    -------
+    list[Any]
+        the LLM profiling result
+    """
+    result_profile = profile_python_content(
+        params.python_content, params.parser_elements
+    )
+
+    res: list[LLMResult] = []
+    i = 0
+    for step in result_profile:
+        for t in step["tasks"]:
+            res.append(
+                LLMResult(
+                    parser_element_id=params.parser_elements[i].id,
+                    step_name=step["name"],
+                    algo_name=t["algoName"],
+                    algo_family=t["algoFamily"],
+                )
             )
-            log("notebook_file=", notebook_file)
-            try:
-                res = profile_notebook_file(notebook_file, subgraph_file)
-                save_result(res, notebook_file, output_directory)
-            except Exception as e:
-                errors[notebook_file.name] = str(e)
-        if errors:
-            print("ERRORS: ", errors)
-    else:
-        res = profile_notebook_file(notebook_file_or_directory, famix_subgraphs_file_or_directory)
-        save_result(res, notebook_file_or_directory, output_directory)
+            i += 1
+
+    return res
 
 
 if __name__ == "__main__":

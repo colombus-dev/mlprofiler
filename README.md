@@ -27,5 +27,5 @@ $ ./scripts/start_lms_server.sh
 ### Run the CLI
 
 ```bash
-$ poetry run python src/main.py data/ data/
+$ poetry run python src/cli.py data/ data/
 ```

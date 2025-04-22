@@ -1,10 +1,27 @@
 import json
+import os
 
 from pathlib import Path
+from typing import Any
 
+from pydantic import BaseModel
 from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from openai import OpenAI
+
+
+LMSTUDIO_API_URL = os.getenv("LMSTUDIO_API_URL", "localhost:1234")
+
+
+class ParserElement(BaseModel):
+    # TODO: move this to common and use it in mock and core
+    id: str
+    library: str
+    function: str
+    value: dict[str, Any]
+    source: str
+    step_name: str
+
 
 # Out directory
 
@@ -14,7 +31,7 @@ out_dir.mkdir(exist_ok=True, parents=True)
 # Templating configuration
 
 env = Environment(
-    loader=FileSystemLoader("../llm/templates"), autoescape=select_autoescape()
+    loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
 )
 
 system_prompt_template = env.get_template("system_prompt.jinja")
@@ -48,7 +65,7 @@ algorithms_classification_response_schema = (
 
 # LLM client
 
-client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+client = OpenAI(base_url=f"http://{LMSTUDIO_API_URL}/v1", api_key="lm-studio")
 
 
 def _cell_source_as_list(source: list[str] | str):
@@ -85,47 +102,21 @@ def save_result(json_profile: dict, original_file: Path, profile_out_dir: Path |
         json.dump(json_profile, f)
 
 
-def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
-    """Profile the given notebook file.
-
-    Parameters
-    ----------
-    notebook_path : Path
-        the notebook file path
-    famix_subgraphs_path : Path
-        the famix subgraphs file path
-    famix_subgraphs : list[dict]
-        the famix subgraphs corresponding to the given file
-    """
+def profile_python_content(python_content: str, famix_subgraphes: list[ParserElement]):
     json_profile = []
     prev_step = None
-    prev_stage = None
-
-    with open(notebook_path) as f:
-        notebook_content = json.load(f)
-    with open(famix_subgraphs_path) as f:
-        famix_subgraphs_content = sorted(
-            json.load(f)["sous_graphs"], key=lambda sg: sg["line_start"]
-        )
-
-    all_python_code = [
-        block
-        for cell in notebook_content["cells"]
-        if cell["cell_type"] == "code"
-        for block in _cell_source_as_list(cell["source"])
-    ]
 
     system_prompt_content = system_prompt_template.render(
-        steps_taxonomy=steps_taxonomy, all_python_code=all_python_code
+        steps_taxonomy=steps_taxonomy, all_python_code=python_content
     )
     algorithms_system_prompt_content = algorithms_system_prompt_template.render(
         algorithm_families_taxonomy=available_algorithms["algoFamilies"],
         algorithm_names_taxonomy=available_algorithms["algoNames"],
-        all_python_code=all_python_code,
+        all_python_code=python_content,
     )
 
-    for subgraph in (pbar := tqdm(famix_subgraphs_content)):
-        line = subgraph["source"]
+    for subgraph in (pbar := tqdm(famix_subgraphes)):
+        line = subgraph.source
         pbar.set_description(f"Classifying line: {line[:50].ljust(50).strip()}")
 
         user_prompt_content = user_prompt_template.render(python_code_line=line)
@@ -167,8 +158,8 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
         res = {
             "algoFamily": algorithms_classified_line["algorithm_family"],
             "algoName": algorithms_classified_line["algorithm_name"],
-            "library": subgraph["library"],
-            "function": subgraph["function"],
+            "library": subgraph.library,
+            "function": subgraph.function,
             "tasks": [{"name": line, "tasks": []}],
         }
 
@@ -195,9 +186,12 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
             if classified_line["class"] in steps_taxonomy
             else "Others"
         )
-        if current_step == "Library Loading" and subgraph["step_name"] != "import":
+        if (
+            current_step == "Library Loading"
+            and subgraph.step_name != "Library Loading"
+        ):
             current_step = "Others"
-        if subgraph["step_name"] == "import":
+        if subgraph.step_name == "Library Loading":
             current_step = "Library Loading"
 
         if prev_step == current_step:
@@ -213,3 +207,44 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
         prev_step = current_step
 
     return json_profile
+
+
+def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
+    """Profile the given notebook file.
+
+    Parameters
+    ----------
+    notebook_path : Path
+        the notebook file path
+    famix_subgraphs_path : Path
+        the famix subgraphs file path
+    famix_subgraphs : list[dict]
+        the famix subgraphs corresponding to the given file
+    """
+
+    with open(notebook_path) as f:
+        notebook_content = json.load(f)
+    with open(famix_subgraphs_path) as f:
+        raw_famix_subgraphs_content = sorted(
+            json.load(f)["sous_graphs"], key=lambda sg: sg["line_start"]
+        )
+        famix_subgraphs_content = [
+            ParserElement(
+                id=str(i),
+                library=e["library"],
+                function=e["function"],
+                value=e["value"],
+                source=e["source"],
+                step_name=e["step_name"],
+            )
+            for i, e in enumerate(raw_famix_subgraphs_content)
+        ]
+
+    all_python_code = [
+        block
+        for cell in notebook_content["cells"]
+        if cell["cell_type"] == "code"
+        for block in _cell_source_as_list(cell["source"])
+    ]
+
+    return profile_python_content(all_python_code, famix_subgraphs_content)
