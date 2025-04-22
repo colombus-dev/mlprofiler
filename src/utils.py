@@ -156,6 +156,7 @@ def profile_python_content(python_content: str, famix_subgraphes: list[ParserEle
         )
 
         res = {
+            "id": subgraph.id,
             "algoFamily": algorithms_classified_line["algorithm_family"],
             "algoName": algorithms_classified_line["algorithm_name"],
             "library": subgraph.library,
@@ -221,7 +222,6 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
     famix_subgraphs : list[dict]
         the famix subgraphs corresponding to the given file
     """
-
     with open(notebook_path) as f:
         notebook_content = json.load(f)
     with open(famix_subgraphs_path) as f:
@@ -230,14 +230,14 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
         )
         famix_subgraphs_content = [
             ParserElement(
-                id=str(i),
+                id=e["id"],
                 library=e["library"],
                 function=e["function"],
                 value=e["value"],
                 source=e["source"],
                 step_name=e["step_name"],
             )
-            for i, e in enumerate(raw_famix_subgraphs_content)
+            for e in raw_famix_subgraphs_content
         ]
 
     all_python_code = [

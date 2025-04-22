@@ -26,7 +26,7 @@ class ProfileNotebookResponse(BaseModel):
 
 
 @app.post("/profile")
-def profile_notebook(params: ProfileNotebookParams) -> list[Any]:
+def profile_notebook(params: ProfileNotebookParams) -> list[LLMResult]:
     """Mock the given notebook (LLM-like) profiling.
 
     Parameters
@@ -50,7 +50,7 @@ def profile_notebook(params: ProfileNotebookParams) -> list[Any]:
         for t in step["tasks"]:
             res.append(
                 LLMResult(
-                    parser_element_id=params.parser_elements[i].id,
+                    parser_element_id=t["id"],
                     step_name=step["name"],
                     algo_name=t["algoName"],
                     algo_family=t["algoFamily"],
