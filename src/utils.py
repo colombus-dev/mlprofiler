@@ -226,7 +226,7 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
         notebook_content = json.load(f)
     with open(famix_subgraphs_path) as f:
         raw_famix_subgraphs_content = sorted(
-            json.load(f)["sous_graphs"], key=lambda sg: sg["line_start"]
+            json.load(f)["elements"], key=lambda sg: sg["line_start"]
         )
         famix_subgraphs_content = [
             ParserElement(
