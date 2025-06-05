@@ -87,19 +87,7 @@ def get_inconsistencies(
 with httpx.Client(auth=ApiTokenHttpxAuth()) as client:
     console = Console()
     # Creating a new project
-    # created_project_id = "ab95d3bb-5333-4b9b-9fc4-eb60cb91eed3"
     created_project_id = post_project(console, client)
-    # Populating db with famix entities
-    famix_entity_invoc_response = client.post(
-        f"http://erebe-vm9.i3s.unice.fr:8000/vespucci/api/typesgs",
-        json={"name": "Invocation", "value": "Famix-Python-Entities.Invocation"},
-    )
-    famix_entity_invoc_response.raise_for_status()
-    famix_entity_import_response = client.post(
-        f"http://erebe-vm9.i3s.unice.fr:8000/vespucci/api/typesgs",
-        json={"name": "Import", "value": "Famix-Python-Entities.Import"},
-    )
-    famix_entity_import_response.raise_for_status()
 
     for i in [0, 1, 3, 4, 5]:
         # Importing a notebook and generating its profile
