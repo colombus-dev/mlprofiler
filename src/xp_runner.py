@@ -110,9 +110,9 @@ def get_metrics(console: Console, client: httpx.Client, project_id: str):
     table.add_column("Inconsistencies (count)", style="green")
 
     table.add_row(
-        get_unknown_metrics_response.json(),
-        get_reused_metrics_response.json(),
-        get_inconsistencies_metrics_response.json(),
+        str(get_unknown_metrics_response.json()),
+        str(get_reused_metrics_response.json()),
+        str(get_inconsistencies_metrics_response.json()),
     )
 
     console.print(table)
@@ -151,7 +151,7 @@ with httpx.Client(auth=ApiTokenHttpxAuth()) as client:
             )
             posted_llm_profile_response.raise_for_status()
             progress.update(progress_task, advance=100)
-        
+
         # Retrieving metrics
         get_metrics(console, client, created_project_id)
 
