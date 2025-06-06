@@ -68,7 +68,7 @@ def get_inconsistencies(
             total=100,
         )
         get_inconsistencies_response = client.get(
-            f"http://erebe-vm9.i3s.unice.fr:8080/core/api/project/{project_id}/notebook/{notebook_id}/inconsistencies",
+            f"http://erebe-vm9.i3s.unice.fr:8000/core/api/project/{project_id}/notebook/{notebook_id}/inconsistencies",
             timeout=100,
         )
         progress.update(progress_task, advance=100)
@@ -79,7 +79,41 @@ def get_inconsistencies(
     table.add_column("MetaStep Names", style="green")
 
     for inconsistency in get_inconsistencies_response.json():
-        table.add_row(*[str(e) for e in inconsistency.values()])
+        table.add_row(*[str(e) for e in inconsistency])
+
+    console.print(table)
+
+
+def get_metrics(console: Console, client: httpx.Client, project_id: str):
+    with Progress() as progress:
+        progress_task = progress.add_task(
+            "[bold]Retrieving some metrics...",
+            total=100,
+        )
+        get_unknown_metrics_response = client.get(
+            f"http://erebe-vm9.i3s.unice.fr:8000/core/api/project/{project_id}/metrics/unknown/count",
+            timeout=100,
+        )
+        get_reused_metrics_response = client.get(
+            f"http://erebe-vm9.i3s.unice.fr:8000/core/api/project/{project_id}/metrics/reused/count",
+            timeout=100,
+        )
+        get_inconsistencies_metrics_response = client.get(
+            f"http://erebe-vm9.i3s.unice.fr:8000/core/api/project/{project_id}/metrics/inconsistencies/count",
+            timeout=100,
+        )
+        progress.update(progress_task, advance=100)
+
+    table = Table(title="Metrics")
+    table.add_column("Unknown (count)", style="cyan")
+    table.add_column("Reuse (count)", style="magenta")
+    table.add_column("Inconsistencies (count)", style="green")
+
+    table.add_row(
+        get_unknown_metrics_response.json(),
+        get_reused_metrics_response.json(),
+        get_inconsistencies_metrics_response.json(),
+    )
 
     console.print(table)
 
@@ -117,6 +151,10 @@ with httpx.Client(auth=ApiTokenHttpxAuth()) as client:
             )
             posted_llm_profile_response.raise_for_status()
             progress.update(progress_task, advance=100)
+        
+        # Retrieving metrics
+        get_metrics(console, client, created_project_id)
+
         # # Retrieving generated inconsistencies
         # get_inconsistencies(
         #     console,
