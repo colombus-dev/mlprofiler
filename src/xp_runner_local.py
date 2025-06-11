@@ -1,6 +1,7 @@
 import json
 import subprocess
 import sys
+import time
 
 import httpx
 import typer
@@ -82,6 +83,70 @@ def get_inconsistencies(
         table.add_row(*[str(e) for e in inconsistency.values()])
 
     console.print(table)
+
+
+def post_inconsistencies_curl(
+    console: Console, project_id: str, notebook_id: str
+):
+    import subprocess
+    import json
+    from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
+
+    # Prepare curl command parameters
+    curl_data = json.dumps({
+        "notebookId": notebook_id,
+        "projectId": project_id
+    })
+
+    # Create a custom progress display
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[bold blue]{task.description}"),
+        BarColumn(),
+        TimeElapsedColumn(),
+    ) as progress:
+        # Add task that will run indefinitely until the curl command completes
+        progress_task = progress.add_task(
+            "[bold]Retrieving inconsistencies...", total=None
+        )
+
+        # Execute curl command with subprocess
+        try:
+            result = subprocess.run(
+                [
+                    "curl", "-X", "POST",
+                    "-H", "Content-Type: application/json",
+                    "-d", curl_data,
+                    "http://localhost:1701/inconsistencies"
+                ],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            # Process completed
+            progress.stop_task(progress_task)
+
+            # Try to parse the response
+            try:
+                response_data = json.loads(result.stdout)
+                console.print(f"[bold green]Successfully created inconsistencies")
+
+                # Display the number of inconsistencies inserted
+                if isinstance(response_data, dict) and "count" in response_data:
+                    console.print(f"[bold green]Number of inconsistencies inserted: {response_data['count']}")
+                elif isinstance(response_data, int):
+                    console.print(f"[bold green]Number of inconsistencies inserted: {response_data}")
+                else:
+                    console.print(f"[bold yellow]Response received: {response_data}")
+            except json.JSONDecodeError:
+                console.print("[bold yellow]Could not parse JSON response. Raw output:")
+                console.print(result.stdout)
+
+        except subprocess.CalledProcessError as e:
+            console.print(f"[bold red]Error calling curl: {e}")
+            console.print(f"[bold red]Command output: {e.stdout}")
+            console.print(f"[bold red]Error output: {e.stderr}")
 
 
 def main(student_index: int = 0, notebook_path: str = None):
@@ -180,7 +245,14 @@ def main(student_index: int = 0, notebook_path: str = None):
             finally:
                 progress.update(progress_task, advance=100)
 
-        # Retrieving generated inconsistencies
+        with Progress() as progress:
+            delay_seconds = 20
+            delay_task = progress.add_task("[bold yellow]Waiting for inconsistencies to be calculated...", total=delay_seconds)
+            for _ in range(delay_seconds):
+                time.sleep(1)
+                progress.update(delay_task, advance=1)
+            console.print("[bold green]Delay complete, retrieving inconsistencies...")
+
         get_inconsistencies(
             console,
             client,
