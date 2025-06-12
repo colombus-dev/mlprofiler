@@ -73,15 +73,67 @@ def get_inconsistencies(
         )
         progress.update(progress_task, advance=100)
 
-    table = Table(title="Inconsistencies")
-    table.add_column("Position", style="cyan")
-    table.add_column("StepImpl IDs", style="magenta")
-    table.add_column("MetaStep Names", style="green")
+    inconsistencies = get_inconsistencies_response.json()
+    if not inconsistencies:
+        console.print("[yellow]No inconsistencies found for this notebook.")
+        return
 
-    for inconsistency in get_inconsistencies_response.json():
-        table.add_row(*[str(e) for e in inconsistency])
+    table = Table(title="Inconsistencies")
+    table.add_column("ID", style="cyan")
+    table.add_column("Detection Date", style="magenta")
+    table.add_column("Description", style="green")
+    table.add_column("Resolved", style="blue")
+    table.add_column("Elements Count", style="yellow")
+
+    for inconsistency in inconsistencies:
+        table.add_row(
+            inconsistency["inconsistency_id"],
+            inconsistency["detection_date"],
+            inconsistency["description"],
+            str(inconsistency["is_resolved"]),
+            str(len(inconsistency["elements"]))
+        )
 
     console.print(table)
+    
+    # Pour chaque inconsistance, afficher le détail des éléments
+    for inconsistency in inconsistencies:
+        console.print(f"\n[bold]Details for inconsistency {inconsistency['inconsistency_id']}[/bold]")
+        
+        elements_table = Table(title="Elements")
+        elements_table.add_column("Element ID", style="cyan")
+        elements_table.add_column("Library", style="magenta")
+        elements_table.add_column("Function", style="green")
+        elements_table.add_column("MetaStep", style="blue")
+        
+        for element in inconsistency["elements"]:
+            elements_table.add_row(
+                element["notebook_element_id"],
+                element["library"] or "-",
+                element["function"] or "-",
+                element["metastep_name"] or "Unknown"
+            )
+        
+        console.print(elements_table)
+        
+        # Afficher les décisions s'il y en a
+        if inconsistency["decisions"]:
+            decisions_table = Table(title="Decisions")
+            decisions_table.add_column("Decision ID", style="cyan")
+            decisions_table.add_column("Date", style="magenta")
+            decisions_table.add_column("Resolution Type", style="green")
+            decisions_table.add_column("User", style="blue")
+            
+            for decision in inconsistency["decisions"]:
+                decisions_table.add_row(
+                    decision["decision_id"],
+                    decision["decision_date"],
+                    decision["resolution_type"] or "-",
+                    decision["user_name"] or "Anonymous"
+                )
+            
+            console.print(decisions_table)
+
 
 
 def get_metrics(console: Console, client: httpx.Client, project_id: str):
@@ -155,10 +207,10 @@ with httpx.Client(auth=ApiTokenHttpxAuth()) as client:
         # Retrieving metrics
         get_metrics(console, client, created_project_id)
 
-        # # Retrieving generated inconsistencies
-        # get_inconsistencies(
-        #     console,
-        #     client,
-        #     created_project_id,
-        #     posted_notebook_profile_id["notebook_id"],
-        # )
+        # Retrieving generated inconsistencies
+        get_inconsistencies(
+            console,
+            client,
+            created_project_id,
+            posted_notebook_profile_id["notebook_id"],
+        )
