@@ -1,7 +1,5 @@
 from .utils import ParserElement, profile_python_content
 
-from typing import Any
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -41,7 +39,7 @@ def profile_notebook(params: ProfileNotebookParams) -> list[LLMResult]:
         the LLM profiling result
     """
     result_profile = profile_python_content(
-        params.python_content, params.parser_elements
+        params.notebook_file_stem, params.python_content, params.parser_elements
     )
 
     res: list[LLMResult] = []

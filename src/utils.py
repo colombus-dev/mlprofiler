@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 
@@ -10,7 +11,12 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from openai import OpenAI
 
 
-LMSTUDIO_API_URL = os.getenv("LMSTUDIO_API_URL", "localhost:1234")
+APP_VERSION = "0.1.0-MLProfile"
+
+INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "localhost:8000")
+MODEL_ID = os.getenv(
+    "MODEL_ID", "qwen2.5-coder:7b"
+)  # qwen/qwen2.5-coder-7b-instruct for LMS
 
 
 class ParserElement(BaseModel):
@@ -65,7 +71,7 @@ algorithms_classification_response_schema = (
 
 # LLM client
 
-client = OpenAI(base_url=f"http://{LMSTUDIO_API_URL}/v1", api_key="lm-studio")
+client = OpenAI(base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key")
 
 
 def _cell_source_as_list(source: list[str] | str):
@@ -102,26 +108,40 @@ def save_result(json_profile: dict, original_file: Path, profile_out_dir: Path |
         json.dump(json_profile, f)
 
 
-def profile_python_content(python_content: str, famix_subgraphes: list[ParserElement]):
-    json_profile = []
+def profile_python_content(
+    python_filename: str, python_content: str, famix_subgraphes: list[ParserElement]
+):
+    profile_source = []
+    profile_outputs = {}
+    profile_json = {
+        "name": python_filename,
+        "metadata": {
+            "version": APP_VERSION,
+            "generation_date": str(datetime.datetime.now()),
+        },
+        "source": profile_source,
+        "outputs": profile_outputs,
+    }
     prev_step = None
 
     system_prompt_content = system_prompt_template.render(
         steps_taxonomy=steps_taxonomy, all_python_code=python_content
     )
-    algorithms_system_prompt_content = algorithms_system_prompt_template.render(
-        algorithm_families_taxonomy=available_algorithms["algoFamilies"],
-        algorithm_names_taxonomy=available_algorithms["algoNames"],
-        all_python_code=python_content,
-    )
+    # algorithms_system_prompt_content = algorithms_system_prompt_template.render(
+    #     algorithm_families_taxonomy=available_algorithms["algoFamilies"],
+    #     algorithm_names_taxonomy=available_algorithms["algoNames"],
+    #     all_python_code=python_content,
+    # )
 
     for subgraph in (pbar := tqdm(famix_subgraphes)):
         line = subgraph.source
         pbar.set_description(f"Classifying line: {line[:50].ljust(50).strip()}")
 
         user_prompt_content = user_prompt_template.render(python_code_line=line)
+
+        # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
         completion = client.chat.completions.create(
-            model="qwen/qwen2.5-coder-7b-instruct",
+            model=MODEL_ID,
             messages=[
                 {
                     "role": "system",
@@ -130,54 +150,59 @@ def profile_python_content(python_content: str, famix_subgraphes: list[ParserEle
                 {"role": "user", "content": user_prompt_content},
             ],
             response_format=json.loads(classification_response_schema),
-            temperature=0,  # 0 for ~ determinism
+            temperature=0,
+            # top_p=1,
+            # frequency_penalty=0,
+            # presence_penalty=0
         )
 
         classified_line = json.loads(completion.choices[0].message.content)
 
-        algorithms_user_prompt_content = algorithms_user_prompt_template.render(
-            python_code_line=line
-        )
-        algorithms_completion = client.chat.completions.create(
-            model="qwen/qwen2.5-coder-7b-instruct",
-            messages=[
-                {
-                    "role": "system",
-                    "content": algorithms_system_prompt_content,
-                },
-                {"role": "user", "content": algorithms_user_prompt_content},
-            ],
-            response_format=json.loads(algorithms_classification_response_schema),
-            temperature=0,  # 0 for ~ determinism
-        )
+        # algorithms_user_prompt_content = algorithms_user_prompt_template.render(
+        #     python_code_line=line
+        # )
+        # algorithms_completion = client.chat.completions.create(
+        #     model="qwen/qwen2.5-coder-7b-instruct",
+        #     messages=[
+        #         {
+        #             "role": "system",
+        #             "content": algorithms_system_prompt_content,
+        #         },
+        #         {"role": "user", "content": algorithms_user_prompt_content},
+        #     ],
+        #     response_format=json.loads(algorithms_classification_response_schema),
+        #     temperature=0,  # 0 for ~ determinism
+        # )
 
-        algorithms_classified_line = json.loads(
-            algorithms_completion.choices[0].message.content
-        )
+        # algorithms_classified_line = json.loads(
+        #     algorithms_completion.choices[0].message.content
+        # )
 
         res = {
             "id": subgraph.id,
-            "algoFamily": algorithms_classified_line["algorithm_family"],
-            "algoName": algorithms_classified_line["algorithm_name"],
+            "algoFamily": None,
+            # "algoFamily": algorithms_classified_line["algorithm_family"],
+            "algoName": None,
+            # "algoName": algorithms_classified_line["algorithm_name"],
             "library": subgraph.library,
             "function": subgraph.function,
             "tasks": [{"name": line, "tasks": []}],
         }
 
-        if (
-            algorithms_classified_line["algorithm_family"]
-            not in available_algorithms["algoFamilies"]
-        ):
-            available_algorithms["algoFamilies"].append(
-                algorithms_classified_line["algorithm_family"]
-            )
-        if (
-            algorithms_classified_line["algorithm_name"]
-            not in available_algorithms["algoNames"]
-        ):
-            available_algorithms["algoNames"].append(
-                algorithms_classified_line["algorithm_name"]
-            )
+        # if (
+        #     algorithms_classified_line["algorithm_family"]
+        #     not in available_algorithms["algoFamilies"]
+        # ):
+        #     available_algorithms["algoFamilies"].append(
+        #         algorithms_classified_line["algorithm_family"]
+        #     )
+        # if (
+        #     algorithms_classified_line["algorithm_name"]
+        #     not in available_algorithms["algoNames"]
+        # ):
+        #     available_algorithms["algoNames"].append(
+        #         algorithms_classified_line["algorithm_name"]
+        #     )
 
         with open("resources/algorithms.json", "w") as f:
             json.dump(available_algorithms, f, indent=4)
@@ -196,18 +221,19 @@ def profile_python_content(python_content: str, famix_subgraphes: list[ParserEle
             current_step = "Library Loading"
 
         if prev_step == current_step:
-            json_profile[-1]["tasks"].append(res)
+            profile_source[-1]["tasks"].append(res)
         else:
-            json_profile.append(
+            profile_source.append(
                 {
                     "name": current_step,
                     "tasks": [res],
+                    "outputs_ids": [],
                 }
             )
 
         prev_step = current_step
 
-    return json_profile
+    return profile_json
 
 
 def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
@@ -247,4 +273,6 @@ def profile_notebook_file(notebook_path: Path, famix_subgraphs_path: Path):
         for block in _cell_source_as_list(cell["source"])
     ]
 
-    return profile_python_content(all_python_code, famix_subgraphs_content)
+    return profile_python_content(
+        notebook_path.stem, all_python_code, famix_subgraphs_content
+    )
