@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# config
-model_identifier="qwen2.5-coder:7b"
+# expects the MODEL_ID environment variable to be set.
 
 # pulling model
-docker exec -ti profil-platform-poc-profil_ollama-1 ollama pull $model_identifier
+docker exec -ti profil-platform-poc-profil_ollama-1 ollama pull $MODEL_ID || exit 1
 
-echo "$model_identifier is ready!"
+echo "$MODEL_ID is ready!"

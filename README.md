@@ -1,12 +1,15 @@
 # profil-platform-poc - LLM
 
-TODO
+The LLM module defines the CLI and API used to compute profiles using an LLM inference server.
+
+This module does not detail the inference server deployment. Check the corresponding [docker-compose.yml](../docker-compose.yml) file for more details about the inference server.
 
 ## Requirements
 
-In addition to the root project, the LLM sub-project has the following requirements:
+Additionaly to the root project's requirements:
 
-* LM studio (https://lmstudio.ai/) and the lms CLI (https://lmstudio.ai/docs/cli)
+* The **inference server** reachable at the address defined by the **INFERENCE_API_URL** environment variable.
+* The loaded **LLM model** defined by the **MODEL_ID** environment variable.
 
 ## How to use it
 
@@ -16,12 +19,10 @@ In addition to the root project, the LLM sub-project has the following requireme
 $ poetry install --with llm
 ```
 
-### Start the LM Studio server
-
-*Note: Depending on your system, you may need to start the LM Studio application before being able to start the lms server*
+### Load the LLM model
 
 ```bash
-$ ./scripts/start_lms_server.sh
+$ MODEL_ID=qwen2.5-coder:7b ./scripts/init_ollama.sh
 ```
 
 ### Run the CLI
