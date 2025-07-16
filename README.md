@@ -2,7 +2,7 @@
 
 The LLM module defines the CLI and API used to compute profiles using an LLM inference server.
 
-This module does not detail the inference server deployment. Check the corresponding [docker-compose.yml](../docker-compose.yml) file for more details about the inference server.
+This module does not detail the inference server deployment. Check the corresponding [README.md](../README.md) and [docker-compose.yml](../docker-compose.yml) files for more details about the inference server and its deployment.
 
 ## Requirements
 
@@ -13,10 +13,16 @@ Additionaly to the root project's requirements:
 
 ## How to use it
 
-### Install dependencies
+### Build the docker image
+
+*Note: Currently, it is required to build the llm API docker image at the root of the project. This will be changed in the future to ease image building.*
+
+The following command build the llm API docker image:
 
 ```bash
-$ poetry install --with llm
+$ cd ..  # if your bash session is located in the llm/ directory
+$ docker build -f llm/Dockerfile --tag mlprofile:llm_api-v0.1 .
+$ cd -   # if your bash session was located in the llm/ directory
 ```
 
 ### Load the LLM model
@@ -25,8 +31,25 @@ $ poetry install --with llm
 $ MODEL_ID=qwen2.5-coder:7b ./scripts/init_ollama.sh
 ```
 
-### Run the CLI
+### Profile a notebook
+
+#### Using the API
+
+*Note: See http://localhost:8081/docs#/default/profile_notebook_profile_post for more information.*
+
+```curl
+$ curl 'http://localhost:8081/profile' \
+    -H 'Content-Type: application/json' \
+    --data-raw $'{...}'
+```
+
+#### Using the CLI
 
 ```bash
-$ poetry run python src/cli.py data/ data/
+$ docker run --network profil-platform-poc_default \
+    -e INFERENCE_API_URL=profil_ollama:11434 \
+    -v ./data:/code/data \
+    -v ./resources:/code/resources \
+    -v ./out:/code/out \
+    profil-platform-poc-llm_api:latest python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
 ```

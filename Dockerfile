@@ -37,6 +37,6 @@ COPY ./llm/templates/ /code/templates/
 
 COPY ./llm/resources/ /code/resources/
 
-COPY ./llm/src/main.py ./llm/src/utils.py ./llm/src/__init__.py /code/app/
+COPY ./llm/src/ /code/app/
 
 CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8081"]
