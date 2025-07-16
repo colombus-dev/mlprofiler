@@ -11,8 +11,9 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from openai import OpenAI
 
 
-APP_VERSION = "0.1.0-MLProfile"
+APP_VERSION = "0.2.0-MLProfile"
 
+TAXONOMY_NAME = os.getenv("TAXONOMY_NAME", "headergen")
 INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "localhost:8000")
 MODEL_ID = os.getenv(
     "MODEL_ID", "qwen2.5-coder:7b"
@@ -40,7 +41,7 @@ env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
 )
 
-system_prompt_template = env.get_template("system_prompt.jinja")
+system_prompt_template = env.get_template(f"system_prompt_{TAXONOMY_NAME}_taxonomy.jinja")
 user_prompt_template = env.get_template("user_prompt.jinja")
 classification_response_schema_template = env.get_template(
     "classification_response_schema.jinja"
@@ -57,7 +58,7 @@ with open("resources/algorithms.json") as f:
 
 # loading the stages/steps
 # source: https://github.com/secure-software-engineering/HeaderGen/blob/1ea52265ca4e76bb202a2deb26f3b9394d3caa95/framework_models/__init__.py#L28
-with open("resources/phases_groups.json") as f:
+with open(f"resources/{TAXONOMY_NAME}_taxonomy.json") as f:
     stages_steps_taxonomy = json.load(f)
     steps_taxonomy = [v for s in stages_steps_taxonomy.values() for v in s]
 
@@ -117,6 +118,7 @@ def profile_python_content(
         "name": python_filename,
         "metadata": {
             "version": APP_VERSION,
+            "taxonomy": TAXONOMY_NAME,
             "generation_date": str(datetime.datetime.now()),
         },
         "source": profile_source,

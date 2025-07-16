@@ -48,6 +48,7 @@ $ curl 'http://localhost:8081/profile' \
 ```bash
 $ docker run --network profil-platform-poc_default \
     -e INFERENCE_API_URL=profil_ollama:11434 \
+    -e TAXONOMY_NAME=dspipelines \
     -v ./data:/code/data \
     -v ./resources:/code/resources \
     -v ./out:/code/out \

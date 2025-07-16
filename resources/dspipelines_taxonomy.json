@@ -1,0 +1,21 @@
+{
+    "Pre-processing Layer": [
+        "Data acquisition",
+        "Data preparation",
+        "Storage"
+    ],
+    "Model Building Layer": [
+        "Feature Engineering",
+        "Modeling",
+        "Training",
+        "Evaluation",
+        "Prediction"
+    ],
+    "Post-processing Layer": [
+        "Interpretation",
+        "Communication",
+        "Deployment"
+    ],
+    "Library Loading": ["Library Loading"],
+    "Others": ["Others"]
+}
