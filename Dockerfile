@@ -33,10 +33,12 @@ RUN chown -R standarduser:standarduser /code
 
 USER standarduser
 
+COPY ./common/ /code/common/
+
 COPY ./llm/templates/ /code/templates/
 
 COPY ./llm/resources/ /code/resources/
 
-COPY ./llm/src/ /code/app/
+COPY ./llm/app/ /code/app/
 
 CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8081"]
