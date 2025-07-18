@@ -1,6 +1,7 @@
 from app.custom_types import SupportedProfilerFunction
 from app.profiling_functions._base import BaseMLProfiler
 from app.profiling_functions.dspipelines import DSPipelinesProfiler
+from app.profiling_functions.headergen import HeaderGenProfiler
 from app.profiling_functions.llm import LLMProfiler
 
 
@@ -16,6 +17,10 @@ def get_profiler(
             )
         case "dspipelines":
             return DSPipelinesProfiler(
+                python_content=python_content, taxonomy_name=taxonomy_name
+            )
+        case "headergen":
+            return HeaderGenProfiler(
                 python_content=python_content, taxonomy_name=taxonomy_name
             )
         case _:
