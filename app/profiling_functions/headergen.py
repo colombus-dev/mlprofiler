@@ -1,5 +1,7 @@
 import httpx
 
+from collections import Counter
+
 from app.custom_types import ParserSubgraph
 from app.profiling_functions._base import BaseMLProfiler
 
@@ -17,5 +19,12 @@ class HeaderGenProfiler(BaseMLProfiler):
         )
         if ml_label_response.is_error:
             return default_step
-        retrieved_step = ml_label_response.json()
-        return retrieved_step if retrieved_step in self.steps_taxonomy else default_step
+        retrieved_steps = ml_label_response.json()
+        compatible_steps = [
+            step for step in retrieved_steps if step in self.steps_taxonomy
+        ]
+        if not compatible_steps:
+            return default_step
+        compatible_steps_counter = Counter(compatible_steps)
+        # TODO: currently only supporting the first step
+        return compatible_steps_counter.most_common(1)[0][0]
