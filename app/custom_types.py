@@ -16,5 +16,5 @@ class ParserSubgraph(BaseModel):
 ParserSubgraphListAdapter = TypeAdapter(list[ParserSubgraph])
 
 
-SupportedTaxonomiesFunction = Literal["headergen", "dspipelines"]
+SupportedTaxonomiesFunction = Literal["headergen", "dspipelines", "daswow"]
 SupportedProfilerFunction = Literal["llm", "dspipelines", "headergen"]

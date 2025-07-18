@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 
-from app.custom_types import ParserSubgraph
+from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
 from app.profiling_functions._utils import load_taxonomy
 
 
 class BaseMLProfiler(ABC):
 
-    def __init__(self, python_content: str, taxonomy_name: str) -> None:
+    def __init__(
+        self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction
+    ) -> None:
         super().__init__()
 
         self.python_content = python_content

@@ -5,7 +5,7 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from openai import OpenAI
 
-from app.custom_types import ParserSubgraph
+from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
 from app.profiling_functions._base import BaseMLProfiler
 
 
@@ -21,7 +21,7 @@ env = Environment(
 
 class LLMProfiler(BaseMLProfiler):
 
-    def __init__(self, python_content: str, taxonomy_name: str):
+    def __init__(self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction):
         super().__init__(python_content, taxonomy_name)
 
         # loading the LLM system and user prompt templates
@@ -70,8 +70,11 @@ class LLMProfiler(BaseMLProfiler):
             # frequency_penalty=0,
             # presence_penalty=0
         )
+        completion_content = completion.choices[0].message.content
+        if not completion_content:
+            return default_step
 
-        classified_line = json.loads(completion.choices[0].message.content)
+        classified_line = json.loads(completion_content)
         return (
             classified_line["class"]
             if classified_line["class"] in self.steps_taxonomy

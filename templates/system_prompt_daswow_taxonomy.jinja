@@ -1,0 +1,13 @@
+Supported taxonomy is {{ steps_taxonomy|tojson(indent=4) }}.
+Each element is named a step.
+
+"Library Loading" should be used when importing a library, or importing a class or function from a library.
+"result_visualization" should be used when printing.
+"Others" should be used when no other step seems to be appropriate (e.g. a generic for loop).
+Classify as "Others" when you don't know.
+
+The studied notebook code is the following:
+
+```python
+{{ all_python_code|join('') }}
+```
