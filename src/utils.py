@@ -180,9 +180,9 @@ def profile_python_content(
 
         res = {
             "id": subgraph.id,
-            "algoFamily": None,
+            "algoFamily": "None", #Should be a string
             # "algoFamily": algorithms_classified_line["algorithm_family"],
-            "algoName": None,
+            "algoName": "None",
             # "algoName": algorithms_classified_line["algorithm_name"],
             "library": subgraph.library,
             "function": subgraph.function,

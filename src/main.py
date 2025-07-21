@@ -41,6 +41,7 @@ def profile_notebook(params: ProfileNotebookParams) -> list[LLMResult]:
     result_profile = profile_python_content(
         params.notebook_file_stem, params.python_content, params.parser_elements
     )
+    result_profile = result_profile["source"]
 
     res: list[LLMResult] = []
     i = 0

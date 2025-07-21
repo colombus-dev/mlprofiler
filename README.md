@@ -25,6 +25,12 @@ $ docker build -f llm/Dockerfile --tag mlprofile:llm_api-v0.1 .
 $ cd -   # if your bash session was located in the llm/ directory
 ```
 
+If you want to use a local LLM inference server. Start the inference server:
+
+```bash
+./scripts/start_lms_server.sh
+```
+
 ### Load the LLM model
 
 ```bash
