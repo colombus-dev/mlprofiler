@@ -21,7 +21,7 @@ The following command build the llm API docker image:
 
 ```bash
 $ cd ..  # if your bash session is located in the llm/ directory
-$ docker build -f llm/Dockerfile --tag mlprofile:llm_api-v0.1 .
+$ docker build --platform linux/amd64 -f llm/Dockerfile --tag mlprofile:llm_api-v0.1 .
 $ cd -   # if your bash session was located in the llm/ directory
 ```
 
@@ -39,7 +39,7 @@ $ MODEL_ID=qwen2.5-coder:7b ./scripts/init_ollama.sh
 
 ### Profile a notebook
 
-#### Using the API
+#### Using the API (legacy)
 
 *Note: See http://localhost:8081/docs#/default/profile_notebook_profile_post for more information.*
 
@@ -49,13 +49,29 @@ $ curl 'http://localhost:8081/profile' \
     --data-raw $'{...}'
 ```
 
-#### Using the CLI
+#### Using the CLI (recommended)
+
+##### Ollama
 
 ```bash
-$ docker run --network profil-platform-poc_default \
+$ docker run --platform linux/amd64 \
+    --network profil-platform-poc_default \
     -e INFERENCE_API_URL=profil_ollama:11434 \
     -v ./data:/code/data \
     -v ./resources:/code/resources \
     -v ./out:/code/out \
-    profil-platform-poc-llm_api:latest python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
+    mlprofile:llm_api-v0.1 python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
+```
+
+##### LMStudio
+
+```bash
+docker run --platform linux/amd64 \
+    --network profil-platform-poc_default \
+    -e INFERENCE_API_URL=host.docker.internal:1234 \
+    -e MODEL_ID=qwen/qwen2.5-coder-7b-instruct \
+    -v ./data:/code/data \
+    -v ./resources:/code/resources \
+    -v ./out:/code/out \
+    mlprofile:llm_api-v0.1 python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
 ```
