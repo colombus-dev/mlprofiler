@@ -13,11 +13,6 @@ from openai import OpenAI
 
 APP_VERSION = "0.1.0-MLProfile"
 
-INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "localhost:8000")
-MODEL_ID = os.getenv(
-    "MODEL_ID", "qwen2.5-coder:7b"
-)  # qwen/qwen2.5-coder-7b-instruct for LMS
-
 
 class ParserElement(BaseModel):
     # TODO: move this to common and use it in mock and core
@@ -69,10 +64,6 @@ algorithms_classification_response_schema = (
     algorithms_classification_response_schema_template.render()
 )
 
-# LLM client
-
-client = OpenAI(base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key")
-
 
 def _cell_source_as_list(source: list[str] | str):
     """Return the source cell content as a list.
@@ -109,8 +100,21 @@ def save_result(json_profile: dict, original_file: Path, profile_out_dir: Path |
 
 
 def profile_python_content(
-    python_filename: str, python_content: str, famix_subgraphes: list[ParserElement]
+    python_filename: str,
+    python_content: str,
+    famix_subgraphes: list[ParserElement],
+    model_id: str | None = None,
+    inference_api_url: str | None = None,
 ):
+    model_id = model_id or os.getenv("MODEL_ID", "qwen2.5-coder:7b")
+    inference_api_url = inference_api_url or os.getenv("INFERENCE_API_URL", "localhost:8000")
+
+    print(f"http://{inference_api_url}/v1")
+
+    # LLM client
+
+    client = OpenAI(base_url=f"http://{inference_api_url}/v1", api_key="inference-key")
+
     profile_source = []
     profile_outputs = {}
     profile_json = {
@@ -135,13 +139,15 @@ def profile_python_content(
 
     for subgraph in (pbar := tqdm(famix_subgraphes)):
         line = subgraph.source
-        pbar.set_description(f"Classifying line: {line[:50].ljust(50).strip()}")
+        pbar.set_description(
+            f"Classifying line: {line[:50].ljust(50).strip().replace('\n', '\t')}"
+        )
 
         user_prompt_content = user_prompt_template.render(python_code_line=line)
 
         # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
         completion = client.chat.completions.create(
-            model=MODEL_ID,
+            model=model_id,
             messages=[
                 {
                     "role": "system",
@@ -180,7 +186,7 @@ def profile_python_content(
 
         res = {
             "id": subgraph.id,
-            "algoFamily": "None", #Should be a string
+            "algoFamily": "None",  # Should be a string
             # "algoFamily": algorithms_classified_line["algorithm_family"],
             "algoName": "None",
             # "algoName": algorithms_classified_line["algorithm_name"],

@@ -17,6 +17,8 @@ class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
     python_content: str
     parser_elements: list[ParserElement]
+    model_id: str | None = None
+    inference_api_url: str | None = None
 
 
 class ProfileNotebookResponse(BaseModel):
@@ -39,7 +41,7 @@ def profile_notebook(params: ProfileNotebookParams) -> list[LLMResult]:
         the LLM profiling result
     """
     result_profile = profile_python_content(
-        params.notebook_file_stem, params.python_content, params.parser_elements
+        params.notebook_file_stem, params.python_content, params.parser_elements, params.model_id, params.inference_api_url
     )
     result_profile = result_profile["source"]
 
@@ -58,6 +60,26 @@ def profile_notebook(params: ProfileNotebookParams) -> list[LLMResult]:
             i += 1
 
     return res
+
+
+@app.post("/profile/v2")
+def profile_notebook(params: ProfileNotebookParams):
+    """Mock the given notebook (LLM-like) profiling.
+
+    Parameters
+    ----------
+    params : ProfileNotebookParams
+        the notebook file step (e.g. abc/myfile.ipynb -> myfile),
+        corresponding python code content and Moose parsing result
+
+    Returns
+    -------
+    list[Any]
+        the LLM profiling result
+    """
+    return profile_python_content(
+        params.notebook_file_stem, params.python_content, params.parser_elements, params.model_id, params.inference_api_url
+    )
 
 
 if __name__ == "__main__":
