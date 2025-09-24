@@ -4,6 +4,8 @@
 
 ### Headergen
 
+*Note: This is the adapted taxonomy of HeaderGen with less overlapping*
+
 #### Source
 
 * **article**: VENKATESH, Ashwin Prasad Shivarpatna, WANG, Jiawei, LI, Li, et al. Enhancing comprehension and navigation in jupyter notebooks with static analysis. In : 2023 IEEE international Conference on software analysis, evolution and reengineering (SANER). IEEE, 2023. p. 391-401.

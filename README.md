@@ -17,7 +17,7 @@ Additionaly to the root project's requirements:
 
 ### Profile a notebook
 
-#### Using the API
+#### Using the API (legacy)
 
 *Note: See http://localhost:8081/docs#/default/profile_notebook_profile_post for more information.*
 
@@ -27,14 +27,33 @@ $ curl 'http://localhost:8081/profile' \
     --data-raw $'{...}'
 ```
 
-#### Using the CLI
+#### Using the CLI (recommended)
+
+##### vLLM
 
 *Note: You can configure the taxonomy and "profiler" used to compute the ML profile by editing the [.env](.env) file.*
 
 The following command computes the ML profile of the provided notebook (or directory of notebooks) and subgraphes (or directory of subgraphes) by sending queries to the API:
 
 ```bash
-$ docker exec --env-file .env profil-platform-poc-llm_api-1 python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
+$ docker run --platform linux/amd64 \
+    --network profil-platform-poc_default \
+    -e INFERENCE_API_URL=profil_vllm:11434 \
+    -v ./data:/code/data \
+    -v ./resources:/code/resources \
+    -v ./out:/code/out \
+    mlprofile:llm_api-v0.1 python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
 ```
 
-The result profile will be saved in the [out/](./out/) directory.
+##### LMStudio
+
+```bash
+docker run --platform linux/amd64 \
+    --network profil-platform-poc_default \
+    -e INFERENCE_API_URL=host.docker.internal:1234 \
+    -e MODEL_ID=qwen/qwen2.5-coder-7b-instruct \
+    -v ./data:/code/data \
+    -v ./resources:/code/resources \
+    -v ./out:/code/out \
+    mlprofile:llm_api-v0.1 python app/cli.py data/corpus_students/student_0.ipynb data/corpus_students/student_0_subgraph.json
+```

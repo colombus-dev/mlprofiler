@@ -26,7 +26,7 @@ COPY --from=llm-api-builder /wheels /wheels
 
 RUN pip install --no-cache-dir --no-index --no-deps --find-links=/wheels -r requirements.txt \
     && rm -rf /wheels/
-    
+
 RUN adduser -D standarduser
 
 RUN chown -R standarduser:standarduser /code
