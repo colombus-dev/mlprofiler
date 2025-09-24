@@ -37,7 +37,7 @@ The following command computes the ML profile of the provided notebook (or direc
 
 ```bash
 $ docker run --platform linux/amd64 \
-    --network profil-platform-poc_default \
+    --network mlprofile_network \
     -e INFERENCE_API_URL=profil_vllm:11434 \
     -v ./data:/code/data \
     -v ./resources:/code/resources \
@@ -49,7 +49,7 @@ $ docker run --platform linux/amd64 \
 
 ```bash
 docker run --platform linux/amd64 \
-    --network profil-platform-poc_default \
+    --network mlprofile_network \
     -e INFERENCE_API_URL=host.docker.internal:1234 \
     -e MODEL_ID=qwen/qwen2.5-coder-7b-instruct \
     -v ./data:/code/data \
