@@ -1,7 +1,7 @@
 {
     "Pre-processing Layer": [
-        "Data acquisition",
-        "Data preparation",
+        "Data Acquisition",
+        "Data Preparation",
         "Storage"
     ],
     "Model Building Layer": [

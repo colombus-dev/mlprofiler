@@ -6,7 +6,7 @@ import typer
 
 from pathlib import Path
 from tqdm import tqdm
-from typing import Annotated, Any, Generator, cast
+from typing import Annotated, Any, Generator, Literal, cast
 
 from custom_types import (
     ParserSubgraph,
@@ -132,6 +132,7 @@ def read_famix_subgraphes(famix_subgraphs_path: Path) -> list[ParserSubgraph]:
 def profile_notebooks(
     notebook_file_or_directory: Path,
     famix_subgraphs_file_or_directory: Path,
+    data_type: Annotated[str, typer.Argument()] = "ipynb",  # Literal["ipynb", "py"]
     output_directory: Annotated[Path, typer.Argument()] = None,
     verbose_mode: Annotated[bool, typer.Argument()] = False,
 ):
@@ -154,7 +155,7 @@ def profile_notebooks(
 
     if notebook_file_or_directory.is_dir():
         errors = {}
-        all_notebooks = list(notebook_file_or_directory.rglob("*.ipynb"))
+        all_notebooks = list(notebook_file_or_directory.rglob(f"*.{data_type}"))
         all_subgraphs = list(famix_subgraphs_file_or_directory.rglob("*_subgraph.json"))
         all_save_paths: list[Path] = []
         for notebook_file, subgraph_file in (
@@ -170,7 +171,11 @@ def profile_notebooks(
                         "http://localhost:8081/profile",
                         json={
                             "notebook_file_stem": notebook_file.stem,
-                            "python_content": read_notebook_content(notebook_file),
+                            "python_content": (
+                                read_notebook_content(notebook_file)
+                                if data_type == "ipynb"
+                                else notebook_file.read_text()
+                            ),
                             "parser_elements": [
                                 s.model_dump()
                                 for s in read_famix_subgraphes(subgraph_file)
@@ -198,7 +203,11 @@ def profile_notebooks(
                 f"http://localhost:8081/profile",
                 json={
                     "notebook_file_stem": notebook_file_or_directory.stem,
-                    "python_content": read_notebook_content(notebook_file_or_directory),
+                    "python_content": (
+                        read_notebook_content(notebook_file_or_directory)
+                        if data_type == "ipynb"
+                        else notebook_file_or_directory.read_text()
+                    ),
                     "parser_elements": [
                         s.model_dump()
                         for s in read_famix_subgraphes(

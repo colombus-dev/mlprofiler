@@ -87,9 +87,10 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             "library": subgraph.library,
             "function": subgraph.function,
             "tasks": [{"name": line, "tasks": []}],
+            "metadata": {}
         }
 
-        current_step = profiler.profile_subgraph(subgraph, "Others")
+        current_step, perplexity, logprobs = profiler.profile_subgraph(subgraph, "Others")
         if (
             current_step == "Library Loading"
             and subgraph.step_name != "Library Loading"
@@ -97,6 +98,9 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             current_step = "Others"
         if subgraph.step_name == "Library Loading":
             current_step = "Library Loading"
+        
+        res["metadata"]["perplexity"] = perplexity
+        res["metadata"]["logprobs"] = logprobs
 
         if prev_step == current_step:
             profile_json.source[-1]["tasks"].append(res)

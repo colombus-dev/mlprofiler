@@ -10,19 +10,10 @@ Additionaly to the root project's requirements:
 
 * The platform deployed with at least the llm_api service.
 * (Optional) The **inference server** reachable at the address defined by the **INFERENCE_API_URL** environment variable.
-* (if using the inference server) The loaded **LLM model** defined by the **MODEL_ID** environment variable.
 
 ## How to use it
 
 *Note: Make sure the platform is deployed and the llm_api service is ready.*
-
-### Load the LLM model
-
-If you want to use the inference server, you first need to load the LLM using the following command:
-
-```bash
-$ MODEL_ID=qwen2.5-coder:7b ./scripts/init_ollama.sh
-```
 
 ### Profile a notebook
 

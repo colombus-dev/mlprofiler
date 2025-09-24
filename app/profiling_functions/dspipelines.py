@@ -18,6 +18,11 @@ class DSPipelinesProfiler(BaseMLProfiler):
     def __init__(self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction):
         super().__init__(python_content, taxonomy_name)
 
-    def profile_subgraph(self, subgraph: ParserSubgraph, default_step: str) -> str:
+    def profile_subgraph(
+        self, subgraph: ParserSubgraph, default_step: str
+    ) -> tuple[str, float | None, list[tuple[str, float]]]:
         retrieved_step = steps_functions_mapping.get(subgraph.function, default_step)
-        return retrieved_step if retrieved_step in self.steps_taxonomy else default_step
+        verified_retrieved_step = (
+            retrieved_step if retrieved_step in self.steps_taxonomy else default_step
+        )
+        return (verified_retrieved_step, 1, [(verified_retrieved_step, 1.0)])
