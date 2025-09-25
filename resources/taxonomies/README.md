@@ -38,16 +38,24 @@
 {"stage_name": ["step_a_name", "step_b_name", ...], ...}
 ```
 
-3. Create a new Jinja2 template file in the [templates/](../../templates/) directory for the system prompt following the naming convention **system_prompt_{taxonomy-name}_taxonomy.jinja**. The template content should match the following format (fill [...] with any additional details and explanations):
+3. Create a new Jinja2 template file in the [templates/](../../templates/) directory for the user prompt following the naming convention **user_prompt_{taxonomy-name}_taxonomy.jinja**. The template content should match the following format:
 
-```jinja
-Supported taxonomy is {{ steps_taxonomy|tojson(indent=4) }}.
-Each element is named a step.
+```
+The {{ steps_taxonomy|length }} categories are {{ steps_taxonomy }}.
+
+Each category is explained below:
 
 [...]
 
-The studied notebook code is the following:
+If you can't tell what it is, say Others.
+
+Code snippet:
 
 ```python
-{{ all_python_code|join('') }}
+{{ python_code_line }}
+.```
+
+The classification for the given code snippet is: 
 ```
+
+Fill [...] with any additional details and explanations (e.g., as the definition of each class). Also, remove the dot before ``` in the code snippet.

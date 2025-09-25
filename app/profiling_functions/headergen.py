@@ -13,21 +13,21 @@ class HeaderGenProfiler(BaseMLProfiler):
 
     def profile_subgraph(
         self, subgraph: ParserSubgraph, default_step: str
-    ) -> tuple[str, float | None, list[tuple[str, float]]]:
+    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         # TODO: add docstring to payload for fair comparison
         ml_label_response = httpx.post(
             "http://headergen:54068/get_ml_labels",
             json={f"{subgraph.library}.{subgraph.function}": {"docstring": ""}},
         )
         if ml_label_response.is_error:
-            return (default_step, 1, [(default_step, 1.0)])
+            return (default_step, 1, [[(default_step, 1.0)]])
         retrieved_steps = ml_label_response.json()
         compatible_steps = [
             step for step in retrieved_steps if step in self.steps_taxonomy
         ]
         if not compatible_steps:
-            return (default_step, 1, [(default_step, 1.0)])
+            return (default_step, 1, [[(default_step, 1.0)]])
         compatible_steps_counter = Counter(compatible_steps)
         # TODO: currently only supporting the first step
         retrieved_step = compatible_steps_counter.most_common(1)[0][0]
-        return (retrieved_step, 1, [(retrieved_step, 1.0)])
+        return (retrieved_step, 1, [[(retrieved_step, 1.0)]])

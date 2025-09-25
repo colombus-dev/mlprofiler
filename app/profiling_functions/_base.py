@@ -17,7 +17,7 @@ class BaseMLProfiler(ABC):
     @abstractmethod
     def profile_subgraph(
         self, subgraph: ParserSubgraph, default_step: str
-    ) -> tuple[str, float | None, list[tuple[str, float]]]:
+    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         """Profile a given subgraph based on the steps taxonomy.
 
         Args:
@@ -26,7 +26,7 @@ class BaseMLProfiler(ABC):
                                 result is out of the taxonomy
 
         Returns:
-            tuple[str, float | None, list[tuple[str, float]]]: a tuple containing the step,
-                                perplexity and logprobs. Default values are used when
-                                not using a LLM
+            tuple[str, float | None, list[list[tuple[str, float]]]]: a tuple containing the step,
+                                overall perplexity and logprobs for each next token.
+                                Default values are used when not using a LLM
         """

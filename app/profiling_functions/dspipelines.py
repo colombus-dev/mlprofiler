@@ -20,9 +20,9 @@ class DSPipelinesProfiler(BaseMLProfiler):
 
     def profile_subgraph(
         self, subgraph: ParserSubgraph, default_step: str
-    ) -> tuple[str, float | None, list[tuple[str, float]]]:
+    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         retrieved_step = steps_functions_mapping.get(subgraph.function, default_step)
         verified_retrieved_step = (
             retrieved_step if retrieved_step in self.steps_taxonomy else default_step
         )
-        return (verified_retrieved_step, 1, [(verified_retrieved_step, 1.0)])
+        return (verified_retrieved_step, 1, [[(verified_retrieved_step, 1.0)]])
