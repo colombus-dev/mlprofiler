@@ -23,7 +23,9 @@ class HeaderGenProfiler(BaseMLProfiler):
             return (default_step, 1, [[(default_step, 1.0)]])
         retrieved_steps = ml_label_response.json()
         compatible_steps = [
-            step for step in retrieved_steps if step in self.steps_taxonomy
+            step
+            for step in retrieved_steps
+            if step in self.taxonomy.get_original_steps_names()
         ]
         if not compatible_steps:
             return (default_step, 1, [[(default_step, 1.0)]])

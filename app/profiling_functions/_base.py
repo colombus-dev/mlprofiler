@@ -12,7 +12,7 @@ class BaseMLProfiler(ABC):
         super().__init__()
 
         self.python_content = python_content
-        self.steps_taxonomy = load_taxonomy(taxonomy_name)
+        self.taxonomy = load_taxonomy(taxonomy_name)
 
     @abstractmethod
     def profile_subgraph(

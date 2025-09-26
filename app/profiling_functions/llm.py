@@ -12,6 +12,7 @@ try:
     from langfuse.openai import OpenAI
 except:
     from openai import OpenAI
+    from openai.types.chat import ChatCompletion
 
 from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
 from app.profiling_functions._base import BaseMLProfiler
@@ -42,7 +43,7 @@ class LLMProfiler(BaseMLProfiler):
         )
         self.classification_response_schema = (
             classification_response_schema_template.render(
-                steps_taxonomy=self.steps_taxonomy
+                compatible_step_names=self.taxonomy.get_compatible_steps_names()
             )
         )
         self.system_prompt_content = system_prompt_template.render(
@@ -51,7 +52,7 @@ class LLMProfiler(BaseMLProfiler):
 
         # LLM client
 
-        self.client = OpenAI(
+        self.client: OpenAI = OpenAI(
             base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
         )
 
@@ -59,13 +60,13 @@ class LLMProfiler(BaseMLProfiler):
         self, subgraph: ParserSubgraph, default_step: str
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         user_prompt_content = self.user_prompt_template.render(
-            steps_taxonomy=self.steps_taxonomy,
+            taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
             subgraph_library=subgraph.library,
             subgraph_function=subgraph.function,
         )
 
-        completion = self.client.chat.completions.create(
+        completion: ChatCompletion = self.client.chat.completions.create(
             model=MODEL_ID,
             messages=[
                 {
@@ -76,7 +77,7 @@ class LLMProfiler(BaseMLProfiler):
             ],
             response_format=json.loads(self.classification_response_schema),
             extra_body={
-                # "guided_choice": self.steps_taxonomy,
+                # "guided_choice": self.taxonomy.compatible_steps_names,
                 "chat_template_kwargs": {"enable_thinking": False},
             },
             # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
@@ -87,7 +88,7 @@ class LLMProfiler(BaseMLProfiler):
             presence_penalty=0,
             # see https://cookbook.openai.com/examples/using_logprobs
             logprobs=True,
-            top_logprobs=len(self.steps_taxonomy),
+            top_logprobs=len(self.taxonomy.get_compatible_steps_names()),
         )
 
         completion_content = completion.choices[0].message.content
@@ -136,10 +137,8 @@ class LLMProfiler(BaseMLProfiler):
         )
 
         return (
-            (
-                predicted_class
-                if predicted_class in self.steps_taxonomy
-                else default_step
+            self.taxonomy.get_original_name_from_compatible(
+                predicted_class, default_step
             ),
             perplexity_score,
             all_linear_probs,
