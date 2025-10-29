@@ -1,0 +1,13 @@
+Code snippet:
+
+```python
+{{ python_code_line }}
+```
+
+Among the following categories, which one applies to the code snippet:
+
+{% for taxonomy_element in taxonomy.elements if taxonomy_element.original_name != "Others" -%}
+- {{ taxonomy_element.compatible_name }}: {{ taxonomy_element.definition }}
+{% endfor -%}
+
+If you can't tell what it is, say Others.

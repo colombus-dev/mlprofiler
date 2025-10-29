@@ -1,0 +1,18 @@
+{
+	"type": "json_schema",
+	"json_schema": {
+		"name": "classified_line",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"class": {
+					"enum": {{ compatible_step_names|tojson }},
+					"description": "The category."
+				}
+			},
+			"required": [
+				"class"
+			]
+		}
+	}
+}
