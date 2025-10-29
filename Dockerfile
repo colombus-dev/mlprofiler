@@ -1,44 +1,30 @@
-FROM nlacroix101/mlprofile:base-0.1 AS llm-api-builder
+FROM ghcr.io/astral-sh/uv:python3.12-alpine
+
+# TODO: split builder/runner to reduce image size
 
 LABEL version="0.1"
 LABEL description="This is the image used to build the LLM API."
 
-COPY pyproject.toml poetry.lock ./
+WORKDIR /mlprofiler-builder
 
-# Required to install the poetry-export plugin
-# TODO: limit install to plugin only (currently installing all dependencies from pyproject.toml)
-RUN poetry install --no-cache
+COPY pyproject.toml uv.lock ./
 
-RUN poetry export --only core,llm --without-hashes --format=requirements.txt > requirements.txt
-
-RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
-
-FROM python:3.12-alpine3.21 AS llm-api-runner
-
-LABEL version="0.1"
-LABEL description="This is the image used to run the LLM API."
-
-WORKDIR /code
-
-COPY --from=llm-api-builder /code/requirements.txt ./
-
-COPY --from=llm-api-builder /wheels /wheels
-
-RUN pip install --no-cache-dir --no-index --no-deps --find-links=/wheels -r requirements.txt \
-    && rm -rf /wheels/
+# Install dependencies
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project
 
 RUN adduser -D standarduser
 
-RUN chown -R standarduser:standarduser /code
+RUN chown -R standarduser:standarduser /mlprofiler-builder
 
 USER standarduser
 
-COPY ./common/ /code/common/
+COPY ./templates/ /mlprofiler-builder/templates/
 
-COPY ./llm/templates/ /code/templates/
+COPY ./resources/ /mlprofiler-builder/resources/
 
-COPY ./llm/resources/ /code/resources/
+COPY ./app/ /mlprofiler-builder/app/
 
-COPY ./llm/app/ /code/app/
-
-CMD ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8081"]
+CMD [".venv/bin/fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8081"]

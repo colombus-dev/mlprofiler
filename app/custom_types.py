@@ -4,7 +4,6 @@ from pydantic import BaseModel, TypeAdapter
 
 
 class ParserSubgraph(BaseModel):
-    # TODO: move this to common and use it in mock and core
     id: str
     library: str
     function: str

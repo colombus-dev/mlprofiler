@@ -18,7 +18,7 @@ from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
 from app.profiling_functions._base import BaseMLProfiler
 
 
-INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "profil_vllm:11434")
+INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "mlprofiler_vllm:11434")
 MODEL_ID = os.getenv("MODEL_ID", "qwen2.5-coder:7b")
 
 env = Environment(

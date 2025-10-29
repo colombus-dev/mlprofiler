@@ -1,0 +1,24 @@
+[project]
+name = "mlprofiler"
+version = "0.3.0"
+description = ""
+authors = []
+readme = "README.md"
+requires-python = ">=3.12.0,<4.0"
+dependencies = [
+    "fastapi[standard]>=0.120.2",
+    "jinja2>=3.1.6",
+    "langfuse>=3.8.1",
+    "numpy>=2.3.4",
+    "openai>=2.6.1",
+    "pydantic>=2.12.3",
+    "rich>=14.2.0",
+    "tqdm>=4.67.1",
+    "typer>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=7.0.0",
+]

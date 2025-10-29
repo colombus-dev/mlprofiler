@@ -1,0 +1,87 @@
+services:
+  mlprofiler_api:
+    platform: linux/amd64
+    build: ./
+    ports:
+      - "8081:8081"
+    networks:
+      - colombus-dev_network
+    volumes:
+      - ./data:/code/data:rw
+      - ./resources:/code/resources:rw
+      - ./out:/code/out:rw
+    environment:
+      INFERENCE_API_URL: mlprofiler_vllm:11434
+      MODEL_ID: ${LLM_MODEL_ID}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+      LANGFUSE_HOST: ${LANGFUSE_HOST}
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /code/app
+          initial_sync: true
+        - action: sync
+          path: ./resources
+          target: /code/resources/
+          initial_sync: true
+        - action: sync
+          path: ./templates
+          target: /code/templates/
+          initial_sync: true
+    depends_on:
+      - mlprofiler_vllm
+  # mlprofiler_local_inference:
+  #   platform: linux/amd64
+  #   build: ./
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     INFERENCE_API_URL: host.docker.internal:1234
+  #     MODEL_ID: qwen/qwen2.5-coder-7b-instruct
+  #   depends_on:
+  #     - profil_api
+  #   profiles: [llm_local]
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  mlprofiler_vllm:
+    image: vllm/vllm-openai:v0.10.0
+    command: [
+      "--port", "11434",
+      "--model", "${LLM_MODEL_ID}",
+      # "--reasoning-parser", "${LLM_REASONING_PARSER}",
+      # see https://docs.vllm.ai/en/v0.10.1.1/configuration/conserving_memory.html for memory usage optimization
+      "--quantization", "${LLM_QUANTIZATION}",
+      "--max_model_len", "8192",
+      "--max_num_seqs", "1",
+      "--gpu-memory-utilization", "0.95",
+      "--enforce-eager",
+      # "--limit-mm-per-prompt.image", "0",
+      # "--limit-mm-per-prompt.video", "0",
+      # see https://docs.vllm.ai/en/stable/usage/v1_guide.html#semantic-changes-to-logprobs for logprobs
+      "--logprobs-mode", "processed_logprobs",
+    ]
+    environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+    # VLLM_USE_V1: 0
+    ports:
+      - "8000:11434"
+    networks:
+      - colombus-dev_network
+    volumes:
+      - vllm_cache_data:/root/.cache/huggingface:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+networks:
+  colombus-dev_network:
+    external: true
+
+volumes:
+  vllm_cache_data:
+    driver: local
