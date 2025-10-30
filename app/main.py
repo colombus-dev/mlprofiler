@@ -2,7 +2,7 @@ import datetime
 
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from pydantic import BaseModel
 
 from app.custom_types import (
@@ -13,8 +13,6 @@ from app.custom_types import (
 from app.profiling_functions._factory import get_profiler
 
 app = FastAPI()
-
-# TODO: adapt core_api to /profile API changes
 
 APP_VERSION = "0.3.0-MLProfile"
 
@@ -101,7 +99,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
                 and subgraph.step_name != "Library Loading"
             ):
                 current_step = "Others"
-        
+
         res["metadata"]["perplexity"] = perplexity
         res["metadata"]["logprobs"] = logprobs
 
@@ -118,3 +116,14 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         prev_step = current_step
 
     return profile_json
+
+
+@app.get(
+    "/health",
+    tags=["healthcheck"],
+    summary="Perform a Health Check",
+    response_description="Return HTTP Status Code 200 (OK)",
+    status_code=status.HTTP_200_OK,
+)
+def get_health():
+    return "OK"

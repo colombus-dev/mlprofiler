@@ -1,7 +1,7 @@
 [project]
 name = "mlprofiler"
 version = "0.3.0"
-description = ""
+description = "mlprofiler - The ML pipelines profiler"
 authors = []
 readme = "README.md"
 requires-python = ">=3.12.0,<4.0"
@@ -22,3 +22,6 @@ dev = [
     "black>=25.9.0",
     "isort>=7.0.0",
 ]
+
+[tool.uv]
+default-groups = []

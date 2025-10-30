@@ -7,9 +7,9 @@ services:
     networks:
       - colombus-dev_network
     volumes:
-      - ./data:/code/data:rw
-      - ./resources:/code/resources:rw
-      - ./out:/code/out:rw
+      - ./data:/mlprofiler-builder/data:rw
+      - ./resources:/mlprofiler-builder/resources:rw
+      - ./out:/mlprofiler-builder/out:rw
     environment:
       INFERENCE_API_URL: mlprofiler_vllm:11434
       MODEL_ID: ${LLM_MODEL_ID}
@@ -20,16 +20,22 @@ services:
       watch:
         - action: sync
           path: ./app
-          target: /code/app
+          target: /mlprofiler-builder/app
           initial_sync: true
         - action: sync
           path: ./resources
-          target: /code/resources/
+          target: /mlprofiler-builder/resources/
           initial_sync: true
         - action: sync
           path: ./templates
-          target: /code/templates/
+          target: /mlprofiler-builder/templates/
           initial_sync: true
+    healthcheck:
+      test: curl -f http://localhost:8081/health || exit 1
+      interval: 5m
+      timeout: 3s
+      retries: 3
+      start_period: 20s
     depends_on:
       - mlprofiler_vllm
   # mlprofiler_local_inference:
