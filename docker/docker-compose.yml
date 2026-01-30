@@ -1,15 +1,17 @@
 services:
   mlprofiler_api:
     platform: linux/amd64
-    build: ./
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     ports:
       - "8081:8081"
     networks:
       - colombus-dev_network
     volumes:
-      - ./data:/mlprofiler-builder/data:rw
-      - ./resources:/mlprofiler-builder/resources:rw
-      - ./out:/mlprofiler-builder/out:rw
+      - ../data:/mlprofiler-builder/data:rw
+      - ../resources:/mlprofiler-builder/resources:rw
+      - ../out:/mlprofiler-builder/out:rw
     environment:
       INFERENCE_API_URL: mlprofiler_vllm:11434
       MODEL_ID: ${LLM_MODEL_ID}
@@ -19,32 +21,25 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./app
+          path: ../app
           target: /mlprofiler-builder/app
           initial_sync: true
         - action: sync
-          path: ./resources
+          path: ../resources
           target: /mlprofiler-builder/resources/
           initial_sync: true
         - action: sync
-          path: ./templates
+          path: ../templates
           target: /mlprofiler-builder/templates/
           initial_sync: true
-    # depends_on:
-    #   - mlprofiler_vllm
-  # mlprofiler_local_inference:
-  #   platform: linux/amd64
-  #   build: ./
-  #   ports:
-  #     - "8081:8081"
-  #   environment:
-  #     INFERENCE_API_URL: host.docker.internal:1234
-  #     MODEL_ID: qwen/qwen2.5-coder-7b-instruct
-  #   depends_on:
-  #     - profil_api
-  #   profiles: [llm_local]
-  #   extra_hosts:
-  #     - "host.docker.internal:host-gateway"
+    # healthcheck:
+    #   test: curl -f http://localhost:8081/health || exit 1
+    #   interval: 5m
+    #   timeout: 3s
+    #   retries: 3
+    #   start_period: 20s
+    depends_on:
+      - mlprofiler_vllm
   mlprofiler_vllm:
     image: vllm/vllm-openai:v0.10.0
     command: [
@@ -64,7 +59,8 @@ services:
     ]
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
-    # VLLM_USE_V1: 0
+      VLLM_BATCH_INVARIANT: 1
+      # VLLM_USE_V1: 0
     ports:
       - "8000:11434"
     networks:
