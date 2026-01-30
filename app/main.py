@@ -2,26 +2,30 @@ import datetime
 
 from typing import Any
 
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from pydantic import BaseModel
 
 from app.custom_types import (
-    ParserSubgraph,
+    SupportedParserFunction,
     SupportedProfilerFunction,
-    SupportedTaxonomiesFunction,
 )
-from app.profiling_functions._factory import get_profiler
+from app.parsers import get_parser
+from app.profiling_functions import get_profiler
+from app.profiling_functions._utils import Taxonomy
 
 app = FastAPI()
 
-APP_VERSION = "0.3.0-MLProfile"
+# TODO: adapt core_api to /profile API changes
+
+APP_VERSION = "0.4.0-MLProfile"
 
 
 class MLProfileMetadata(BaseModel):
     version: str
     generation_date: datetime.datetime
-    taxonomy: SupportedTaxonomiesFunction
+    taxonomy: str
     profiler: SupportedProfilerFunction
+    parser: SupportedParserFunction
 
 
 class MLProfileResult(BaseModel):
@@ -33,9 +37,10 @@ class MLProfileResult(BaseModel):
 
 class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
+    context: str | None = None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
     python_content: str
-    parser_elements: list[ParserSubgraph]
-    taxonomy_name: SupportedTaxonomiesFunction
+    taxonomy: Taxonomy
+    parser_name: SupportedParserFunction
     profiler_name: SupportedProfilerFunction
 
 
@@ -59,21 +64,24 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         metadata=MLProfileMetadata(
             version=APP_VERSION,
             generation_date=datetime.datetime.now(),
-            taxonomy=params.taxonomy_name,
+            taxonomy=params.taxonomy.name,
             profiler=params.profiler_name,
+            parser=params.parser_name,
         ),
         source=[],
         outputs={},
     )
     prev_step = None
 
+    parser = get_parser(params.parser_name)
+
     profiler = get_profiler(
         profile_json.metadata.profiler,
-        params.python_content,
-        profile_json.metadata.taxonomy,
+        params.context or params.python_content,
+        params.taxonomy,
     )
 
-    for subgraph in params.parser_elements:
+    for subgraph in parser.parse_code(params.python_content):
         line = subgraph.source
 
         res = {
@@ -85,7 +93,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             "library": subgraph.library,
             "function": subgraph.function,
             "tasks": [{"name": line, "tasks": []}],
-            "metadata": {}
+            "metadata": {},
         }
 
         if subgraph.step_name == "Library Loading":
@@ -93,7 +101,9 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             perplexity = 1
             logprobs = 100
         else:
-            current_step, perplexity, logprobs = profiler.profile_subgraph(subgraph, "Others")
+            current_step, perplexity, logprobs = profiler.profile_subgraph(
+                subgraph, "Others"
+            )
             if (
                 current_step == "Library Loading"
                 and subgraph.step_name != "Library Loading"
@@ -116,14 +126,3 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         prev_step = current_step
 
     return profile_json
-
-
-@app.get(
-    "/health",
-    tags=["healthcheck"],
-    summary="Perform a Health Check",
-    response_description="Return HTTP Status Code 200 (OK)",
-    status_code=status.HTTP_200_OK,
-)
-def get_health():
-    return "OK"

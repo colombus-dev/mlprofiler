@@ -33,7 +33,7 @@
         },
         {
             "compatible_name": "Model Inference",
-            "original_name": "Model Prediction",
+            "original_name": "Prediction",
             "definition": "the code makes inference using a model",
             "stage": "Model Building Layer"
         },

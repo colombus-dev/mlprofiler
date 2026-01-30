@@ -1,8 +1,4 @@
-from pathlib import Path
-
 from pydantic import BaseModel
-
-from app.custom_types import SupportedTaxonomiesFunction
 
 
 class TaxonomyElement(BaseModel):
@@ -13,7 +9,7 @@ class TaxonomyElement(BaseModel):
 
 
 class Taxonomy(BaseModel):
-    name: SupportedTaxonomiesFunction
+    name: str
     elements: list[TaxonomyElement]
 
     def get_original_steps_names(self) -> list[str]:
@@ -29,10 +25,3 @@ class Taxonomy(BaseModel):
             if e.compatible_name == compatible_name:
                 return e.original_name
         return default_name
-
-
-def load_taxonomy(taxonomy_name: SupportedTaxonomiesFunction) -> Taxonomy:
-    raw_taxonomy = Path(
-        f"resources/taxonomies/{taxonomy_name}_taxonomy.json"
-    ).read_text()
-    return Taxonomy.model_validate_json(raw_taxonomy)

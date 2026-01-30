@@ -12,10 +12,10 @@ try:
     from langfuse.openai import OpenAI
 except:
     from openai import OpenAI
-    from openai.types.chat import ChatCompletion
+from openai.types.chat import ChatCompletion
 
-from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
-from app.profiling_functions._base import BaseMLProfiler
+from app.custom_types import ParserSubgraph
+from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 
 
 INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "mlprofiler_vllm:11434")
@@ -28,14 +28,12 @@ env = Environment(
 
 class LLMProfiler(BaseMLProfiler):
 
-    def __init__(self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction):
-        super().__init__(python_content, taxonomy_name)
+    def __init__(self, python_content: str, taxonomy: Taxonomy):
+        super().__init__(python_content, taxonomy)
 
         # loading the LLM system and user prompt templates
         system_prompt_template = env.get_template("system_prompt.jinja")
-        self.user_prompt_template = env.get_template(
-            f"user_prompt_{taxonomy_name}_taxonomy.jinja"
-        )
+        self.user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
@@ -62,8 +60,8 @@ class LLMProfiler(BaseMLProfiler):
         user_prompt_content = self.user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
-            subgraph_library=subgraph.library,
-            subgraph_function=subgraph.function,
+            # subgraph_library=subgraph.library,
+            # subgraph_function=subgraph.function,
         )
 
         completion: ChatCompletion = self.client.chat.completions.create(
