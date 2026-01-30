@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parser metadata in JSON ML profile.
 - "dspipelines" parser
 - External taxonomies support
+- Distinction between context and code to classify
+- Removed the CLI
 
 ## [0.3] - 2025-07-16
 

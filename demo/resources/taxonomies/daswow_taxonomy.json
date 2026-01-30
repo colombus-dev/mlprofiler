@@ -1,0 +1,65 @@
+{
+    "name": "daswow",
+    "elements": [
+        {
+            "compatible_name": "helper_functions",
+            "original_name": "helper_functions",
+            "definition": "Code that is not directly related to the data science activity at hand, but provides useful scripting functions (e. g. importing or configuring libraries).",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "load_data",
+            "original_name": "load_data",
+            "definition": "The process of loading a dataset of any type (e.g., .csv, .pkl) into a Jupyter notebook environment.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "data_preprocessing",
+            "original_name": "data_preprocessing",
+            "definition": "The process of preparing the dataset(s) for the subsequent analysis. It includes tasks such as cleaning, instance selection, normalisation, data transformation, and feature selection.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "data_exploration",
+            "original_name": "data_exploration",
+            "definition": "The process of inspecting the content and shape of a dataset to understand the nature and characteristics of the data. Note that it may involve the usage of visualisation techniques but differs in its purpose.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "modelling",
+            "original_name": "modelling",
+            "definition": "The process of applying statistical models and learning-based algorithms to learn from sample data.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "evaluation",
+            "original_name": "evaluation",
+            "definition": "The process of assessing a model using one/various evaluation metric(s) such as goodness of fit and accuracy.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "prediction",
+            "original_name": "prediction",
+            "definition": "The process of applying a model trained on a set of data to other or newly arriving pieces of data to forecast new values.",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "result_visualization",
+            "original_name": "result_visualization",
+            "definition": "The process of obtaining a graphical representation (e.g., tables, plots, graphs) of a/several measurement(s)",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "save_results",
+            "original_name": "save_results",
+            "definition": "The process of serialising and storing the data",
+            "stage": "Layer 0"
+        },
+        {
+            "compatible_name": "comment_only",
+            "original_name": "comment_only",
+            "definition": "Lines of comment including commented code.",
+            "stage": "Layer 0"
+        }
+    ]
+}
