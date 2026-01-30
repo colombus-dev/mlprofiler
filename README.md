@@ -17,5 +17,5 @@ $ docker compose --env-file .env up
 It is also possible to deploy the LLM monitoring platform (Langfuse) as follows:
 
 ```bash
-$ docker compose --file docker-compose-monitor-local.yml
+$ docker compose --file docker-compose-monitor-local.yml up
 ```
