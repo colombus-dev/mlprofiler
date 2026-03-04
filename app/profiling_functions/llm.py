@@ -9,9 +9,23 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 try:
     # trying monitored by default
+    from langfuse import get_client, propagate_attributes
     from langfuse.openai import OpenAI
+
+    langfuse = get_client()
 except:
     from openai import OpenAI
+
+    def propagate_attributes(*args, **kwargs): ...
+
+    class LangfuseMock:
+        def __enter__(self): ...
+        def __exit__(self): ...
+        def start_as_current_observation(self, *args, **kwargs): ...
+
+    langfuse = LangfuseMock()
+
+
 from openai.types.chat import ChatCompletion
 
 from app.custom_types import ParserSubgraph
@@ -19,7 +33,6 @@ from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 
 
 INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "mlprofiler_vllm:11434")
-MODEL_ID = os.getenv("MODEL_ID", "qwen2.5-coder:7b")
 
 env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
@@ -27,13 +40,12 @@ env = Environment(
 
 
 class LLMProfiler(BaseMLProfiler):
-
     def __init__(self, python_content: str, taxonomy: Taxonomy):
         super().__init__(python_content, taxonomy)
 
         # loading the LLM system and user prompt templates
         system_prompt_template = env.get_template("system_prompt.jinja")
-        self.user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
+        self.user_prompt_template = env.get_template(f"user_prompt_taxonomy.{taxonomy.name}.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
@@ -64,38 +76,48 @@ class LLMProfiler(BaseMLProfiler):
             # subgraph_function=subgraph.function,
         )
 
-        completion: ChatCompletion = self.client.chat.completions.create(
-            model=MODEL_ID,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.system_prompt_content,
-                },
-                {"role": "user", "content": user_prompt_content},
-            ],
-            response_format=json.loads(self.classification_response_schema),
-            extra_body={
-                # "guided_choice": self.taxonomy.compatible_steps_names,
-                "chat_template_kwargs": {"enable_thinking": False},
-            },
-            # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
-            temperature=0,
-            max_tokens=15,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
-            # see https://cookbook.openai.com/examples/using_logprobs
-            logprobs=True,
-            top_logprobs=len(self.taxonomy.get_compatible_steps_names()),
-        )
+        model_id = self.client.models.list().data[0].id
+
+        with langfuse.start_as_current_observation(
+            as_type="span", name="OpenAI-generation"
+        ):
+            # Propagate session_id to all observations including OpenAI generation
+            with propagate_attributes(session_id=self.session_id):
+                completion: ChatCompletion = self.client.chat.completions.create(
+                    model=model_id,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": self.system_prompt_content,
+                        },
+                        {"role": "user", "content": user_prompt_content},
+                    ],
+                    response_format=json.loads(self.classification_response_schema),
+                    extra_body={
+                        "chat_template_kwargs": {"enable_thinking": False},
+                    },
+                    # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
+                    temperature=0,
+                    max_tokens=15,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    # see https://cookbook.openai.com/examples/using_logprobs
+                    logprobs=True,
+                    top_logprobs=len(self.taxonomy.get_compatible_steps_names()),
+                )
 
         completion_content = completion.choices[0].message.content
 
         if not completion_content:
             return default_step, -1, []
 
-        classified_line = json.loads(completion_content)
-        predicted_class = classified_line["class"]
+        try:
+            classified_line = json.loads(completion_content)
+            predicted_class = classified_line["class"]
+        except:
+            print("Bad format response")
+            return default_step, -1, []
 
         # excluding json structured output specific tokens to avoid biasing probs
         # and perplexity score (as the linear probs of these tokens are most of the

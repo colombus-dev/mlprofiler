@@ -38,7 +38,7 @@
             "stage": "Layer 0"
         },
         {
-            "compatible_name": "prediction",
+            "compatible_name": "model_inference",
             "original_name": "prediction",
             "definition": "The process of applying a model trained on a set of data to other or newly arriving pieces of data to forecast new values.",
             "stage": "Layer 0"
@@ -46,13 +46,13 @@
         {
             "compatible_name": "result_visualization",
             "original_name": "result_visualization",
-            "definition": "The process of obtaining a graphical representation (e.g., tables, plots, graphs) of a/several measurement(s)",
+            "definition": "The process of obtaining a graphical representation (e.g., tables, plots, graphs) of a/several measurement(s).",
             "stage": "Layer 0"
         },
         {
             "compatible_name": "save_results",
             "original_name": "save_results",
-            "definition": "The process of serialising and storing the data",
+            "definition": "The process of serialising and storing the data.",
             "stage": "Layer 0"
         },
         {

@@ -23,6 +23,7 @@ APP_VERSION = "0.4.0-MLProfile"
 class MLProfileMetadata(BaseModel):
     version: str
     generation_date: datetime.datetime
+    session_id: str
     taxonomy: str
     profiler: SupportedProfilerFunction
     parser: SupportedParserFunction
@@ -38,6 +39,8 @@ class MLProfileResult(BaseModel):
 class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
     context: str | None = None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
+    instructions_index: list[int] | None = None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
+    session_id: str | None = None  # enables reusing existing session
     python_content: str
     taxonomy: Taxonomy
     parser_name: SupportedParserFunction
@@ -59,11 +62,24 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     list[Any]
         the LLM profiling result
     """
+    parser = get_parser(params.parser_name)
+
+    profiler = get_profiler(
+        params.profiler_name,
+        params.context or params.python_content,
+        params.taxonomy,
+    )
+
+    if params.session_id:
+        # reusing existing session
+        profiler.session_id = params.session_id
+
     profile_json = MLProfileResult(
         name=params.notebook_file_stem,
         metadata=MLProfileMetadata(
             version=APP_VERSION,
             generation_date=datetime.datetime.now(),
+            session_id=profiler.session_id,
             taxonomy=params.taxonomy.name,
             profiler=params.profiler_name,
             parser=params.parser_name,
@@ -73,15 +89,10 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     )
     prev_step = None
 
-    parser = get_parser(params.parser_name)
+    for i, subgraph in enumerate(parser.parse_code(params.python_content)):
+        if params.instructions_index and i not in params.instructions_index:
+            continue
 
-    profiler = get_profiler(
-        profile_json.metadata.profiler,
-        params.context or params.python_content,
-        params.taxonomy,
-    )
-
-    for subgraph in parser.parse_code(params.python_content):
         line = subgraph.source
 
         res = {

@@ -1,13 +1,61 @@
-Code snippet:
+<|task|>
 
-```python
+# You are a code classification expert who is an experienced Data Scientist, with years of experience and extensive knowledge about data science and machine learning libraries.
+# You have studied the code above, paying attention to its structure and flow.
+# Now, you use the following function to classify it.
+# Make sure you fully understand each stage definition and consider all of them before making a choice.
+
+# Among the following categories, which one applies to the code snippet
+def classify_pipeline_code(code_snippet: str):
+    """Classify the code snippet given the following data science lifecycle stages:
+
+    * Data Acquisition: reading or loading new data
+    * Data Preparation: preparing data so that it is suitable for further processing and analysis
+    * Modeling: creating, instantiation or building a model
+    * Training: training a model
+    * Evaluation: evaluating a model (e.g., performances, biases, memory)
+    * Model Inference: infering new results from a model (e.g., making predictions)
+
+    If the code snippet does not match any of the stages, returns "Others".
+
+    Args:
+        code_snippet (str): the code snippet, extracted from the data science code
+
+    Returns:
+        str: the stage corresponding to the code snippet
+    """
+    if code_snippet.contributes_to("the preparation of data so that it is suitable for further processing and analysis"):
+        # the code snippet contributes to the preparation of data so that it is suitable for further processing and analysis
+        return "Data Preparation"
+    if code_snippet.contributes_to("reading or loading new data"):
+        # the code snippet reads or loads new data
+        return "Data Acquisition"
+    if code_snippet.contributes_to("the creation, instantiation or building of a model"):
+        # the code snippet creates, instantiates or build a model
+        # it does not transform data, which could be related to data preparation
+        return "Modeling"
+    if code_snippet.contributes_to("training a model"):
+        # the code trains a model
+        return "Training"
+    if code_snippet.contributes_to("the evaluation of a model"):
+        # the code evaluates a model
+        return "Evaluation"
+    if code_snippet.contributes_to("infering results from a model"):
+        # the code makes inference using a model
+        # it does not transform data, which could be related to data preparation
+        return "Model Inference"
+    else:
+        # it is 100% sure the code does not contribute to any other stage
+        return "Others"
+
+# For example:
+
+- Example 1: `classify_pipeline_code("df = pd.DataFrame()")` should return `"Data Preparation"`
+- Example 2: `classify_pipeline_code("model.fit()")` should return `"Training"`
+- Example 3: `classify_pipeline_code("predictions = model.predict(X_test)")` should return `"Model Inference"`
+- Example 4: `classify_pipeline_code("predictions.reshape(-1)")` should return `"Data Preparation"`
+- Example 5: `classify_pipeline_code("Dense(128)")` should return `"Modeling"`
+
+# What would be the result for the following code snippet?
+
 {{ python_code_line }}
-```
-
-Among the following categories, which one applies to the code snippet:
-
-{% for taxonomy_element in taxonomy.elements if taxonomy_element.original_name != "Others" -%}
-- {{ taxonomy_element.compatible_name }}: {{ taxonomy_element.definition }}
-{% endfor %}
-
-If you can't tell what it is, say Others.

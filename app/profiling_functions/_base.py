@@ -1,3 +1,5 @@
+import uuid
+
 from abc import ABC, abstractmethod
 
 from app.custom_types import ParserSubgraph
@@ -5,14 +7,12 @@ from app.profiling_functions._utils import Taxonomy
 
 
 class BaseMLProfiler(ABC):
-
-    def __init__(
-        self, python_content: str, taxonomy: Taxonomy
-    ) -> None:
+    def __init__(self, python_content: str, taxonomy: Taxonomy) -> None:
         super().__init__()
 
         self.python_content: str = python_content
         self.taxonomy: Taxonomy = taxonomy
+        self.session_id = f"session-{uuid.uuid4()}"
 
     @abstractmethod
     def profile_subgraph(

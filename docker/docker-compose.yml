@@ -6,6 +6,8 @@ services:
       dockerfile: ./docker/Dockerfile
     ports:
       - "8081:8081"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - colombus-dev_network
     volumes:
@@ -13,11 +15,13 @@ services:
       - ../resources:/mlprofiler-builder/resources:rw
       - ../out:/mlprofiler-builder/out:rw
     environment:
-      INFERENCE_API_URL: mlprofiler_vllm:11434
+      # INFERENCE_API_URL: mlprofiler_vllm:11434
+      INFERENCE_API_URL: host.docker.internal:11434
       MODEL_ID: ${LLM_MODEL_ID}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_HOST: ${LANGFUSE_HOST}
+      LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
     develop:
       watch:
         - action: sync
@@ -38,10 +42,12 @@ services:
     #   timeout: 3s
     #   retries: 3
     #   start_period: 20s
-    depends_on:
-      - mlprofiler_vllm
+    # depends_on:
+    #   - mlprofiler_vllm
   mlprofiler_vllm:
-    image: vllm/vllm-openai:v0.10.0
+    profiles:
+      - localvllm
+    image: vllm/vllm-openai:v0.10.2
     command: [
       "--port", "11434",
       "--model", "${LLM_MODEL_ID}",
