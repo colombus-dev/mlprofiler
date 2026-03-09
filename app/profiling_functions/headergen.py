@@ -7,7 +7,6 @@ from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 
 
 class HeaderGenProfiler(BaseMLProfiler):
-
     def __init__(self, python_content: str, taxonomy: Taxonomy):
         super().__init__(python_content, taxonomy)
 
@@ -21,15 +20,10 @@ class HeaderGenProfiler(BaseMLProfiler):
         )
         if ml_label_response.is_error:
             return (default_step, 1, [[(default_step, 1.0)]])
-        retrieved_steps = ml_label_response.json()
-        compatible_steps = [
-            step
-            for step in retrieved_steps
-            if step in self.taxonomy.get_original_steps_names()
-        ]
-        if not compatible_steps:
+        retrieved_steps: list[str] = ml_label_response.json()
+        if not retrieved_steps:
             return (default_step, 1, [[(default_step, 1.0)]])
-        compatible_steps_counter = Counter(compatible_steps)
+        retrieved_steps_counter = Counter(retrieved_steps)
         # TODO: currently only supporting the first step
-        retrieved_step = compatible_steps_counter.most_common(1)[0][0]
+        retrieved_step = retrieved_steps_counter.most_common(1)[0][0]
         return (retrieved_step, 1, [[(retrieved_step, 1.0)]])

@@ -9,12 +9,12 @@
 def classify_pipeline_code(code_snippet: str):
     """Classify the code snippet given the following data science lifecycle stages:
 
-    * Data Acquisition: reading or loading new data
-    * Data Preparation: preparing data so that it is suitable for further processing and analysis
-    * Modeling: creating, instantiation or building a model
-    * Training: training a model
-    * Evaluation: evaluating a model (e.g., performances, biases, memory)
-    * Model Inference: infering new results from a model (e.g., making predictions)
+    * Data Collection: The process of gathering and importing data from various sources into a data analysis environment for further processing and analysis.
+    * Data Preparation: The initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis.
+    * Data Modeling: The process of creating mathematical or computational representations of real-world phenomena using statistical and machine learning techniques to extract insights and make predictions.
+    * Model Evaluation: The process of assessing a trained model's performance using specific metrics and comparing it against new datasets or real-world scenarios to determine its effectiveness and reliability.
+    * Model Deployment: The application of a previously trained machine learning model to new, unseen data for the purpose of making predictions or decisions.
+    * Save Results: The process of serializing and persisting data for future use or analysis.
 
     If the code snippet does not match any of the stages, returns "Others".
 
@@ -24,26 +24,27 @@ def classify_pipeline_code(code_snippet: str):
     Returns:
         str: the stage corresponding to the code snippet
     """
-    if code_snippet.contributes_to("the preparation of data so that it is suitable for further processing and analysis"):
-        # the code snippet contributes to the preparation of data so that it is suitable for further processing and analysis
+    if code_snippet.contributes_to("the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis"):
+        # the code snippet contributes to the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis
         return "Data Preparation"
-    if code_snippet.contributes_to("reading or loading new data"):
-        # the code snippet reads or loads new data
-        return "Data Acquisition"
-    if code_snippet.contributes_to("the creation, instantiation or building of a model"):
-        # the code snippet creates, instantiates or build a model
-        # it does not transform data, which could be related to data preparation
-        return "Modeling"
-    if code_snippet.contributes_to("training a model"):
-        # the code trains a model
-        return "Training"
-    if code_snippet.contributes_to("the evaluation of a model"):
+    if code_snippet.contributes_to("gathering and importing data from various sources into a data analysis environment for further processing and analysis"):
+        # the code snippet gathers and imports data from various sources into a data analysis environment for further processing and analysis
+        return "Data Collection"
+    if code_snippet.contributes_to("creating mathematical or computational representations of real-world phenomena using statistical and machine learning techniques to extract insights and make predictions"):
+        # the code snippet creates, instantiates, build or train a model
+        # it does not transform data, which could be related to Data Preparation
+        return "Data Modeling"
+    if code_snippet.contributes_to("the process of assessing a trained model's performance using specific metrics and comparing it against new datasets or real-world scenarios to determine its effectiveness and reliability"):
         # the code evaluates a model
-        return "Evaluation"
-    if code_snippet.contributes_to("infering results from a model"):
+        return "Model Evaluation"
+    if code_snippet.contributes_to("the application of a previously trained machine learning model to new, unseen data for the purpose of making predictions or decisions"):
         # the code makes inference using a model
         # it does not transform data, which could be related to data preparation
-        return "Model Inference"
+        return "Model Deployment"
+    if code_snippet.contributes_to("the process of serializing and persisting data for future use or analysis"):
+        # the code saves data or prediction results for persistence
+        # it does not transform data, which could be related to data preparation
+        return "Save Results"
     else:
         # it is 100% sure the code does not contribute to any other stage
         return "Others"
@@ -51,10 +52,10 @@ def classify_pipeline_code(code_snippet: str):
 # For example:
 
 - Example 1: `classify_pipeline_code("df = pd.DataFrame()")` should return `"Data Preparation"`
-- Example 2: `classify_pipeline_code("model.fit()")` should return `"Training"`
-- Example 3: `classify_pipeline_code("predictions = model.predict(X_test)")` should return `"Model Inference"`
+- Example 2: `classify_pipeline_code("model.fit()")` should return `"Data Modeling"`
+- Example 3: `classify_pipeline_code("predictions = model.predict(X_test)")` should return `"Model Deployment"`
 - Example 4: `classify_pipeline_code("predictions.reshape(-1)")` should return `"Data Preparation"`
-- Example 5: `classify_pipeline_code("Dense(128)")` should return `"Modeling"`
+- Example 5: `classify_pipeline_code("Dense(128)")` should return `"Data Modeling"`
 
 # What would be the result for the following code snippet?
 

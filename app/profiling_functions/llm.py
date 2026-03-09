@@ -45,7 +45,7 @@ class LLMProfiler(BaseMLProfiler):
 
         # loading the LLM system and user prompt templates
         system_prompt_template = env.get_template("system_prompt.jinja")
-        self.user_prompt_template = env.get_template(f"user_prompt_taxonomy.{taxonomy.name}.jinja")
+        self.user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
@@ -53,7 +53,7 @@ class LLMProfiler(BaseMLProfiler):
         )
         self.classification_response_schema = (
             classification_response_schema_template.render(
-                compatible_step_names=self.taxonomy.get_compatible_steps_names()
+                compatible_step_names=self.taxonomy.get_steps_names()
             )
         )
         self.system_prompt_content = system_prompt_template.render(
@@ -104,7 +104,7 @@ class LLMProfiler(BaseMLProfiler):
                     presence_penalty=0,
                     # see https://cookbook.openai.com/examples/using_logprobs
                     logprobs=True,
-                    top_logprobs=len(self.taxonomy.get_compatible_steps_names()),
+                    top_logprobs=len(self.taxonomy.get_steps_names()),
                 )
 
         completion_content = completion.choices[0].message.content
@@ -156,10 +156,13 @@ class LLMProfiler(BaseMLProfiler):
             -np.mean([logprob for logprob in relevant_content_logprobs])
         )
 
+        retrieved_step = (
+            predicted_class
+            if predicted_class in self.taxonomy.get_steps_names()
+            else default_step
+        )
         return (
-            self.taxonomy.get_original_name_from_compatible(
-                predicted_class, default_step
-            ),
+            retrieved_step,
             perplexity_score,
             all_linear_probs,
         )
