@@ -11,7 +11,7 @@ class HeaderGenProfiler(BaseMLProfiler):
         super().__init__(python_content, taxonomy)
 
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str
+        self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         # TODO: add docstring to payload for fair comparison
         ml_label_response = httpx.post(

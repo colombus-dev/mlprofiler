@@ -16,7 +16,7 @@ class BaseMLProfiler(ABC):
 
     @abstractmethod
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str
+        self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         """Profile a given subgraph based on the steps taxonomy.
 
@@ -24,6 +24,7 @@ class BaseMLProfiler(ABC):
             subgraph (ParserSubgraph): the famix subgraph to profile
             default_step (str): the default step to use when the profiling
                                 result is out of the taxonomy
+            expected (str): the expected step (given by the baseline)
 
         Returns:
             tuple[str, float | None, list[list[tuple[str, float]]]]: a tuple containing the step,

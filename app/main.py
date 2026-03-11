@@ -40,6 +40,7 @@ class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
     context: str | None = None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
     instructions_index: list[int] | None = None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
+    expected_results: list[str]  # enables giving the baseline result for In-Context Learning (ICL)
     session_id: str | None = None  # enables reusing existing session
     python_content: str
     taxonomy: Taxonomy
@@ -89,7 +90,13 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     )
     prev_step = None
 
-    for i, subgraph in enumerate(parser.parse_code(params.python_content)):
+    filtered_subgraphes = [
+        (i, subgraph)
+        for i, subgraph in enumerate(parser.parse_code(params.python_content))
+        if i in params.instructions_index
+    ]
+
+    for (i, subgraph), expected in zip(filtered_subgraphes, params.expected_results):
         if params.instructions_index and i not in params.instructions_index:
             continue
 
@@ -113,7 +120,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             logprobs = 100
         else:
             current_step, perplexity, logprobs = profiler.profile_subgraph(
-                subgraph, "Others"
+                subgraph, "Others", expected
             )
             if (
                 current_step == "Library Loading"
