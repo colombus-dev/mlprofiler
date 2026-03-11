@@ -67,6 +67,8 @@ class DSPipelinesParser(BaseMLParser):
                     function=splitted_libfunc[-1].split(" ")[0],
                     value={},
                     source=ast.unparse(elem["node"]),
+                    start_lineno=elem["node"].lineno,
+                    end_lineno=elem["node"].end_lineno,
                     step_name="",
                 )
             )

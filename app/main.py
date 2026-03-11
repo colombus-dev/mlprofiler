@@ -39,6 +39,7 @@ class MLProfileResult(BaseModel):
 class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
     context: str | None = None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
+    context_truncation_offset: int | None = None  # enables truncating context to avoid context overflow
     instructions_index: list[int] | None = None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
     expected_results: list[str]  # enables giving the baseline result for In-Context Learning (ICL)
     session_id: str | None = None  # enables reusing existing session
@@ -65,9 +66,10 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     """
     parser = get_parser(params.parser_name)
 
+    context = params.context or params.python_content
     profiler = get_profiler(
         params.profiler_name,
-        params.context or params.python_content,
+        context,
         params.taxonomy,
     )
 
@@ -113,6 +115,11 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
             "tasks": [{"name": line, "tasks": []}],
             "metadata": {},
         }
+
+        if params.context_truncation_offset is not None:
+            profiler.python_content = "\n".join(
+                context.split("\n")[subgraph.start_lineno - params.context_truncation_offset:subgraph.end_lineno + params.context_truncation_offset]
+            )
 
         if subgraph.step_name == "Library Loading":
             current_step = "Library Loading"

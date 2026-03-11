@@ -9,6 +9,8 @@ class ParserSubgraph(BaseModel):
     function: str
     value: dict[str, Any]
     source: str
+    start_lineno: int
+    end_lineno: int
     step_name: str
 
 

@@ -10,9 +10,17 @@ class BaseMLProfiler(ABC):
     def __init__(self, python_content: str, taxonomy: Taxonomy) -> None:
         super().__init__()
 
-        self.python_content: str = python_content
+        self._python_content: str = python_content
         self.taxonomy: Taxonomy = taxonomy
         self.session_id = f"session-{uuid.uuid4()}"
+    
+    @property
+    def python_content(self):
+        return self._python_content
+
+    @python_content.setter
+    def python_content(self, new_content):
+        self._python_content = new_content
 
     @abstractmethod
     def profile_subgraph(

@@ -44,32 +44,39 @@ class LLMProfiler(BaseMLProfiler):
         super().__init__(python_content, taxonomy)
 
         # loading the LLM system and user prompt templates
-        system_prompt_template = env.get_template("system_prompt.jinja")
-        self.user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
+        self.__system_prompt_template = env.get_template("system_prompt.jinja")
+        self.__user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
             "classification_response_schema.jinja"
         )
-        self.classification_response_schema = (
+        self.__classification_response_schema = (
             classification_response_schema_template.render(
                 compatible_step_names=self.taxonomy.get_steps_names()
             )
         )
-        self.system_prompt_content = system_prompt_template.render(
-            all_python_code=python_content
+        self.__system_prompt_content = self.__system_prompt_template.render(
+            all_python_code=self._python_content
         )
 
         # LLM client
-
-        self.client: OpenAI = OpenAI(
+        self.__client: OpenAI = OpenAI(
             base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
         )
+
+    @BaseMLProfiler.python_content.setter
+    def python_content(self, new_content):
+        self._python_content = new_content
+        self.__system_prompt_content = self.__system_prompt_template.render(
+            all_python_code=self._python_content
+        )
+        
 
     def profile_subgraph(
         self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        user_prompt_content = self.user_prompt_template.render(
+        user_prompt_content = self.__user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
             expected=expected,
@@ -77,23 +84,23 @@ class LLMProfiler(BaseMLProfiler):
             # subgraph_function=subgraph.function,
         )
 
-        model_id = self.client.models.list().data[0].id
+        model_id = self.__client.models.list().data[0].id
 
         with langfuse.start_as_current_observation(
             as_type="span", name="OpenAI-generation"
         ):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
-                completion: ChatCompletion = self.client.chat.completions.create(
+                completion: ChatCompletion = self.__client.chat.completions.create(
                     model=model_id,
                     messages=[
                         {
                             "role": "system",
-                            "content": self.system_prompt_content,
+                            "content": self.__system_prompt_content,
                         },
                         {"role": "user", "content": user_prompt_content},
                     ],
-                    response_format=json.loads(self.classification_response_schema),
+                    response_format=json.loads(self.__classification_response_schema),
                     extra_body={
                         "chat_template_kwargs": {"enable_thinking": False},
                     },
