@@ -18,7 +18,7 @@ class DSPipelinesProfiler(BaseMLProfiler):
         super().__init__(python_content, taxonomy)
 
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
+        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         retrieved_step = steps_functions_mapping.get(subgraph.function, default_step)
         return (retrieved_step, 1, [[(retrieved_step, 1.0)]])

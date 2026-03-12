@@ -24,7 +24,7 @@ class BaseMLProfiler(ABC):
 
     @abstractmethod
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
+        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         """Profile a given subgraph based on the steps taxonomy.
 

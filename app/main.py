@@ -38,10 +38,18 @@ class MLProfileResult(BaseModel):
 
 class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
-    context: str | None = None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
-    context_truncation_offset: int | None = None  # enables truncating context to avoid context overflow
-    instructions_index: list[int] | None = None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
-    expected_results: list[str]  # enables giving the baseline result for In-Context Learning (ICL)
+    context: str | None = (
+        None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
+    )
+    context_truncation_offset: int | None = (
+        None  # enables truncating context to avoid context overflow
+    )
+    instructions_index: list[int] | None = (
+        None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
+    )
+    expected_results: list[str] | list[list[str]] | None = (
+        None  # enables giving the baseline result for In-Context Learning (ICL)
+    )
     session_id: str | None = None  # enables reusing existing session
     python_content: str
     taxonomy: Taxonomy
@@ -95,10 +103,21 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     filtered_subgraphes = [
         (i, subgraph)
         for i, subgraph in enumerate(parser.parse_code(params.python_content))
-        if i in params.instructions_index
+        if (not params.instructions_index) or (i in params.instructions_index)
     ]
 
-    for (i, subgraph), expected in zip(filtered_subgraphes, params.expected_results):
+    # TODO: improve this part
+    expected_results = (
+        params.expected_results
+        if params.expected_results
+        else [None for _ in range(len(filtered_subgraphes))]
+    )
+    if len(expected_results) != len(filtered_subgraphes):
+        expected_results = [expected_results for _ in range(len(filtered_subgraphes))]
+
+    # print(expected_results)
+
+    for (i, subgraph), expected in zip(filtered_subgraphes, expected_results):
         if params.instructions_index and i not in params.instructions_index:
             continue
 
@@ -118,7 +137,11 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
 
         if params.context_truncation_offset is not None:
             profiler.python_content = "\n".join(
-                context.split("\n")[subgraph.start_lineno - params.context_truncation_offset:subgraph.end_lineno + params.context_truncation_offset]
+                context.split("\n")[
+                    subgraph.start_lineno - 1
+                    - params.context_truncation_offset : subgraph.end_lineno
+                    + params.context_truncation_offset
+                ]
             )
 
         if subgraph.step_name == "Library Loading":

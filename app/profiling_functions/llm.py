@@ -74,12 +74,13 @@ class LLMProfiler(BaseMLProfiler):
         
 
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | None = None
+        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         user_prompt_content = self.__user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
-            expected=expected,
+            expected_class=expected,
+            is_multi_class=isinstance(expected, list)
             # subgraph_library=subgraph.library,
             # subgraph_function=subgraph.function,
         )

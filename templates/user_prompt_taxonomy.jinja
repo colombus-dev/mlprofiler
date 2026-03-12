@@ -56,8 +56,15 @@ def classify_pipeline_code(code_snippet: str):
 - Example 3: `classify_pipeline_code("predictions = model.predict(X_test)")` should return `"Model Deployment"`
 - Example 4: `classify_pipeline_code("predictions.reshape(-1)")` should return `"Data Preparation"`
 - Example 5: `classify_pipeline_code("Dense(128)")` should return `"Data Modeling"`
+- Example 6: `classify_pipeline_code(data.plot(kind='line', legend=None, figsize=(5, 5))")` return `"Model Evaluation"`
+- Example 7: `classify_pipeline_code(ax.set_xticks(range(len(farmers)), labels=farmers, rotation=45, ha="right", rotation_mode="anchor")")` return `"Model Evaluation"`
+- Example 8: `classify_pipeline_code("im = ax.imshow(harvest)")` return `"Model Evaluation"`
 
-# You should improve an existing classifier that returned the following result:
+{% if is_multi_class %}
+    # You should improve an existing classifier that returned one of the following results:
+{% else %}
+    # You should improve an existing classifier that returned the following result:
+{% endif %}
 
 {{ expected_class }}
 
