@@ -24,16 +24,6 @@ def classify_pipeline_code(code_snippet: str):
     Returns:
         str: the stage corresponding to the code snippet
     """
-    if code_snippet.contributes_to("the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis"):
-        # the code snippet contributes to the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis
-        return "Data Preparation"
-    if code_snippet.contributes_to("gathering and importing data from various sources into a data analysis environment for further processing and analysis"):
-        # the code snippet gathers and imports data from various sources into a data analysis environment for further processing and analysis
-        return "Data Collection"
-    if code_snippet.contributes_to("creating mathematical or computational representations of real-world phenomena using statistical and machine learning techniques to extract insights and make predictions"):
-        # the code snippet creates, instantiates, build or train a model
-        # it does not transform data, which could be related to Data Preparation
-        return "Data Modeling"
     if code_snippet.contributes_to("the process of assessing a trained model's performance using specific metrics and comparing it against new datasets or real-world scenarios to determine its effectiveness and reliability"):
         # the code evaluates a model
         return "Model Evaluation"
@@ -45,6 +35,16 @@ def classify_pipeline_code(code_snippet: str):
         # the code saves data or prediction results for persistence
         # it does not transform data, which could be related to data preparation
         return "Save Results"
+    if code_snippet.contributes_to("gathering and importing data from various sources into a data analysis environment for further processing and analysis"):
+        # the code snippet gathers and imports data from various sources into a data analysis environment for further processing and analysis
+        return "Data Collection"
+    if code_snippet.contributes_to("creating mathematical or computational representations of real-world phenomena using statistical and machine learning techniques to extract insights and make predictions"):
+        # the code snippet creates, instantiates, build or train a model
+        # it does not transform data, which could be related to Data Preparation
+        return "Data Modeling"
+    if code_snippet.contributes_to("the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis"):
+        # the code snippet contributes to the initial phase of data science where raw data is cleaned, filtered, transformed, and normalized to ensure quality and relevance for analysis
+        return "Data Preparation"
     else:
         # it is 100% sure the code does not contribute to any other stage
         return "Others"

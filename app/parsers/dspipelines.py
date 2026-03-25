@@ -13,9 +13,11 @@ class DSPipelinesParser(BaseMLParser):
         super().__init__()
         self.__subgraphes: list[ParserSubgraph] = []
 
-    def parse_code(self, python_code: str) -> list[ParserSubgraph]:
+    def parse_code(
+        self, python_code: str, parse_subscript: bool = True
+    ) -> list[ParserSubgraph]:
         tree = ast.parse(python_code)
-        visitor = FuncLister()
+        visitor = FuncLister(parse_subscript=parse_subscript)
         visitor.s_list = []
         visitor.f_name = []
         visitor.f_dict = {}
@@ -86,6 +88,10 @@ class FuncLister(ast.NodeVisitor):
     arg_arr = []
     symb_arr = []
     symb = []
+
+    def __init__(self, parse_subscript: bool = True) -> None:
+        super().__init__()
+        self.parse_subscript = parse_subscript
 
     def visit_ClassDef(self, node):
         self.generic_visit(node)
@@ -174,6 +180,19 @@ class FuncLister(ast.NodeVisitor):
                 self.arg_arr.append(arg)
                 self.symb_arr.append(self.symb)
 
+        self.generic_visit(node)
+
+    def visit_Subscript(self, node):
+        # ADDED
+        if self.parse_subscript:
+            if isinstance(node.value, ast.Name):
+                self.s_list.append({"root": "", "node": node, "api": "subscript"})
+                self.arg_arr.append("")
+                self.symb_arr.append("")
+            elif isinstance(node.value, ast.Attribute):
+                self.s_list.append({"root": "", "node": node, "api": "subscript"})
+                self.arg_arr.append("")
+                self.symb_arr.append("")
         self.generic_visit(node)
 
     def get_args(node):

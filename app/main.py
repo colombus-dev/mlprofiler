@@ -55,6 +55,7 @@ class ProfileNotebookParams(BaseModel):
     taxonomy: Taxonomy
     parser_name: SupportedParserFunction
     profiler_name: SupportedProfilerFunction
+    parse_subscript: bool
 
 
 @app.post("/profile")
@@ -102,7 +103,9 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
 
     filtered_subgraphes = [
         (i, subgraph)
-        for i, subgraph in enumerate(parser.parse_code(params.python_content))
+        for i, subgraph in enumerate(
+            parser.parse_code(params.python_content, params.parse_subscript)
+        )
         if (not params.instructions_index) or (i in params.instructions_index)
     ]
 
@@ -138,7 +141,8 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         if params.context_truncation_offset is not None:
             profiler.python_content = "\n".join(
                 context.split("\n")[
-                    subgraph.start_lineno - 1
+                    subgraph.start_lineno
+                    - 1
                     - params.context_truncation_offset : subgraph.end_lineno
                     + params.context_truncation_offset
                 ]
