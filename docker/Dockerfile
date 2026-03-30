@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.12-alpine
+FROM ghcr.io/astral-sh/uv:python3.12-trixie
 
 # TODO: split builder/runner to reduce image size
 
@@ -15,11 +15,14 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-install-project
 
-RUN adduser -D standarduser
+RUN useradd -ms /bin/bash standarduser
+# RUN adduser -D standarduser
 
 RUN chown -R standarduser:standarduser /mlprofiler-builder
 
 USER standarduser
+
+RUN mkdir -p ~/.cache/huggingface
 
 COPY ./templates/ /mlprofiler-builder/templates/
 

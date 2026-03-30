@@ -13,7 +13,7 @@ class BaseMLProfiler(ABC):
         self._python_content: str = python_content
         self.taxonomy: Taxonomy = taxonomy
         self.session_id = f"session-{uuid.uuid4()}"
-    
+
     @property
     def python_content(self):
         return self._python_content
@@ -24,7 +24,10 @@ class BaseMLProfiler(ABC):
 
     @abstractmethod
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
+        self,
+        subgraph: ParserSubgraph,
+        default_step: str,
+        expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         """Profile a given subgraph based on the steps taxonomy.
 
@@ -39,3 +42,32 @@ class BaseMLProfiler(ABC):
                                 overall perplexity and logprobs for each next token.
                                 Default values are used when not using a LLM
         """
+
+    def profile_multiple_subgraphes(
+        self,
+        subgraphes: list[ParserSubgraph],
+        default_step: str,
+        expected: list[str | list[str]] | None = None,
+    ) -> list[tuple[str, float | None, list[list[tuple[str, float]]]]]:
+        """Profile a given list of subgraphes based on the steps taxonomy.
+
+        Args:
+            subgraphes (list[ParserSubgraph]): the list of famix subgraphes to profile
+            default_step (str): the default step to use when the profiling
+                                result is out of the taxonomy
+            expected (str): the expected steps (given by the baseline)
+
+        Returns:
+            list[tuple[str, float | None, list[list[tuple[str, float]]]]]: the list of tuples containing the step,
+                                overall perplexity and logprobs for each next token.
+                                Default values are used when not using a LLM
+        """
+        expected_steps = (
+            expected
+            if isinstance(expected, list)
+            else [None for _ in range(len(subgraphes))]
+        )
+        return [
+            self.profile_subgraph(subgraph, default_step, exp)
+            for subgraph, exp in zip(subgraphes, expected_steps)
+        ]

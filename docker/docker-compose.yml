@@ -14,6 +14,7 @@ services:
       - ../data:/mlprofiler-builder/data:rw
       - ../resources:/mlprofiler-builder/resources:rw
       - ../out:/mlprofiler-builder/out:rw
+      - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
       # INFERENCE_API_URL: mlprofiler_vllm:11434
       INFERENCE_API_URL: host.docker.internal:11434
@@ -36,6 +37,12 @@ services:
           path: ../templates
           target: /mlprofiler-builder/templates/
           initial_sync: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
     # healthcheck:
     #   test: curl -f http://localhost:8081/health || exit 1
     #   interval: 5m
@@ -86,4 +93,6 @@ networks:
 
 volumes:
   vllm_cache_data:
+    driver: local
+  huggingface_cache_data:
     driver: local

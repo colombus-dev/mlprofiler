@@ -118,11 +118,19 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     if len(expected_results) != len(filtered_subgraphes):
         expected_results = [expected_results for _ in range(len(filtered_subgraphes))]
 
-    # print(expected_results)
+    results = (
+        profiler.profile_multiple_subgraphes(
+            [fsg for _, fsg in filtered_subgraphes], "Others", expected_results
+        )
+        if filtered_subgraphes
+        else []
+    )
 
-    for (i, subgraph), expected in zip(filtered_subgraphes, expected_results):
-        if params.instructions_index and i not in params.instructions_index:
-            continue
+    for (i, subgraph), (current_step, perplexity, logprobs) in zip(
+        filtered_subgraphes, results
+    ):
+        # if params.instructions_index and i not in params.instructions_index:
+        #     continue
 
         line = subgraph.source
 
@@ -148,19 +156,16 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
                 ]
             )
 
-        if subgraph.step_name == "Library Loading":
-            current_step = "Library Loading"
-            perplexity = 1
-            logprobs = 100
-        else:
-            current_step, perplexity, logprobs = profiler.profile_subgraph(
-                subgraph, "Others", expected
-            )
-            if (
-                current_step == "Library Loading"
-                and subgraph.step_name != "Library Loading"
-            ):
-                current_step = "Others"
+        # if subgraph.step_name == "Library Loading":
+        #     current_step = "Library Loading"
+        #     perplexity = 1
+        #     logprobs = 100
+        # else:
+        #     if (
+        #         current_step == "Library Loading"
+        #         and subgraph.step_name != "Library Loading"
+        #     ):
+        #         current_step = "Others"
 
         res["metadata"]["perplexity"] = perplexity
         res["metadata"]["logprobs"] = logprobs

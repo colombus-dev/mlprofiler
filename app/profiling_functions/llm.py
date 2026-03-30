@@ -39,6 +39,21 @@ env = Environment(
 )
 
 
+class InferenceClientSingleton:
+    __INSTANCE: OpenAI | None = None
+    __INSTANCE_NAME: str = ""
+
+    @classmethod
+    def get_instance(cls, instance_name: str) -> OpenAI:
+        if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
+            return cls.__INSTANCE
+        cls.__INSTANCE_NAME = instance_name
+        cls.__INSTANCE = OpenAI(
+            base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
+        )
+        return cls.__INSTANCE
+
+
 class LLMProfiler(BaseMLProfiler):
     def __init__(self, python_content: str, taxonomy: Taxonomy):
         super().__init__(python_content, taxonomy)
@@ -61,8 +76,8 @@ class LLMProfiler(BaseMLProfiler):
         )
 
         # LLM client
-        self.__client: OpenAI = OpenAI(
-            base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
+        self.__client: OpenAI = InferenceClientSingleton.get_instance(
+            "http://{INFERENCE_API_URL}/v1"
         )
 
     @BaseMLProfiler.python_content.setter
@@ -71,16 +86,18 @@ class LLMProfiler(BaseMLProfiler):
         self.__system_prompt_content = self.__system_prompt_template.render(
             all_python_code=self._python_content
         )
-        
 
     def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
+        self,
+        subgraph: ParserSubgraph,
+        default_step: str,
+        expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         user_prompt_content = self.__user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
             expected_class=expected,
-            is_multi_class=isinstance(expected, list)
+            is_multi_class=isinstance(expected, list),
             # subgraph_library=subgraph.library,
             # subgraph_function=subgraph.function,
         )
