@@ -79,6 +79,7 @@ class LLMProfiler(BaseMLProfiler):
         self.__client: OpenAI = InferenceClientSingleton.get_instance(
             "http://{INFERENCE_API_URL}/v1"
         )
+        self.model_id = self.__client.models.list().data[0].id
 
     @BaseMLProfiler.python_content.setter
     def python_content(self, new_content):
@@ -93,16 +94,23 @@ class LLMProfiler(BaseMLProfiler):
         default_step: str,
         expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        user_prompt_content = self.__user_prompt_template.render(
-            taxonomy=self.taxonomy,
-            python_code_line=subgraph.source,
-            expected_class=expected,
-            is_multi_class=isinstance(expected, list),
-            # subgraph_library=subgraph.library,
-            # subgraph_function=subgraph.function,
-        )
-
-        model_id = self.__client.models.list().data[0].id
+        if self.__system_prompt_content:
+            user_prompt_content = self.__user_prompt_template.render(
+                taxonomy=self.taxonomy,
+                python_code_line=subgraph.source,
+                expected_class=expected,
+                is_multi_class=isinstance(expected, list),
+            )
+        else:
+            # if no system prompt content, we pass it to the user prompt
+            # as the model may not support system messages (e.g., magicoder)
+            user_prompt_content = self.__user_prompt_template.render(
+                taxonomy=self.taxonomy,
+                python_code_line=subgraph.source,
+                expected_class=expected,
+                is_multi_class=isinstance(expected, list),
+                all_python_code=self._python_content,
+            )
 
         with langfuse.start_as_current_observation(
             as_type="span", name="OpenAI-generation"
@@ -110,14 +118,16 @@ class LLMProfiler(BaseMLProfiler):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
                 completion: ChatCompletion = self.__client.chat.completions.create(
-                    model=model_id,
+                    model=self.model_id,
                     messages=[
                         {
                             "role": "system",
                             "content": self.__system_prompt_content,
                         },
                         {"role": "user", "content": user_prompt_content},
-                    ],
+                    ]
+                    if self.__system_prompt_content
+                    else [{"role": "user", "content": user_prompt_content}],
                     response_format=json.loads(self.__classification_response_schema),
                     extra_body={
                         "chat_template_kwargs": {"enable_thinking": False},
