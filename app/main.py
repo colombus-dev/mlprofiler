@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from app.custom_types import (
+    ParserSubgraph,
     SupportedParserFunction,
     SupportedProfilerFunction,
 )
@@ -18,6 +19,32 @@ app = FastAPI()
 # TODO: adapt core_api to /profile API changes
 
 APP_VERSION = "0.4.0-MLProfile"
+
+
+class ParsePythonParams(BaseModel):
+    python_content: str
+    parser_name: SupportedParserFunction
+    parse_subscript: bool
+
+
+@app.post("/parse")
+def parse_python(params: ParsePythonParams) -> list[ParserSubgraph]:
+    """Parse the given python code and returns the retrieved subgraphes.
+
+    Parameters
+    ----------
+    params : ParsePythonParams
+        the the python content, parser name and wether to parse subscript
+        instructions or not
+
+    Returns
+    -------
+    list[ParserSubgraph]
+        the retrieved subgraphes
+    """
+    return get_parser(params.parser_name).parse_code(
+        params.python_content, params.parse_subscript
+    )
 
 
 class MLProfileMetadata(BaseModel):
