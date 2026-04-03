@@ -17,7 +17,7 @@ class DSPipelinesProfiler(BaseMLProfiler):
     def __init__(self, python_content: str, taxonomy: Taxonomy):
         super().__init__(python_content, taxonomy)
 
-    def profile_subgraph(
+    async def profile_subgraph(
         self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         retrieved_step = steps_functions_mapping.get(subgraph.function, default_step)

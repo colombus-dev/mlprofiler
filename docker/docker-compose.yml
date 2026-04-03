@@ -62,9 +62,9 @@ services:
       # see https://docs.vllm.ai/en/v0.10.1.1/configuration/conserving_memory.html for memory usage optimization
       "--quantization", "${LLM_QUANTIZATION}",
       "--max_model_len", "8192",
-      "--max_num_seqs", "1",
+      "--max_num_seqs", "10",  # "1"
       "--gpu-memory-utilization", "0.95",
-      "--enforce-eager",
+      # "--enforce-eager",
       # "--limit-mm-per-prompt.image", "0",
       # "--limit-mm-per-prompt.video", "0",
       # see https://docs.vllm.ai/en/stable/usage/v1_guide.html#semantic-changes-to-logprobs for logprobs
@@ -72,7 +72,7 @@ services:
     ]
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
-      VLLM_BATCH_INVARIANT: 1
+      # VLLM_BATCH_INVARIANT: 1
       # VLLM_USE_V1: 0
     ports:
       - "8000:11434"

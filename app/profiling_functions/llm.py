@@ -10,11 +10,11 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 try:
     # trying monitored by default
     from langfuse import get_client, propagate_attributes
-    from langfuse.openai import OpenAI
+    from langfuse.openai import AsyncOpenAI
 
     langfuse = get_client()
 except:
-    from openai import OpenAI
+    from openai import AsyncOpenAI
 
     def propagate_attributes(*args, **kwargs): ...
 
@@ -40,18 +40,20 @@ env = Environment(
 
 
 class InferenceClientSingleton:
-    __INSTANCE: OpenAI | None = None
+    __INSTANCE: AsyncOpenAI | None = None
     __INSTANCE_NAME: str = ""
+    __MODEL_ID: str = ""
 
     @classmethod
-    def get_instance(cls, instance_name: str) -> OpenAI:
+    async def get_instance(cls, instance_name: str) -> tuple[AsyncOpenAI, str]:
         if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
-            return cls.__INSTANCE
+            return cls.__INSTANCE, cls.__MODEL_ID
         cls.__INSTANCE_NAME = instance_name
-        cls.__INSTANCE = OpenAI(
+        cls.__INSTANCE = AsyncOpenAI(
             base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
         )
-        return cls.__INSTANCE
+        cls.__MODEL_ID = (await cls.__INSTANCE.models.list()).data[0].id
+        return cls.__INSTANCE, cls.__MODEL_ID
 
 
 class LLMProfiler(BaseMLProfiler):
@@ -75,12 +77,6 @@ class LLMProfiler(BaseMLProfiler):
             all_python_code=self._python_content
         )
 
-        # LLM client
-        self.__client: OpenAI = InferenceClientSingleton.get_instance(
-            "http://{INFERENCE_API_URL}/v1"
-        )
-        self.model_id = self.__client.models.list().data[0].id
-
     @BaseMLProfiler.python_content.setter
     def python_content(self, new_content):
         self._python_content = new_content
@@ -88,7 +84,7 @@ class LLMProfiler(BaseMLProfiler):
             all_python_code=self._python_content
         )
 
-    def profile_subgraph(
+    async def profile_subgraph(
         self,
         subgraph: ParserSubgraph,
         default_step: str,
@@ -112,13 +108,16 @@ class LLMProfiler(BaseMLProfiler):
                 all_python_code=self._python_content,
             )
 
+        client, model_id = await InferenceClientSingleton.get_instance(
+            "http://{INFERENCE_API_URL}/v1"
+        )
         with langfuse.start_as_current_observation(
             as_type="span", name="OpenAI-generation"
         ):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
-                completion: ChatCompletion = self.__client.chat.completions.create(
-                    model=self.model_id,
+                completion: ChatCompletion = await client.chat.completions.create(
+                    model=model_id,
                     messages=[
                         {
                             "role": "system",
@@ -143,7 +142,7 @@ class LLMProfiler(BaseMLProfiler):
                     top_logprobs=len(self.taxonomy.get_steps_names()),
                 )
 
-        completion_content = completion.choices[0].message.content
+                completion_content = completion.choices[0].message.content
 
         if not completion_content:
             return default_step, -1, []

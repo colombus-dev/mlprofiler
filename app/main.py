@@ -1,8 +1,8 @@
 import datetime
 
-from typing import Any
+from typing import Any, Annotated
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 
 from app.custom_types import (
@@ -10,8 +10,8 @@ from app.custom_types import (
     SupportedParserFunction,
     SupportedProfilerFunction,
 )
-from app.parsers import get_parser
-from app.profiling_functions import get_profiler
+from app.parsers import get_parser, BaseMLParser
+from app.profiling_functions import get_profiler, BaseMLProfiler
 from app.profiling_functions._utils import Taxonomy
 
 app = FastAPI()
@@ -85,8 +85,26 @@ class ProfileNotebookParams(BaseModel):
     parse_subscript: bool
 
 
+def inject_parser(params: ProfileNotebookParams):
+    return get_parser(params.parser_name)
+
+
+def inject_profiler(params: ProfileNotebookParams):
+    return get_profiler(
+        params.profiler_name,
+        params.context or params.python_content,
+        params.taxonomy,
+    )
+
+
+ParserDep = Annotated[BaseMLParser, Depends(inject_parser)]
+ProfilerDep = Annotated[BaseMLProfiler, Depends(inject_profiler)]
+
+
 @app.post("/profile")
-def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
+async def profile_notebook(
+    params: ProfileNotebookParams, parser: ParserDep, profiler: ProfilerDep
+) -> MLProfileResult:
     """Compute the ML profile for the given notebook.
 
     Parameters
@@ -100,14 +118,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
     list[Any]
         the LLM profiling result
     """
-    parser = get_parser(params.parser_name)
-
     context = params.context or params.python_content
-    profiler = get_profiler(
-        params.profiler_name,
-        context,
-        params.taxonomy,
-    )
 
     if params.session_id:
         # reusing existing session
@@ -133,7 +144,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         for i, subgraph in enumerate(
             parser.parse_code(params.python_content, params.parse_subscript)
         )
-        if (not params.instructions_index) or (i in params.instructions_index)
+        if (params.instructions_index is None) or (i in params.instructions_index)
     ]
 
     # TODO: improve this part
@@ -146,7 +157,7 @@ def profile_notebook(params: ProfileNotebookParams) -> MLProfileResult:
         expected_results = [expected_results for _ in range(len(filtered_subgraphes))]
 
     results = (
-        profiler.profile_multiple_subgraphes(
+        await profiler.profile_multiple_subgraphes(
             [fsg for _, fsg in filtered_subgraphes], "Others", expected_results
         )
         if filtered_subgraphes

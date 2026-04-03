@@ -64,7 +64,7 @@ class EmbeddingProfiler(BaseMLProfiler):
     def python_content(self, new_content):
         self._python_content = new_content
 
-    def profile_subgraph(
+    async def profile_subgraph(
         self,
         subgraph: ParserSubgraph,
         default_step: str,
@@ -88,7 +88,7 @@ class EmbeddingProfiler(BaseMLProfiler):
             [],
         )
 
-    def profile_multiple_subgraphes(
+    async def profile_multiple_subgraphes(
         self,
         subgraphes: list[ParserSubgraph],
         default_step: str,
