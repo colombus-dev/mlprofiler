@@ -1,6 +1,3 @@
-import os
-
-import numpy as np
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
@@ -8,7 +5,6 @@ from app.custom_types import ParserSubgraph
 from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 
 
-INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "mlprofiler_vllm:11434")
 
 LABELS_NAMES = [
     "Data Preparation",

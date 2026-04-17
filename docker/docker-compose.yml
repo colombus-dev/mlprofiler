@@ -1,5 +1,5 @@
 services:
-  mlprofiler_api:
+  ml_profiler_api:
     platform: linux/amd64
     build:
       context: ../
@@ -16,8 +16,8 @@ services:
       - ../out:/mlprofiler-builder/out:rw
       - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      # INFERENCE_API_URL: mlprofiler_vllm:11434
-      INFERENCE_API_URL: host.docker.internal:11434
+      INFERENCE_API_URL_PREFIX: "http://ml_interference_api:11434"
+      PARSER_API_URL_PREFIX: "http://locahost:1701"
       MODEL_ID: ${LLM_MODEL_ID}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
@@ -28,15 +28,12 @@ services:
         - action: sync
           path: ../app
           target: /mlprofiler-builder/app
-          initial_sync: true
         - action: sync
           path: ../resources
           target: /mlprofiler-builder/resources/
-          initial_sync: true
         - action: sync
           path: ../templates
           target: /mlprofiler-builder/templates/
-          initial_sync: true
     deploy:
       resources:
         reservations:
@@ -50,10 +47,10 @@ services:
     #   retries: 3
     #   start_period: 20s
     # depends_on:
-    #   - mlprofiler_vllm
-  mlprofiler_vllm:
+    #   - ml_interference_api
+  ml_interference_api:
     profiles:
-      - localvllm
+      - ml_interference_api
     image: vllm/vllm-openai:v0.10.2
     command: [
       "--port", "11434",
@@ -61,10 +58,10 @@ services:
       # "--reasoning-parser", "${LLM_REASONING_PARSER}",
       # see https://docs.vllm.ai/en/v0.10.1.1/configuration/conserving_memory.html for memory usage optimization
       "--quantization", "${LLM_QUANTIZATION}",
-      "--max_model_len", "8192",
+      "--max_model_len", "4096",
       "--max_num_seqs", "10",  # "1"
-      "--gpu-memory-utilization", "0.95",
-      # "--enforce-eager",
+      "--gpu-memory-utilization", "0.8",
+      "--enforce-eager",
       # "--limit-mm-per-prompt.image", "0",
       # "--limit-mm-per-prompt.video", "0",
       # see https://docs.vllm.ai/en/stable/usage/v1_guide.html#semantic-changes-to-logprobs for logprobs
@@ -75,7 +72,7 @@ services:
       # VLLM_BATCH_INVARIANT: 1
       # VLLM_USE_V1: 0
     ports:
-      - "8000:11434"
+      - "11434:11434"
     networks:
       - colombus-dev_network
     volumes:
