@@ -1,10 +1,9 @@
 import asyncio
 import uuid
-
 from abc import ABC, abstractmethod
 
-from app.custom_types import ParserSubgraph
-from app.profiling_functions._utils import Taxonomy
+from app.models.parser import ParserSubgraph
+from app.models.taxonomy import Taxonomy
 
 
 class BaseMLProfiler(ABC):
