@@ -1,14 +1,14 @@
 import datetime
-from typing import Any, Generator, List
+from typing import Any, Generator
 
-import httpx
 import ujson
 from fastapi import APIRouter, UploadFile
 
-from app.constants import APP_VERSION, PARSER_API_TIMEOUT, PARSER_API_URL_PREFIX
-from app.models.parser import ParserFunction, ParserSubgraph
+from app.constants import APP_VERSION
+from app.models.parser import ParserFunction
 from app.models.profiler import ProfilerFunction
 from app.models.taxonomy import TAXONOMY_BY_NAME, TaxonomyFunction
+from app.parsers import get_parser
 from app.profiling_functions import get_profiler
 
 router = APIRouter()
@@ -36,30 +36,19 @@ class NotebookCellIterator:
                     yield cell
 
 
-def _parse_source_code(source_code: str) -> List[ParserSubgraph]:
-    parser_response = httpx.post(
-        f"{PARSER_API_URL_PREFIX}/parse",
-        json={
-            "source": source_code,
-        },
-        timeout=PARSER_API_TIMEOUT,
-    )
-    parser_response.raise_for_status()
-    parser_response = parser_response.json()
-    return [ParserSubgraph.model_validate(pr) for pr in parser_response]
-
-
 async def _profile_notebook(
     notebook_file: UploadFile,
     taxonomy_name: TaxonomyFunction,
     profiler_name: ProfilerFunction,
+    parser_name: str = ParserFunction.VESPUCCI.value,
 ):
     file_content = await notebook_file.read()
     source_code = "\n".join(
         c["source"] for c in NotebookCellIterator(file_content.decode("utf8"))
     )
 
-    subgraphs = _parse_source_code(source_code)
+
+    subgraphs = get_parser(parser_name).parse_code(source_code)
 
     taxonomy = TAXONOMY_BY_NAME[taxonomy_name]
     profiler = get_profiler(
@@ -95,7 +84,7 @@ async def _profile_notebook(
             "session_id": profiler.session_id,
             "taxonomy": taxonomy_name,
             "profiler": profiler_name,
-            "parser": ParserFunction.VESPUCCI.value,
+            "parser": parser_name,
         },
         "source": source,
         "outputs": {},
