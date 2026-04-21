@@ -1,8 +1,8 @@
-import httpx
-
 from collections import Counter
 
-from app.custom_types import ParserSubgraph
+import httpx
+
+from app.models.parser import ParserSubgraph
 from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 
 
@@ -11,7 +11,10 @@ class HeaderGenProfiler(BaseMLProfiler):
         super().__init__(python_content, taxonomy)
 
     async def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str, expected: str | list[str] | None = None
+        self,
+        subgraph: ParserSubgraph,
+        default_step: str,
+        expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         # TODO: add docstring to payload for fair comparison
         ml_label_response = httpx.post(

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.custom_types import ParserSubgraph
+from app.models.parser import ParserSubgraph
 
 
 class BaseMLParser(ABC):
@@ -8,7 +8,9 @@ class BaseMLParser(ABC):
         super().__init__()
 
     @abstractmethod
-    def parse_code(self, python_code: str, parse_subscript: bool = True) -> list[ParserSubgraph]:
+    def parse_code(
+        self, python_code: str, parse_subscript: bool = True
+    ) -> list[ParserSubgraph]:
         """Parse a given python code to extract the instructions to classify.
 
         Args:

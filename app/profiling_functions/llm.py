@@ -1,10 +1,8 @@
 # Templating configuration
 
 import json
-import os
 
 import numpy as np
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 try:
@@ -29,10 +27,8 @@ except:
 from openai.types.chat import ChatCompletion
 
 from app.constants import INFERENCE_API_URL_PREFIX
-from app.custom_types import ParserSubgraph
+from app.models.parser import ParserSubgraph
 from app.profiling_functions._base import BaseMLProfiler, Taxonomy
-
-
 
 env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()

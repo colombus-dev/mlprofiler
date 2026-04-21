@@ -1,10 +1,8 @@
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
-from app.custom_types import ParserSubgraph
+from app.models.parser import ParserSubgraph
 from app.profiling_functions._base import BaseMLProfiler, Taxonomy
-
-
 
 LABELS_NAMES = [
     "Data Preparation",
