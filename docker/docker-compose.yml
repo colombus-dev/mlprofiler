@@ -25,15 +25,14 @@ services:
       LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
     develop:
       watch:
-      - action: sync
+      - action: sync+restart
         path: ../app
         target: /mlprofiler-builder/app
-      - action: sync
-        path: ../resources
-        target: /mlprofiler-builder/resources/
+        initial_sync: true
       - action: sync
         path: ../templates
         target: /mlprofiler-builder/templates/
+        initial_sync: true
     deploy:
       resources:
         reservations:
