@@ -1,29 +1,27 @@
 import datetime
+from typing import Annotated, Any
 
-from typing import Any, Annotated
-
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 
-from app.custom_types import (
-    ParserSubgraph,
-    SupportedParserFunction,
-    SupportedProfilerFunction,
-)
-from app.parsers import get_parser, BaseMLParser
-from app.profiling_functions import get_profiler, BaseMLProfiler
-from app.profiling_functions._utils import Taxonomy
+from app.constants import APP_VERSION
+from app.models.parser import ParserFunction, ParserSubgraph
+from app.models.profiler import ProfilerFunction
+from app.models.taxonomy import Taxonomy
+from app.parsers import BaseMLParser, get_parser
+from app.profiling_functions import BaseMLProfiler, get_profiler
+from app.routers import profile_router
 
-app = FastAPI()
+app = FastAPI(version=APP_VERSION)
+app.include_router(profile_router.router, prefix="/v2/profile")
+
 
 # TODO: adapt core_api to /profile API changes
-
-APP_VERSION = "0.4.0-MLProfile"
 
 
 class ParsePythonParams(BaseModel):
     python_content: str
-    parser_name: SupportedParserFunction
+    parser_name: ParserFunction
     parse_subscript: bool
 
 
@@ -52,8 +50,8 @@ class MLProfileMetadata(BaseModel):
     generation_date: datetime.datetime
     session_id: str
     taxonomy: str
-    profiler: SupportedProfilerFunction
-    parser: SupportedParserFunction
+    profiler: ProfilerFunction
+    parser: ParserFunction
 
 
 class MLProfileResult(BaseModel):
@@ -80,8 +78,8 @@ class ProfileNotebookParams(BaseModel):
     session_id: str | None = None  # enables reusing existing session
     python_content: str
     taxonomy: Taxonomy
-    parser_name: SupportedParserFunction
-    profiler_name: SupportedProfilerFunction
+    parser_name: ParserFunction
+    profiler_name: ProfilerFunction
     parse_subscript: bool
 
 
@@ -187,9 +185,9 @@ async def profile_notebook(
         if params.context_truncation_offset is not None:
             profiler.python_content = "\n".join(
                 context.split("\n")[
-                    subgraph.start_lineno
+                    subgraph.line.start
                     - 1
-                    - params.context_truncation_offset : subgraph.end_lineno
+                    - params.context_truncation_offset : subgraph.line.end
                     + params.context_truncation_offset
                 ]
             )

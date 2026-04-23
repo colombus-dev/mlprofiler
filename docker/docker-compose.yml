@@ -5,19 +5,19 @@ services:
       context: ../
       dockerfile: ./docker/Dockerfile
     ports:
-      - "8081:8081"
+    - 8081:8081
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+    - host.docker.internal:host-gateway
     networks:
-      - colombus-dev_network
+    - colombus-dev_network
     volumes:
-      - ../data:/mlprofiler-builder/data:rw
-      - ../resources:/mlprofiler-builder/resources:rw
-      - ../out:/mlprofiler-builder/out:rw
-      - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
+    - ../data:/mlprofiler-builder/data:rw
+    - ../resources:/mlprofiler-builder/resources:rw
+    - ../out:/mlprofiler-builder/out:rw
+    - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      # INFERENCE_API_URL: mlprofiler_vllm:11434
-      INFERENCE_API_URL: host.docker.internal:11434
+      INFERENCE_API_URL_PREFIX: http://ml_inference_api:11434
+      PARSER_API_URL_PREFIX: http://ml_parser_api:1701
       MODEL_ID: ${LLM_MODEL_ID}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
@@ -25,24 +25,20 @@ services:
       LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
     develop:
       watch:
-        - action: sync
-          path: ../app
-          target: /mlprofiler-builder/app
-          initial_sync: true
-        - action: sync
-          path: ../resources
-          target: /mlprofiler-builder/resources/
-          initial_sync: true
-        - action: sync
-          path: ../templates
-          target: /mlprofiler-builder/templates/
-          initial_sync: true
+      - action: sync+restart
+        path: ../app
+        target: /mlprofiler-builder/app
+        initial_sync: true
+      - action: sync
+        path: ../templates
+        target: /mlprofiler-builder/templates/
+        initial_sync: true
     deploy:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              capabilities: [gpu]
+          - driver: nvidia
+            capabilities: [gpu]
     # healthcheck:
     #   test: curl -f http://localhost:8081/health || exit 1
     #   interval: 5m
@@ -50,42 +46,40 @@ services:
     #   retries: 3
     #   start_period: 20s
     # depends_on:
-    #   - mlprofiler_vllm
-  mlprofiler_vllm:
+    #   - ml_inference_api
+  ml_inference_api:
     profiles:
-      - localvllm
+    - ml_inference_api
     image: vllm/vllm-openai:v0.10.2
-    command: [
-      "--port", "11434",
-      "--model", "${LLM_MODEL_ID}",
-      # "--reasoning-parser", "${LLM_REASONING_PARSER}",
-      # see https://docs.vllm.ai/en/v0.10.1.1/configuration/conserving_memory.html for memory usage optimization
-      "--quantization", "${LLM_QUANTIZATION}",
-      "--max_model_len", "8192",
-      "--max_num_seqs", "10",  # "1"
-      "--gpu-memory-utilization", "0.95",
-      # "--enforce-eager",
-      # "--limit-mm-per-prompt.image", "0",
-      # "--limit-mm-per-prompt.video", "0",
-      # see https://docs.vllm.ai/en/stable/usage/v1_guide.html#semantic-changes-to-logprobs for logprobs
-      "--logprobs-mode", "processed_logprobs",
-    ]
+    command: [--port, '11434', --model, '${LLM_MODEL_ID}', --quantization, '${LLM_QUANTIZATION}', --max_model_len, '4096', --max_num_seqs, '10', --gpu-memory-utilization, '0.8', --enforce-eager, --logprobs-mode, processed_logprobs]
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
       # VLLM_BATCH_INVARIANT: 1
       # VLLM_USE_V1: 0
     ports:
-      - "8000:11434"
+    - 11434:11434
     networks:
-      - colombus-dev_network
+    - colombus-dev_network
     volumes:
-      - vllm_cache_data:/root/.cache/huggingface:rw
+    - vllm_cache_data:/root/.cache/huggingface:rw
     deploy:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              capabilities: [gpu]
+          - driver: nvidia
+            capabilities: [gpu]
+
+  ml_parser_api:
+    profiles:
+    - ml_parser_api
+    platform: linux/amd64
+    build:
+      context: ../../FAST-Parsing-Service # TODO ymu: remove, this is temporary
+      dockerfile: ./dockerfile
+    ports:
+    - 1701:1701
+    networks:
+    - colombus-dev_network
 
 networks:
   colombus-dev_network:
