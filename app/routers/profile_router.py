@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 from typing import Any, Generator
 
@@ -40,7 +41,7 @@ async def _profile_notebook(
     notebook_file: UploadFile,
     taxonomy_name: TaxonomyFunction,
     profiler_name: ProfilerFunction,
-    parser_name: str = ParserFunction.VESPUCCI.value,
+    parser_name: ParserFunction = ParserFunction.VESPUCCI,
 ):
     file_content = await notebook_file.read()
     source_code = "\n".join(
@@ -84,7 +85,7 @@ async def _profile_notebook(
             "session_id": profiler.session_id,
             "taxonomy": taxonomy_name,
             "profiler": profiler_name,
-            "parser": parser_name,
+            "parser": parser_name.value,
         },
         "source": source,
         "outputs": {},
@@ -97,7 +98,7 @@ async def profile(
     taxonomy: TaxonomyFunction,
     profiler: ProfilerFunction,
 ):
-    profiles = []
-    for notebook_file in notebook_files:
-        profiles.append(await _profile_notebook(notebook_file, taxonomy, profiler))
+    profiles = await asyncio.gather(
+        *[_profile_notebook(notebook_file, taxonomy, profiler) for notebook_file in notebook_files]
+    )
     return profiles

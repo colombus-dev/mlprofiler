@@ -50,7 +50,7 @@ TAXONOMY_BY_NAME = {
                 definition="the code evaluates a model",
             ),
             TaxonomyElement(
-                name="Model Inference",
+                name="Prediction",
                 definition="the code makes inference using a model",
             ),
             TaxonomyElement(
