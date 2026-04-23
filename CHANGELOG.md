@@ -27,7 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Taxonomy metadata in JSON ML profile.
-- "dspipelines" taxonomy (from *The Art and Practice of Data Science Pipelines*, 2022 ICSE) with some improvements (Library Loading, Others)
+- "dspipelines" taxonomy (from *The Art and Practice of Data Science Pipelines*, 2022 ICSE) with some improvements (
+  Library Loading, Others)
 
 ## [0.1] - 2025-06-01
 

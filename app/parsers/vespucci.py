@@ -2,7 +2,7 @@ import httpx
 
 from app.constants import PARSER_API_URL_PREFIX
 from app.models.parser import ParserSubgraph
-from app.parsers._base import BaseMLParser
+from app.parsers.base import BaseMLParser
 
 PARSER_API_TIMEOUT = 2
 
