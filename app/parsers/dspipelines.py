@@ -2,7 +2,8 @@ import ast
 import uuid
 
 from app.models.parser import ParserSubgraph, ParserSubgraphLine
-from app.parsers._base import BaseMLParser
+from app.parsers.base import BaseMLParser
+
 
 #### TODO: adapted from https://github.com/sumonbis/DS-Pipeline below
 
@@ -10,10 +11,10 @@ from app.parsers._base import BaseMLParser
 class DSPipelinesParser(BaseMLParser):
     def __init__(self):
         super().__init__()
-        self.__subgraphes: list[ParserSubgraph] = []
+        self.__subgraphs: list[ParserSubgraph] = []
 
     def parse_code(
-        self, python_code: str, parse_subscript: bool = True
+            self, python_code: str, parse_subscript: bool = True
     ) -> list[ParserSubgraph]:
         tree = ast.parse(python_code)
         visitor = FuncLister(parse_subscript=parse_subscript)
@@ -25,8 +26,8 @@ class DSPipelinesParser(BaseMLParser):
         visitor.symb_arr = []
         visitor.visit(tree)
 
-        edges = []
-        pipe = []
+        edges: list[tuple[int, int]] = []
+        pipe: list[str] = []
 
         for i in range(len(visitor.s_list)):
             ins = list(set(visitor.arg_arr[i]))
@@ -41,12 +42,12 @@ class DSPipelinesParser(BaseMLParser):
                     if found:
                         break
 
-            rec = []
+            rec: list[dict] = []
             self.build_pipe(visitor.s_list[i], visitor.f_dict, pipe, rec)
 
-        computed_subgraphes = [*self.__subgraphes]
-        self.__subgraphes.clear()
-        return computed_subgraphes
+        computed_subgraphs = [*self.__subgraphs]
+        self.__subgraphs.clear()
+        return computed_subgraphs
 
     def build_pipe(self, elem, dict, pipe, rec):
         if elem["root"].startswith("9"):
@@ -61,7 +62,7 @@ class DSPipelinesParser(BaseMLParser):
         elif (len(pipe) == 0) or (pipe[-1] != elem):
             pipe.append(elem["root"])
             splitted_libfunc = elem["api"].split(".")
-            self.__subgraphes.append(
+            self.__subgraphs.append(
                 ParserSubgraph(
                     id=str(uuid.uuid4()),
                     library="",
@@ -82,22 +83,22 @@ class FuncLister(ast.NodeVisitor):
     isClass = False
     isFunc = 0
 
-    symb_dict = {}
-    s_list = []
-    f_name = []
-    f_dict = {}
-    arg_arr = []
-    symb_arr = []
-    symb = []
+    symb_dict: dict[str, str] = {}
+    s_list: list[dict] = []
+    f_name: list[str] = []
+    f_dict: dict[str, list[dict]] = {}
+    arg_arr: list[list[str] | str] = []
+    symb_arr: list[list[str] | str] = []
+    symb: list[str] = []
 
     def __init__(self, parse_subscript: bool = True) -> None:
         super().__init__()
         self.parse_subscript = parse_subscript
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node) -> None:
         self.generic_visit(node)
 
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node) -> None:
         self.isFunc += 1
         self.f_name.append(node.name)
         self.f_dict[self.f_name[-1]] = []
@@ -105,7 +106,7 @@ class FuncLister(ast.NodeVisitor):
         self.f_name.pop()
         self.isFunc -= 1
 
-    def visit_Assign(self, node):
+    def visit_Assign(self, node) -> None:
         self.symb = []
         sym = ""
         for target in node.targets:
@@ -121,22 +122,23 @@ class FuncLister(ast.NodeVisitor):
         self.generic_visit(node)
         self.symb = []
 
-    def getSymbol(self, target):
+    def getSymbol(self, target) -> str:
         if isinstance(target, ast.Name):
             return target.id
         elif isinstance(target, ast.Subscript):
             if (
-                isinstance(target.value, ast.Name)
-                and isinstance(target.slice, ast.Index)
-                and isinstance(target.slice.value, ast.Name)
+                    isinstance(target.value, ast.Name)
+                    and isinstance(target.slice, ast.Index)
+                    and isinstance(target.slice.value, ast.Name)
             ):
                 return target.value.id + "[" + target.slice.value.id + "]"
+            return "?"
         elif isinstance(target, ast.Attribute):
             return target.attr
         else:
             return "?"
 
-    def visit_Call(self, node):
+    def visit_Call(self, node) -> None:
         api = ""
         ar = ""
         arg = []
@@ -196,7 +198,8 @@ class FuncLister(ast.NodeVisitor):
                 self.symb_arr.append("")
         self.generic_visit(node)
 
-    def get_args(node):
+    @staticmethod
+    def get_args(node) -> list[str]:
         a = []
         b = []
         for arg in node.args:
@@ -223,7 +226,7 @@ class FuncLister(ast.NodeVisitor):
 
 
 class AttrLister(ast.NodeVisitor):
-    def visit_Attribute(self, node):
+    def visit_Attribute(self, node)-> None:
         if isinstance(node.value, ast.Attribute):
             if FuncLister.trailler == "":
                 FuncLister.trailler = node.attr
@@ -234,14 +237,14 @@ class AttrLister(ast.NodeVisitor):
                 FuncLister.trailler = node.value.id + "." + node.attr
             else:
                 FuncLister.trailler = (
-                    node.value.id + "." + node.attr + "." + FuncLister.trailler
+                        node.value.id + "." + node.attr + "." + FuncLister.trailler
                 )
         self.generic_visit(node)
 
 
 class Utils:
     @classmethod
-    def get_val(cls, node):
+    def get_val(cls, node) -> str:
         if isinstance(node, ast.Num):
             return str(node.n)
         elif isinstance(node, ast.Str):
@@ -268,14 +271,14 @@ class Utils:
             return "UNKNOWN"
 
     @classmethod
-    def get_elts(cls, node):
+    def get_elts(cls, node) -> str:
         a = []
         for e in node.elts:
             a.append(cls.get_val(e))
         return str(a)
 
     @classmethod
-    def get_bin_op(cls, node):
+    def get_bin_op(cls, node) -> str | None:
         if isinstance(node, ast.Add):
             return " + "
         elif isinstance(node, ast.Sub):

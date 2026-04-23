@@ -8,8 +8,10 @@ from app.constants import APP_VERSION
 from app.models.parser import ParserFunction, ParserSubgraph
 from app.models.profiler import ProfilerFunction
 from app.models.taxonomy import Taxonomy
-from app.parsers import BaseMLParser, get_parser
-from app.profiling_functions import BaseMLProfiler, get_profiler
+from app.parsers.base import BaseMLParser
+from app.parsers.factory import get_parser
+from app.profiling_functions.base import BaseMLProfiler
+from app.profiling_functions.factory import get_profiler
 from app.routers import profile_router
 
 app = FastAPI(version=APP_VERSION)
@@ -27,7 +29,7 @@ class ParsePythonParams(BaseModel):
 
 @app.post("/parse")
 def parse_python(params: ParsePythonParams) -> list[ParserSubgraph]:
-    """Parse the given python code and returns the retrieved subgraphes.
+    """Parse the given python code and returns the retrieved subgraphs.
 
     Parameters
     ----------
@@ -38,7 +40,7 @@ def parse_python(params: ParsePythonParams) -> list[ParserSubgraph]:
     Returns
     -------
     list[ParserSubgraph]
-        the retrieved subgraphes
+        the retrieved subgraphs
     """
     return get_parser(params.parser_name).parse_code(
         params.python_content, params.parse_subscript
@@ -64,13 +66,15 @@ class MLProfileResult(BaseModel):
 class ProfileNotebookParams(BaseModel):
     notebook_file_stem: str
     context: str | None = (
-        None  # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
+        None
+        # enables profiling subset of python_content (e.g., notebook cell) while keeping the whole context (default: python_content)
     )
     context_truncation_offset: int | None = (
         None  # enables truncating context to avoid context overflow
     )
     instructions_index: list[int] | None = (
-        None  # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
+        None
+        # enables profiling subset of ast instructions (e.g., avoid instructions classified as Others by the baseline)
     )
     expected_results: list[str] | list[list[str]] | None = (
         None  # enables giving the baseline result for In-Context Learning (ICL)
@@ -101,7 +105,7 @@ ProfilerDep = Annotated[BaseMLProfiler, Depends(inject_profiler)]
 
 @app.post("/profile")
 async def profile_notebook(
-    params: ProfileNotebookParams, parser: ParserDep, profiler: ProfilerDep
+        params: ProfileNotebookParams, parser: ParserDep, profiler: ProfilerDep
 ) -> MLProfileResult:
     """Compute the ML profile for the given notebook.
 
@@ -137,7 +141,7 @@ async def profile_notebook(
     )
     prev_step = None
 
-    filtered_subgraphes = [
+    filtered_subgraphs = [
         (i, subgraph)
         for i, subgraph in enumerate(
             parser.parse_code(params.python_content, params.parse_subscript)
@@ -149,21 +153,21 @@ async def profile_notebook(
     expected_results = (
         params.expected_results
         if params.expected_results
-        else [None for _ in range(len(filtered_subgraphes))]
+        else [None for _ in range(len(filtered_subgraphs))]
     )
-    if len(expected_results) != len(filtered_subgraphes):
-        expected_results = [expected_results for _ in range(len(filtered_subgraphes))]
+    if len(expected_results) != len(filtered_subgraphs):
+        expected_results = [expected_results for _ in range(len(filtered_subgraphs))]
 
     results = (
-        await profiler.profile_multiple_subgraphes(
-            [fsg for _, fsg in filtered_subgraphes], "Others", expected_results
+        await profiler.profile_multiple_subgraphs(
+            [fsg for _, fsg in filtered_subgraphs], "Others", expected_results
         )
-        if filtered_subgraphes
+        if filtered_subgraphs
         else []
     )
 
     for (i, subgraph), (current_step, perplexity, logprobs) in zip(
-        filtered_subgraphes, results
+            filtered_subgraphs, results
     ):
         # if params.instructions_index and i not in params.instructions_index:
         #     continue
@@ -187,8 +191,8 @@ async def profile_notebook(
                 context.split("\n")[
                     subgraph.line.start
                     - 1
-                    - params.context_truncation_offset : subgraph.line.end
-                    + params.context_truncation_offset
+                    - params.context_truncation_offset: subgraph.line.end
+                                                        + params.context_truncation_offset
                 ]
             )
 

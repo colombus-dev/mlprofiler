@@ -2,7 +2,7 @@ import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
 from app.models.parser import ParserSubgraph
-from app.profiling_functions._base import BaseMLProfiler, Taxonomy
+from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 LABELS_NAMES = [
     "Data Preparation",
@@ -59,10 +59,10 @@ class EmbeddingProfiler(BaseMLProfiler):
         self._python_content = new_content
 
     async def profile_subgraph(
-        self,
-        subgraph: ParserSubgraph,
-        default_step: str,
-        expected: str | list[str] | None = None,
+            self,
+            subgraph: ParserSubgraph,
+            default_step: str,
+            expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         embedded_code = self.embedding_model.encode(subgraph.source)
         input_name = self.session.get_inputs()[0].name
@@ -82,14 +82,14 @@ class EmbeddingProfiler(BaseMLProfiler):
             [],
         )
 
-    async def profile_multiple_subgraphes(
-        self,
-        subgraphes: list[ParserSubgraph],
-        default_step: str,
-        expected: list[str | list[str]] | None = None,
+    async def profile_multiple_subgraphs(
+            self,
+            subgraphs: list[ParserSubgraph],
+            default_step: str,
+            expected: list[str | list[str]] | None = None,
     ) -> list[tuple[str, float | None, list[list[tuple[str, float]]]]]:
         embedded_code = self.embedding_model.encode(
-            [subgraph.source for subgraph in subgraphes]
+            [subgraph.source for subgraph in subgraphs]
         )
         input_name = self.session.get_inputs()[0].name
         label_name = self.session.get_outputs()[0].name
