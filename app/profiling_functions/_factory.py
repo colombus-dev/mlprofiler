@@ -1,13 +1,13 @@
-from app.custom_types import SupportedProfilerFunction
+from app.models.profiler import ProfilerFunction
 from app.profiling_functions._base import BaseMLProfiler, Taxonomy
 from app.profiling_functions.dspipelines import DSPipelinesProfiler
+from app.profiling_functions.embedding import EmbeddingProfiler
 from app.profiling_functions.headergen import HeaderGenProfiler
 from app.profiling_functions.llm import LLMProfiler
-from app.profiling_functions.embedding import EmbeddingProfiler
 
 
 def get_profiler(
-    profiler_name: SupportedProfilerFunction,
+    profiler_name: ProfilerFunction,
     python_content: str,
     taxonomy: Taxonomy,
 ) -> BaseMLProfiler:
