@@ -1,5 +1,5 @@
 from app.models.parser import ParserFunction
-from app.parsers._base import BaseMLParser
+from app.parsers.base import BaseMLParser
 from app.parsers.dspipelines import DSPipelinesParser
 from app.parsers.vespucci import VespucciParser
 

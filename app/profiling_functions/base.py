@@ -24,10 +24,10 @@ class BaseMLProfiler(ABC):
 
     @abstractmethod
     async def profile_subgraph(
-        self,
-        subgraph: ParserSubgraph,
-        default_step: str,
-        expected: str | list[str] | None = None,
+            self,
+            subgraph: ParserSubgraph,
+            default_step: str,
+            expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         """Profile a given subgraph based on the steps taxonomy.
 
@@ -43,16 +43,16 @@ class BaseMLProfiler(ABC):
                                 Default values are used when not using a LLM
         """
 
-    async def profile_multiple_subgraphes(
-        self,
-        subgraphes: list[ParserSubgraph],
-        default_step: str,
-        expected: list[str | list[str]] | None = None,
+    async def profile_multiple_subgraphs(
+            self,
+            subgraphs: list[ParserSubgraph],
+            default_step: str,
+            expected: list[str | list[str]] | None = None,
     ) -> list[tuple[str, float | None, list[list[tuple[str, float]]]]]:
-        """Profile a given list of subgraphes based on the steps taxonomy.
+        """Profile a given list of subgraphs based on the steps taxonomy.
 
         Args:
-            subgraphes (list[ParserSubgraph]): the list of famix subgraphes to profile
+            subgraphs (list[ParserSubgraph]): the list of famix subgraphs to profile
             default_step (str): the default step to use when the profiling
                                 result is out of the taxonomy
             expected (str): the expected steps (given by the baseline)
@@ -62,14 +62,12 @@ class BaseMLProfiler(ABC):
                                 overall perplexity and logprobs for each next token.
                                 Default values are used when not using a LLM
         """
-        expected_steps = (
-            expected
-            if isinstance(expected, list)
-            else [None for _ in range(len(subgraphes))]
-        )
+        expected_step: list[str | list[str] | None] = [None for _ in range(len(subgraphs))]
+        if expected is not None:
+            expected_step = expected # type: ignore
         return await asyncio.gather(
             *(
                 self.profile_subgraph(subgraph, default_step, exp)
-                for subgraph, exp in zip(subgraphes, expected_steps)
+                for subgraph, exp in zip(subgraphs, expected_step)
             )
         )
