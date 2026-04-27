@@ -129,9 +129,9 @@ class FuncLister(ast.NodeVisitor):
             if (
                     isinstance(target.value, ast.Name)
                     and isinstance(target.slice, ast.Index)
-                    and isinstance(target.slice.value, ast.Name)
+                    and isinstance(target.value, ast.Name)
             ):
-                return target.value.id + "[" + target.slice.value.id + "]"
+                return target.value.id + "[" + target.value.id + "]"
             return "?"
         elif isinstance(target, ast.Attribute):
             return target.attr
@@ -204,7 +204,7 @@ class FuncLister(ast.NodeVisitor):
         b = []
         for arg in node.args:
             if isinstance(arg, ast.Starred):
-                a.append(arg.value.id)
+                a.append(arg.value.id) # type: ignore
             # elif isinstance(arg, ast.Str):
             elif isinstance(arg, ast.BinOp):
                 a.append(
@@ -219,7 +219,7 @@ class FuncLister(ast.NodeVisitor):
         for kw in node.keywords:
             if isinstance(kw, ast.keyword):
                 if kw.arg is None:
-                    a.append("**" + kw.value.id)
+                    a.append("**" + kw.value.id) # type: ignore
                 else:
                     a.append(kw.arg + "=" + Utils.get_val(kw.value))
         return b
@@ -278,7 +278,7 @@ class Utils:
         return str(a)
 
     @classmethod
-    def get_bin_op(cls, node) -> str | None:
+    def get_bin_op(cls, node) -> str:
         if isinstance(node, ast.Add):
             return " + "
         elif isinstance(node, ast.Sub):
@@ -303,6 +303,8 @@ class Utils:
             return " B_OR "
         elif isinstance(node, ast.BitXor):
             return " B_XOR "
+        else:
+            assert False
 
     @classmethod
     def get_root(cls, api, fs) -> str:

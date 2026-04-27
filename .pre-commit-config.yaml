@@ -5,14 +5,14 @@ repos:
   - id: ruff
     args: [--fix]
 
-#- repo: https://github.com/pre-commit/mirrors-mypy
-#  rev: v1.10.0
-#  hooks:
-#  - id: mypy
-#    additional_dependencies:
-#    - fastapi
-#    - pydantic
-#    - types-ujson
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.10.0
+  hooks:
+  - id: mypy
+    additional_dependencies:
+    - fastapi
+    - pydantic
+    - types-ujson
 
 - repo: https://github.com/hadolint/hadolint
   rev: v2.12.0

@@ -150,17 +150,17 @@ async def profile_notebook(
     ]
 
     # TODO: improve this part
-    expected_results = (
-        params.expected_results
-        if params.expected_results
-        else [None for _ in range(len(filtered_subgraphs))]
-    )
-    if len(expected_results) != len(filtered_subgraphs):
-        expected_results = [expected_results for _ in range(len(filtered_subgraphs))]
+    if params.expected_results:
+        if len(params.expected_results) != len(filtered_subgraphs):
+            expected_results = [params.expected_results for _ in range(len(filtered_subgraphs))]
+        else:
+            expected_results = params.expected_results # type: ignore
+    else:
+        expected_results = None
 
     results = (
         await profiler.profile_multiple_subgraphs(
-            [fsg for _, fsg in filtered_subgraphs], "Others", expected_results
+            [fsg for _, fsg in filtered_subgraphs], "Others", expected_results # type: ignore
         )
         if filtered_subgraphs
         else []
@@ -174,7 +174,7 @@ async def profile_notebook(
 
         line = subgraph.source
 
-        res = {
+        res: dict[Any, Any] = {
             "id": subgraph.id,
             "algoFamily": None,
             # "algoFamily": algorithms_classified_line["algorithm_family"],

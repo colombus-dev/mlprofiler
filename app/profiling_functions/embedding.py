@@ -54,7 +54,7 @@ class EmbeddingProfiler(BaseMLProfiler):
             "resources/SVC_mlpipelines_classifier_model.onnx",
         )
 
-    @BaseMLProfiler.python_content.setter
+    @BaseMLProfiler.python_content.setter # type: ignore
     def python_content(self, new_content):
         self._python_content = new_content
 

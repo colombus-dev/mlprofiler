@@ -78,7 +78,7 @@ class LLMProfiler(BaseMLProfiler):
             all_python_code=self._python_content
         )
 
-    @BaseMLProfiler.python_content.setter
+    @BaseMLProfiler.python_content.setter # type: ignore
     def python_content(self, new_content):
         self._python_content = new_content
         self.__system_prompt_content = self.__system_prompt_template.render(
