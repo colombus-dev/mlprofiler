@@ -28,11 +28,9 @@ services:
       - action: sync+restart
         path: ../app
         target: /mlprofiler-builder/app
-        initial_sync: true
       - action: sync
         path: ../templates
         target: /mlprofiler-builder/templates/
-        initial_sync: true
     deploy:
       resources:
         reservations:
