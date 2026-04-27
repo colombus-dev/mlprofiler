@@ -1,32 +1,32 @@
 {
-    "algoFamilies": [
-        "No family",
-        "Gradient Boosting",
-        "Linear Models",
-        "Ensemble",
-        "Ensemble Learning",
-        "Preprocessing",
-        "Feature Engineering",
-        "Fairness Metrics",
-        "Evaluation Metrics",
-        "Data Visualization"
-    ],
-    "algoNames": [
-        "No algo",
-        "XGBoost",
-        "Logistic Regression",
-        "RandomForest",
-        "Gradient Boosting",
-        "StandardScaler",
-        "One-Hot Encoding",
-        "Disparate Impact",
-        "Random Forest",
-        "RandomForestClassifier",
-        "ROC Curve",
-        "ROC AUC",
-        "Bar Chart",
-        "TF-IDF Vectorizer",
-        "Dropout",
-        "EarlyStopping"
-    ]
+  "algoFamilies": [
+    "No family",
+    "Gradient Boosting",
+    "Linear Models",
+    "Ensemble",
+    "Ensemble Learning",
+    "Preprocessing",
+    "Feature Engineering",
+    "Fairness Metrics",
+    "Evaluation Metrics",
+    "Data Visualization"
+  ],
+  "algoNames": [
+    "No algo",
+    "XGBoost",
+    "Logistic Regression",
+    "RandomForest",
+    "Gradient Boosting",
+    "StandardScaler",
+    "One-Hot Encoding",
+    "Disparate Impact",
+    "Random Forest",
+    "RandomForestClassifier",
+    "ROC Curve",
+    "ROC AUC",
+    "Bar Chart",
+    "TF-IDF Vectorizer",
+    "Dropout",
+    "EarlyStopping"
+  ]
 }

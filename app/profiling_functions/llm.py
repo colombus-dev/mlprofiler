@@ -11,24 +11,29 @@ try:
     from langfuse.openai import AsyncOpenAI
 
     langfuse = get_client()
-except:
+except ValueError:
     from openai import AsyncOpenAI
 
-    def propagate_attributes(*args, **kwargs): ...
+
+    def propagate_attributes(*args, **kwargs):
+        ...
+
 
     class LangfuseMock:
         def __enter__(self): ...
+
         def __exit__(self): ...
+
         def start_as_current_observation(self, *args, **kwargs): ...
 
-    langfuse = LangfuseMock()
 
+    langfuse = LangfuseMock()
 
 from openai.types.chat import ChatCompletion
 
 from app.constants import INFERENCE_API_URL_PREFIX
 from app.models.parser import ParserSubgraph
-from app.profiling_functions._base import BaseMLProfiler, Taxonomy
+from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
@@ -73,7 +78,7 @@ class LLMProfiler(BaseMLProfiler):
             all_python_code=self._python_content
         )
 
-    @BaseMLProfiler.python_content.setter
+    @BaseMLProfiler.python_content.setter # type: ignore
     def python_content(self, new_content):
         self._python_content = new_content
         self.__system_prompt_content = self.__system_prompt_template.render(
@@ -81,10 +86,10 @@ class LLMProfiler(BaseMLProfiler):
         )
 
     async def profile_subgraph(
-        self,
-        subgraph: ParserSubgraph,
-        default_step: str,
-        expected: str | list[str] | None = None,
+            self,
+            subgraph: ParserSubgraph,
+            default_step: str,
+            expected: str | list[str] | None = None,
     ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
         if self.__system_prompt_content:
             user_prompt_content = self.__user_prompt_template.render(
@@ -108,7 +113,7 @@ class LLMProfiler(BaseMLProfiler):
             "http://{INFERENCE_API_URL}/v1"
         )
         with langfuse.start_as_current_observation(
-            as_type="span", name="OpenAI-generation"
+                as_type="span", name="OpenAI-generation"
         ):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
@@ -146,7 +151,7 @@ class LLMProfiler(BaseMLProfiler):
         try:
             classified_line = json.loads(completion_content)
             predicted_class = classified_line["class"]
-        except:
+        except (json.JSONDecodeError, TypeError):
             print("Bad format response")
             return default_step, -1, []
 
@@ -157,7 +162,7 @@ class LLMProfiler(BaseMLProfiler):
             logprob_content.top_logprobs
             for logprob_content in completion.choices[0].logprobs.content
             if logprob_content.top_logprobs[0].token
-            and logprob_content.top_logprobs[0].token in predicted_class
+               and logprob_content.top_logprobs[0].token in predicted_class
         ]
         relevant_content_logprobs = [
             token.logprob

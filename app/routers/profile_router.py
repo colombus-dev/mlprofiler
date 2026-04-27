@@ -9,8 +9,8 @@ from app.constants import APP_VERSION
 from app.models.parser import ParserFunction
 from app.models.profiler import ProfilerFunction
 from app.models.taxonomy import TAXONOMY_BY_NAME, TaxonomyFunction
-from app.parsers import get_parser
-from app.profiling_functions import get_profiler
+from app.parsers.factory import get_parser
+from app.profiling_functions.factory import get_profiler
 
 router = APIRouter()
 
@@ -38,16 +38,15 @@ class NotebookCellIterator:
 
 
 async def _profile_notebook(
-    notebook_file: UploadFile,
-    taxonomy_name: TaxonomyFunction,
-    profiler_name: ProfilerFunction,
-    parser_name: ParserFunction = ParserFunction.VESPUCCI,
+        notebook_file: UploadFile,
+        taxonomy_name: TaxonomyFunction,
+        profiler_name: ProfilerFunction,
+        parser_name: ParserFunction = ParserFunction.VESPUCCI,
 ):
     file_content = await notebook_file.read()
     source_code = "\n".join(
         c["source"] for c in NotebookCellIterator(file_content.decode("utf8"))
     )
-
 
     subgraphs = get_parser(parser_name).parse_code(source_code)
 
@@ -57,11 +56,11 @@ async def _profile_notebook(
         python_content=source_code,
         taxonomy=taxonomy,
     )
-    results = await profiler.profile_multiple_subgraphes(
-        subgraphes=subgraphs, default_step=taxonomy.default_step, expected=None
+    results = await profiler.profile_multiple_subgraphs(
+        subgraphs=subgraphs, default_step=taxonomy.default_step, expected=None
     )
 
-    source = []
+    source: list[dict] = []
     for subgraph, (current_step, perplexity, logprobs) in zip(subgraphs, results):
         element = {
             "id": subgraph.id,
@@ -94,9 +93,9 @@ async def _profile_notebook(
 
 @router.post("")
 async def profile(
-    notebook_files: list[UploadFile],
-    taxonomy: TaxonomyFunction,
-    profiler: ProfilerFunction,
+        notebook_files: list[UploadFile],
+        taxonomy: TaxonomyFunction,
+        profiler: ProfilerFunction,
 ):
     profiles = await asyncio.gather(
         *[_profile_notebook(notebook_file, taxonomy, profiler) for notebook_file in notebook_files]
