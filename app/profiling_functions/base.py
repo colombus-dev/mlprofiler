@@ -64,7 +64,7 @@ class BaseMLProfiler(ABC):
         """
         expected_step: list[str | list[str] | None] = [None for _ in range(len(subgraphs))]
         if expected is not None:
-            expected_step = expected
+            expected_step = expected # type: ignore
         return await asyncio.gather(
             *(
                 self.profile_subgraph(subgraph, default_step, exp)

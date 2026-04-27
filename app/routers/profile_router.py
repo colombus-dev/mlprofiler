@@ -60,7 +60,7 @@ async def _profile_notebook(
         subgraphs=subgraphs, default_step=taxonomy.default_step, expected=None
     )
 
-    source = []
+    source: list[dict] = []
     for subgraph, (current_step, perplexity, logprobs) in zip(subgraphs, results):
         element = {
             "id": subgraph.id,
