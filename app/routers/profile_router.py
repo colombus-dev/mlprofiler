@@ -53,7 +53,7 @@ async def _profile_notebook(
     taxonomy = TAXONOMY_BY_NAME[taxonomy_name]
     profiler = get_profiler(
         profiler_name=profiler_name,
-        python_content=source_code,
+        python_content='',
         taxonomy=taxonomy,
     )
     results = await profiler.profile_multiple_subgraphs(

@@ -1,5 +1,4 @@
-# Templating configuration
-
+from typing import Any
 import json
 
 import numpy as np
@@ -41,20 +40,21 @@ env = Environment(
 
 
 class InferenceClientSingleton:
-    __INSTANCE: AsyncOpenAI | None = None
-    __INSTANCE_NAME: str = ""
-    __MODEL_ID: str = ""
+    _INSTANCE_BY_NAME: dict[str, dict[str, Any]] = {}
 
     @classmethod
-    async def get_instance(cls, instance_name: str) -> tuple[AsyncOpenAI, str]:
-        if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
-            return cls.__INSTANCE, cls.__MODEL_ID
-        cls.__INSTANCE_NAME = instance_name
-        cls.__INSTANCE = AsyncOpenAI(
-            base_url=f"{INFERENCE_API_URL_PREFIX}/v1", api_key="inference-key"
-        )
-        cls.__MODEL_ID = (await cls.__INSTANCE.models.list()).data[0].id
-        return cls.__INSTANCE, cls.__MODEL_ID
+    async def get_instance(cls, name: str) -> tuple[AsyncOpenAI, str]:
+        instance = cls._INSTANCE_BY_NAME.get(name)
+        if instance is None:
+            client = AsyncOpenAI(
+                base_url=f"{name}", api_key="inference-key"
+            )
+            cls._INSTANCE_BY_NAME[name] = {
+                'client': client,
+                'model_id': (await client.models.list()).data[0].id,
+            }
+            instance = cls._INSTANCE_BY_NAME[name]
+        return instance['client'], instance['model_id']
 
 
 class LLMProfiler(BaseMLProfiler):
@@ -110,7 +110,7 @@ class LLMProfiler(BaseMLProfiler):
             )
 
         client, model_id = await InferenceClientSingleton.get_instance(
-            "http://{INFERENCE_API_URL}/v1"
+            f"{INFERENCE_API_URL_PREFIX}"
         )
         with langfuse.start_as_current_observation(
                 as_type="span", name="OpenAI-generation"
