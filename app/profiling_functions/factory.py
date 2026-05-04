@@ -8,17 +8,17 @@ from app.profiling_functions.llm import LLMProfiler
 
 def get_profiler(
         profiler_name: ProfilerFunction,
-        python_content: str,
         taxonomy: Taxonomy,
+        source_code: str
 ) -> BaseMLProfiler:
     match profiler_name:
         case "embedding":
-            return EmbeddingProfiler(python_content=python_content, taxonomy=taxonomy)
+            return EmbeddingProfiler(taxonomy=taxonomy, source_code=source_code)
         case "llm":
-            return LLMProfiler(python_content=python_content, taxonomy=taxonomy)
+            return LLMProfiler(taxonomy=taxonomy, source_code=source_code)
         case "dspipelines":
-            return DSPipelinesProfiler(python_content=python_content, taxonomy=taxonomy)
+            return DSPipelinesProfiler(taxonomy=taxonomy, source_code=source_code)
         case "headergen":
-            return HeaderGenProfiler(python_content=python_content, taxonomy=taxonomy)
+            return HeaderGenProfiler(taxonomy=taxonomy, source_code=source_code)
         case _:
             raise ValueError(f"Invalid profiler name [{profiler_name}].")

@@ -1,4 +1,5 @@
 from enum import Enum
+from pydantic import BaseModel
 
 
 class ProfilerFunction(str, Enum):
@@ -6,3 +7,9 @@ class ProfilerFunction(str, Enum):
     DSPIPELINES = "dspipelines"
     HEADERGEN = "headergen"
     EMBEDDING = "embedding"
+
+
+class ProfileResult(BaseModel):
+    step: str
+    perplexity: float
+    logprobs: list[list[tuple[str, float]]]

@@ -57,7 +57,7 @@ Each category is explained below:
 
 [...]
 
-If you can't tell what it is, say Others.
+If you can't tell what it is, say Other.
 
 Code snippet:
 

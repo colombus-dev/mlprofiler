@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 steps_functions_mapping_path = Path(
@@ -13,14 +14,9 @@ steps_functions_mapping: dict[str, str] = json.loads(
 
 
 class DSPipelinesProfiler(BaseMLProfiler):
-    def __init__(self, python_content: str, taxonomy: Taxonomy):
-        super().__init__(python_content, taxonomy)
+    def __init__(self, taxonomy: Taxonomy, source_code: str):
+        super().__init__(taxonomy, source_code)
 
-    async def profile_subgraph(
-            self,
-            subgraph: ParserSubgraph,
-            default_step: str,
-            expected: str | list[str] | None = None,
-    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        retrieved_step = steps_functions_mapping.get(subgraph.function, default_step)
-        return (retrieved_step, 1, [[(retrieved_step, 1.0)]])
+    async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
+        retrieved_step = steps_functions_mapping.get(subgraph.function, self.taxonomy.default_step)
+        return ProfileResult(step=retrieved_step, perplexity=1, logprobs=[[(retrieved_step, 1.0)]])

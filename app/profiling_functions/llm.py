@@ -11,6 +11,8 @@ try:
 
     langfuse = get_client()
 except ValueError:
+    from contextlib import contextmanager
+
     from openai import AsyncOpenAI
 
 
@@ -19,11 +21,9 @@ except ValueError:
 
 
     class LangfuseMock:
-        def __enter__(self): ...
-
-        def __exit__(self): ...
-
-        def start_as_current_observation(self, *args, **kwargs): ...
+        @contextmanager
+        def start_as_current_observation(self, *args, **kwargs):
+            ...
 
 
     langfuse = LangfuseMock()
@@ -32,6 +32,7 @@ from openai.types.chat import ChatCompletion
 
 from app.constants import INFERENCE_API_URL_PREFIX
 from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 env = Environment(
@@ -58,12 +59,11 @@ class InferenceClientSingleton:
 
 
 class LLMProfiler(BaseMLProfiler):
-    def __init__(self, python_content: str, taxonomy: Taxonomy):
-        super().__init__(python_content, taxonomy)
+    def __init__(self, taxonomy: Taxonomy, source_code: str):
+        super().__init__(taxonomy, source_code)
 
         # loading the LLM system and user prompt templates
-        self.__system_prompt_template = env.get_template("system_prompt.jinja")
-        self.__user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
+        self._user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
@@ -74,60 +74,25 @@ class LLMProfiler(BaseMLProfiler):
                 compatible_step_names=self.taxonomy.get_steps_names()
             )
         )
-        self.__system_prompt_content = self.__system_prompt_template.render(
-            all_python_code=self._python_content
-        )
 
-    @BaseMLProfiler.python_content.setter # type: ignore
-    def python_content(self, new_content):
-        self._python_content = new_content
-        self.__system_prompt_content = self.__system_prompt_template.render(
-            all_python_code=self._python_content
+    async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
+        user_prompt_content = self._user_prompt_template.render(
+            taxonomy=self.taxonomy,
+            python_code_line=subgraph.source,
+            expected_class=None,
+            is_multi_class=False,
+            all_python_code=self.truncate_source_code(target_line=subgraph.line.start),
         )
-
-    async def profile_subgraph(
-            self,
-            subgraph: ParserSubgraph,
-            default_step: str,
-            expected: str | list[str] | None = None,
-    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        if self.__system_prompt_content:
-            user_prompt_content = self.__user_prompt_template.render(
-                taxonomy=self.taxonomy,
-                python_code_line=subgraph.source,
-                expected_class=expected,
-                is_multi_class=isinstance(expected, list),
-            )
-        else:
-            # if no system prompt content, we pass it to the user prompt
-            # as the model may not support system messages (e.g., magicoder)
-            user_prompt_content = self.__user_prompt_template.render(
-                taxonomy=self.taxonomy,
-                python_code_line=subgraph.source,
-                expected_class=expected,
-                is_multi_class=isinstance(expected, list),
-                all_python_code=self._python_content,
-            )
 
         client, model_id = await InferenceClientSingleton.get_instance(
             f"{INFERENCE_API_URL_PREFIX}"
         )
-        with langfuse.start_as_current_observation(
-                as_type="span", name="OpenAI-generation"
-        ):
+        with langfuse.start_as_current_observation(as_type="span", name="OpenAI-generation"):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
                 completion: ChatCompletion = await client.chat.completions.create(
                     model=model_id,
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": self.__system_prompt_content,
-                        },
-                        {"role": "user", "content": user_prompt_content},
-                    ]
-                    if self.__system_prompt_content
-                    else [{"role": "user", "content": user_prompt_content}],
+                    messages=[{"role": "user", "content": user_prompt_content}],
                     response_format=json.loads(self.__classification_response_schema),
                     extra_body={
                         "chat_template_kwargs": {"enable_thinking": False},
@@ -146,14 +111,14 @@ class LLMProfiler(BaseMLProfiler):
                 completion_content = completion.choices[0].message.content
 
         if not completion_content:
-            return default_step, -1, []
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1, logprobs=[])
 
         try:
             classified_line = json.loads(completion_content)
             predicted_class = classified_line["class"]
         except (json.JSONDecodeError, TypeError):
             print("Bad format response")
-            return default_step, -1, []
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1, logprobs=[])
 
         # excluding json structured output specific tokens to avoid biasing probs
         # and perplexity score (as the linear probs of these tokens are most of the
@@ -195,10 +160,6 @@ class LLMProfiler(BaseMLProfiler):
         retrieved_step = (
             predicted_class
             if predicted_class in self.taxonomy.get_steps_names()
-            else default_step
+            else self.taxonomy.default_step
         )
-        return (
-            retrieved_step,
-            perplexity_score,
-            all_linear_probs,
-        )
+        return ProfileResult(step=retrieved_step, perplexity=perplexity_score, logprobs=all_linear_probs)

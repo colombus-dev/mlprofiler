@@ -16,7 +16,7 @@ def classify_pipeline_code(code_snippet: str):
 * Model Deployment: The application of a previously trained machine learning model to new, unseen data for the purpose of making predictions or decisions.
 * Save Results: The process of serializing and persisting data for future use or analysis.
 
-If the code snippet does not match any of the stages, returns "Others".
+If the code snippet does not match any of the stages, returns "Other".
 
 Args:
 code_snippet (str): the code snippet, extracted from the data science code
@@ -47,7 +47,7 @@ if code_snippet.contributes_to("the initial phase of data science where raw data
 return "Data Preparation"
 else:
 # it is 100% sure the code does not contribute to any other stage
-return "Others"
+return "Other"
 
 # For example:
 
