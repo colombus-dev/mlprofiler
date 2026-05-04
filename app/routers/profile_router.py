@@ -51,17 +51,11 @@ async def _profile_notebook(
     subgraphs = get_parser(parser_name).parse_code(source_code)
 
     taxonomy = TAXONOMY_BY_NAME[taxonomy_name]
-    profiler = get_profiler(
-        profiler_name=profiler_name,
-        python_content='',
-        taxonomy=taxonomy,
-    )
-    results = await profiler.profile_multiple_subgraphs(
-        subgraphs=subgraphs, default_step=taxonomy.default_step, expected=None
-    )
+    profiler = get_profiler(profiler_name=profiler_name, taxonomy=taxonomy, source_code=source_code)
+    results = await profiler.profile_multiple_subgraphs(subgraphs=subgraphs)
 
     source: list[dict] = []
-    for subgraph, (current_step, perplexity, logprobs) in zip(subgraphs, results):
+    for subgraph, profiler_result in zip(subgraphs, results):
         element = {
             "id": subgraph.id,
             "algoFamily": None,
@@ -69,12 +63,12 @@ async def _profile_notebook(
             "library": subgraph.library,
             "function": subgraph.function,
             "tasks": [{"name": subgraph.source, "tasks": []}],
-            "metadata": {"perplexity": perplexity, "logprobs": logprobs},
+            "metadata": {"perplexity": profiler_result.perplexity},
         }
-        if source and source[-1]["name"] == current_step:
+        if source and source[-1]["name"] == profiler_result.step:
             source[-1]["tasks"].append(element)
         else:
-            step = {"name": current_step, "tasks": [element], "outputs_ids": []}
+            step = {"name": profiler_result.step, "tasks": [element], "outputs_ids": []}
             source.append(step)
     return {
         "name": notebook_file.filename,

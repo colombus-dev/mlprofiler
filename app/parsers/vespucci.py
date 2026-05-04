@@ -23,4 +23,4 @@ class VespucciParser(BaseMLParser):
         )
         parser_response.raise_for_status()
         parser_response = parser_response.json()
-        return [ParserSubgraph.model_validate(pr) for pr in parser_response]
+        return sorted([ParserSubgraph.model_validate(pr) for pr in parser_response], key=lambda pr: pr.line.start)
