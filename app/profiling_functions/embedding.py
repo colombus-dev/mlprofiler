@@ -1,8 +1,8 @@
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
-from app.models.profiler import ProfileResult
 from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 LABELS_NAMES = [
