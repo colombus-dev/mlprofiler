@@ -1,8 +1,8 @@
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
-from app.models.parser import ParserSubgraph
 from app.models.profiler import ProfileResult
+from app.models.parser import ParserSubgraph
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 LABELS_NAMES = [
@@ -45,8 +45,8 @@ class InferenceSessionSingleton:
 
 
 class EmbeddingProfiler(BaseMLProfiler):
-    def __init__(self, taxonomy: Taxonomy, source_code: str):
-        super().__init__(taxonomy, source_code)
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
         self.embedding_model = EmbeddingModelSingleton.get_instance(
             "Qwen/Qwen3-Embedding-0.6B"
@@ -68,7 +68,7 @@ class EmbeddingProfiler(BaseMLProfiler):
         retrieved_step = LABELS_NAMES[
             predicted_class_id
         ]  # self.taxonomy.get_steps_names()[predicted_class_id]
-        return ProfileResult(step=retrieved_step, perplexity=-1, logprobs=[])
+        return ProfileResult(step=retrieved_step, perplexity=-1)
 
     async def profile_multiple_subgraphs(self, subgraphs: list[ParserSubgraph]) -> list[ProfileResult]:
         embedded_code = self.embedding_model.encode(
@@ -79,4 +79,4 @@ class EmbeddingProfiler(BaseMLProfiler):
         predicted_class_id = self.session.run(
             [label_name], {input_name: embedded_code}
         )[0]
-        return [ProfileResult(step=LABELS_NAMES[class_id], perplexity=-1, logprobs=[]) for class_id in predicted_class_id]
+        return [ProfileResult(step=LABELS_NAMES[class_id], perplexity=-1) for class_id in predicted_class_id]

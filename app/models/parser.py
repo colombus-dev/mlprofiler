@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
 
 
 class ParserFunction(str, Enum):
@@ -26,3 +26,6 @@ class ParserSubgraph(BaseModel):
     step_name: str
     line: ParserSubgraphLine
     cursor: ParserSubgraphCursor
+
+
+ParserSubgraphList = TypeAdapter(list[ParserSubgraph])

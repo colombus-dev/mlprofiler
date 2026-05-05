@@ -1,7 +1,7 @@
 import httpx
 
 from app.constants import PARSER_API_URL_PREFIX
-from app.models.parser import ParserSubgraph
+from app.models.parser import ParserSubgraph, ParserSubgraphList
 from app.parsers.base import BaseMLParser
 
 PARSER_API_TIMEOUT = 2
@@ -23,4 +23,4 @@ class VespucciParser(BaseMLParser):
         )
         parser_response.raise_for_status()
         parser_response = parser_response.json()
-        return sorted([ParserSubgraph.model_validate(pr) for pr in parser_response], key=lambda pr: pr.line.start)
+        return sorted(ParserSubgraphList.validate_python(parser_response), key=lambda pr: (pr.line.start, pr.cursor.start))

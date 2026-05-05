@@ -51,8 +51,8 @@ async def _profile_notebook(
     subgraphs = get_parser(parser_name).parse_code(source_code)
 
     taxonomy = TAXONOMY_BY_NAME[taxonomy_name]
-    profiler = get_profiler(profiler_name=profiler_name, taxonomy=taxonomy, source_code=source_code)
-    results = await profiler.profile_multiple_subgraphs(subgraphs=subgraphs)
+    profiler = get_profiler(source_code, taxonomy, profiler_name)
+    results = await profiler.profile_multiple_subgraphs(subgraphs)
 
     source: list[dict] = []
     for subgraph, profiler_result in zip(subgraphs, results):
