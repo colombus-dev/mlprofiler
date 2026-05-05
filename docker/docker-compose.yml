@@ -54,7 +54,7 @@ volumes:
 
 models:
   llm_inference_api:
-    model: ai/qwen2.5:7B-Q4_0
+    model: hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-AWQ
     context_size: 4096
     runtime_flags:
       - "--threads"

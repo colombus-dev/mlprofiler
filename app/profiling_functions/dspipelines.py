@@ -14,9 +14,9 @@ steps_functions_mapping: dict[str, str] = json.loads(
 
 
 class DSPipelinesProfiler(BaseMLProfiler):
-    def __init__(self, taxonomy: Taxonomy, source_code: str):
-        super().__init__(taxonomy, source_code)
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
     async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
         retrieved_step = steps_functions_mapping.get(subgraph.function, self.taxonomy.default_step)
-        return ProfileResult(step=retrieved_step, perplexity=1, logprobs=[[(retrieved_step, 1.0)]])
+        return ProfileResult(step=retrieved_step, perplexity=1)

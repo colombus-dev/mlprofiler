@@ -12,4 +12,3 @@ class ProfilerFunction(str, Enum):
 class ProfileResult(BaseModel):
     step: str
     perplexity: float
-    logprobs: list[list[tuple[str, float]]]

@@ -59,10 +59,11 @@ class InferenceClientSingleton:
 
 
 class LLMProfiler(BaseMLProfiler):
-    def __init__(self, taxonomy: Taxonomy, source_code: str):
-        super().__init__(taxonomy, source_code)
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
         # loading the LLM system and user prompt templates
+        self._system_prompt_template = env.get_template("system_prompt.jinja")
         self._user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
@@ -76,23 +77,32 @@ class LLMProfiler(BaseMLProfiler):
         )
 
     async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
+        context_source_code = self.compute_source_code_context(target_line=subgraph.line.start)
+        system_prompt_content = self._system_prompt_template.render(
+            all_python_code=context_source_code
+        )
         user_prompt_content = self._user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
             expected_class=None,
-            is_multi_class=False,
-            all_python_code=self.truncate_source_code(target_line=subgraph.line.start),
+            is_multi_class=False
         )
-
-        client, model_id = await InferenceClientSingleton.get_instance(
-            f"{INFERENCE_API_URL_PREFIX}"
-        )
+        client, model_id = await InferenceClientSingleton.get_instance(INFERENCE_API_URL_PREFIX)
         with langfuse.start_as_current_observation(as_type="span", name="OpenAI-generation"):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
                 completion: ChatCompletion = await client.chat.completions.create(
                     model=model_id,
-                    messages=[{"role": "user", "content": user_prompt_content}],
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": system_prompt_content,
+                        },
+                        {
+                            "role": "user",
+                            "content": user_prompt_content
+                        },
+                    ],
                     response_format=json.loads(self.__classification_response_schema),
                     extra_body={
                         "chat_template_kwargs": {"enable_thinking": False},
@@ -111,24 +121,26 @@ class LLMProfiler(BaseMLProfiler):
                 completion_content = completion.choices[0].message.content
 
         if not completion_content:
-            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1, logprobs=[])
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
         try:
             classified_line = json.loads(completion_content)
             predicted_class = classified_line["class"]
         except (json.JSONDecodeError, TypeError):
             print("Bad format response")
-            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1, logprobs=[])
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
         # excluding json structured output specific tokens to avoid biasing probs
         # and perplexity score (as the linear probs of these tokens are most of the
         # time close to 100) leading to a low perplexity score
+        """
         relevant_top_logprobs = [
             logprob_content.top_logprobs
             for logprob_content in completion.choices[0].logprobs.content
             if logprob_content.top_logprobs[0].token
                and logprob_content.top_logprobs[0].token in predicted_class
         ]
+        """
         relevant_content_logprobs = [
             token.logprob
             for token in completion.choices[0].logprobs.content
@@ -136,6 +148,7 @@ class LLMProfiler(BaseMLProfiler):
         ]
 
         # converting all logprobs to linear probabilities
+        """
         all_linear_probs = [
             [
                 linear_prob
@@ -151,6 +164,7 @@ class LLMProfiler(BaseMLProfiler):
                 for top_logprob in relevant_top_logprobs
             ]
         ]
+        """
 
         # we compute the perplexity_score (excluding the json structured output specific tokens to avoid biases)
         perplexity_score = np.exp(
@@ -162,4 +176,4 @@ class LLMProfiler(BaseMLProfiler):
             if predicted_class in self.taxonomy.get_steps_names()
             else self.taxonomy.default_step
         )
-        return ProfileResult(step=retrieved_step, perplexity=perplexity_score, logprobs=all_linear_probs)
+        return ProfileResult(step=retrieved_step, perplexity=perplexity_score)
