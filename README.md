@@ -12,8 +12,8 @@ The following docker compose commands deploy the mlprofiler API and vLLM instanc
 
 ```bash
 $ cd docker
-$ docker compose --env-file .env build
-$ docker compose --env-file .env up
+$ docker compose build
+$ docker compose up
 ```
 
 It is also possible to deploy the LLM monitoring platform [Langfuse](https://langfuse.com/docs)
@@ -24,6 +24,8 @@ $ cd docker
 $ docker compose --file docker-compose-monitor-langfuse.yml up
 $ docker compose --file docker-compose-monitor-grafana.yml up
 ```
+
+Make sure you are passing proper variables to your service using the .env file in your docker compose commands.
 
 ## Troubleshooting
 
