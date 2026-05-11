@@ -51,11 +51,3 @@ networks:
 volumes:
   huggingface_cache_data:
     driver: local
-
-models:
-  llm_inference_api:
-    model: hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-AWQ
-    context_size: 4096
-    runtime_flags:
-      - "--threads"
-      - "8"
