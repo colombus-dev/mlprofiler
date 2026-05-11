@@ -1,4 +1,4 @@
-# mlprofiler - The ML pipelines profiler
+# ML Profiler setup guide
 
 ## Requirements
 
@@ -6,26 +6,62 @@
 * Docker Compose (tested on version v2.40.0)
 * [Docker Model Runner](https://docs.docker.com/ai/model-runner/get-started/#docker-engine) (tested on version v1.1.37)
 
-## Deployment
+## Configuring DMR
 
-The following docker compose commands deploy the mlprofiler API and vLLM instance:
+The model and inference engine differ by platform.
 
+### 1. Linux:
+
+[Setup vLLM](https://docs.docker.com/ai/model-runner/inference-engines/#setting-up-vllm)
 ```bash
-$ cd docker
-$ docker compose build
-$ docker compose up
+docker model install-runner --backend vllm --gpu cuda
 ```
 
-It is also possible to deploy the LLM monitoring platform [Langfuse](https://langfuse.com/docs)
-or [Grafana](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana#prometheus-and-grafana) as follows:
-
+Configuring the model
 ```bash
-$ cd docker
-$ docker compose --file docker-compose-monitor-langfuse.yml up
-$ docker compose --file docker-compose-monitor-grafana.yml up
+docker model configure --hf_overrides '{
+  "max_model_len": 8192,
+  "max_num_seqs": 10,
+  "gpu_memory_utilization": 0.8,
+  "enforce_eager": true
+}' hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-AWQ
 ```
 
-Make sure you are passing proper variables to your service using the .env file in your docker compose commands.
+Inspecting the configuration
+```bash
+docker model configure show
+```
+
+### 2. Mac
+
+No extra installation needed. DMR uses llama.cpp by default, which runs natively on Apple Silicon via Metal.
+Model configuration TBD.
+
+## Starting the app
+
+Go inside the docker folder by running : ```cd docker```
+
+Then follow one of the below procedures :
+
+* Linux
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.linux.yml up
+    ```
+* Mac
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.mac.yml up
+    ```
+
+It's also possible to deploy the monitoring as follows:
+
+* Langfuse - [doc](https://langfuse.com/docs)
+    ```bash
+    docker compose -f docker-compose-monitor-langfuse.yml --env-file .env up
+    ```
+* Grafana - [doc](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana#prometheus-and-grafana)
+    ```bash
+    docker compose -f docker-compose-monitor-grafana.yml --env-file .env up
+    ```
 
 ## Troubleshooting
 

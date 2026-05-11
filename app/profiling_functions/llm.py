@@ -47,9 +47,7 @@ class InferenceClientSingleton:
     async def get_instance(cls, name: str) -> tuple[AsyncOpenAI, str]:
         instance = cls._INSTANCE_BY_NAME.get(name)
         if instance is None:
-            client = AsyncOpenAI(
-                base_url=f"{name}", api_key="inference-key"
-            )
+            client = AsyncOpenAI(base_url=name, api_key="inference-key")
             cls._INSTANCE_BY_NAME[name] = {
                 'client': client,
                 'model_id': (await client.models.list()).data[0].id,
