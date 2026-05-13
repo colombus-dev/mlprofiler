@@ -210,4 +210,4 @@ __marimo__/
 out/
 data/
 .idea/
-docker/.env.langfuse
+docker/.env

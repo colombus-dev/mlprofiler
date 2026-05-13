@@ -15,7 +15,9 @@ services:
       - ../out:/mlprofiler-builder/out:rw
       - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      PARSER_API_URL_PREFIX: http://ml_parser_api:1701
+      vLLM_INFERENCE_API_URL_PREFIX: http://vllm_inference_api:11434/v1
+      VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
+      VLLM_FORCE: ${VLLM_FORCE}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
@@ -33,9 +35,7 @@ services:
           target: /mlprofiler-builder/templates/
           initial_sync: true
 
-  ml_parser_api:
-    profiles:
-      - ml_parser_api
+  vespucci_parser_api:
     build:
       context: ../../FAST-Parsing-Service
       dockerfile: ./dockerfile
