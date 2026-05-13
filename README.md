@@ -41,26 +41,37 @@ Model configuration TBD.
 
 Go inside the docker folder by running : ```cd docker```
 
+Prepare the env file
+```bash
+cp .env.sample .env
+```
+> [!IMPORTANT]
+> Make sure your edit '.env' to update the variable so that they fit your needs.
+
 Then follow one of the below procedures :
 
-* Linux
+* Linux (vLLM image, requires the variable FORCE_VLLM=1)
     ```bash
-    docker compose -f docker-compose.yml -f docker-compose.linux.yml up
+    docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
     ```
+* Linux (DMR)
+  ```bash
+  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file .env up --build
+  ```
 * Mac
     ```bash
-    docker compose -f docker-compose.yml -f docker-compose.mac.yml up
+    docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
     ```
 
 It's also possible to deploy the monitoring as follows:
 
 * Langfuse - [doc](https://langfuse.com/docs)
     ```bash
-    docker compose -f docker-compose-monitor-langfuse.yml --env-file .env up
+    docker compose -f docker-compose-monitor-langfuse.yml up
     ```
 * Grafana - [doc](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana#prometheus-and-grafana)
     ```bash
-    docker compose -f docker-compose-monitor-grafana.yml --env-file .env up
+    docker compose -f docker-compose-monitor-grafana.yml up
     ```
 
 ## Troubleshooting
