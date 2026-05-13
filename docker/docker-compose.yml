@@ -1,92 +1,53 @@
 services:
   mlprofiler_api:
-    platform: linux/amd64
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
     ports:
-    - 8081:8081
+      - 8081:8081
     extra_hosts:
-    - host.docker.internal:host-gateway
+      - host.docker.internal:host-gateway
     networks:
-    - colombus-dev_network
+      - colombus-dev_network
     volumes:
-    - ../data:/mlprofiler-builder/data:rw
-    - ../resources:/mlprofiler-builder/resources:rw
-    - ../out:/mlprofiler-builder/out:rw
-    - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
+      - ../data:/mlprofiler-builder/data:rw
+      - ../resources:/mlprofiler-builder/resources:rw
+      - ../out:/mlprofiler-builder/out:rw
+      - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      INFERENCE_API_URL_PREFIX: http://ml_inference_api:11434
-      PARSER_API_URL_PREFIX: http://ml_parser_api:1701
-      MODEL_ID: ${LLM_MODEL_ID}
+      vLLM_INFERENCE_API_URL_PREFIX: http://vllm_inference_api:11434/v1
+      VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
+      VLLM_FORCE: ${VLLM_FORCE}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
-      LANGFUSE_HOST: ${LANGFUSE_HOST}
+      LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
       LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
+    models:
+      - llm_inference_api
     develop:
       watch:
-      - action: sync+restart
-        path: ../app
-        target: /mlprofiler-builder/app
-        initial_sync: true
-      - action: sync
-        path: ../templates
-        target: /mlprofiler-builder/templates/
-        initial_sync: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            capabilities: [gpu]
-    # healthcheck:
-    #   test: curl -f http://localhost:8081/health || exit 1
-    #   interval: 5m
-    #   timeout: 3s
-    #   retries: 3
-    #   start_period: 20s
-    # depends_on:
-    #   - ml_inference_api
-  ml_inference_api:
-    profiles:
-    - ml_inference_api
-    image: vllm/vllm-openai:v0.10.2
-    command: [--port, '11434', --model, '${LLM_MODEL_ID}', --quantization, '${LLM_QUANTIZATION}', --max_model_len, '4096', --max_num_seqs, '10', --gpu-memory-utilization, '0.8', --enforce-eager, --logprobs-mode, processed_logprobs]
-    environment:
-      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
-      # VLLM_BATCH_INVARIANT: 1
-      # VLLM_USE_V1: 0
-    ports:
-    - 11434:11434
-    networks:
-    - colombus-dev_network
-    volumes:
-    - vllm_cache_data:/root/.cache/huggingface:rw
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            capabilities: [gpu]
+        - action: sync+restart
+          path: ../app
+          target: /mlprofiler-builder/app
+          initial_sync: true
+        - action: sync
+          path: ../templates
+          target: /mlprofiler-builder/templates/
+          initial_sync: true
 
-  ml_parser_api:
-    profiles:
-    - ml_parser_api
-    platform: linux/amd64
+  vespucci_parser_api:
     build:
-      context: ../../FAST-Parsing-Service # TODO ymu: remove, this is temporary
+      context: ../../FAST-Parsing-Service
       dockerfile: ./dockerfile
     ports:
-    - 1701:1701
+      - 1701:1701
     networks:
-    - colombus-dev_network
+      - colombus-dev_network
 
 networks:
   colombus-dev_network:
     external: true
 
 volumes:
-  vllm_cache_data:
-    driver: local
   huggingface_cache_data:
     driver: local

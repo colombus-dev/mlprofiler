@@ -4,7 +4,6 @@ import uuid
 from app.models.parser import ParserSubgraph, ParserSubgraphLine
 from app.parsers.base import BaseMLParser
 
-
 #### TODO: adapted from https://github.com/sumonbis/DS-Pipeline below
 
 

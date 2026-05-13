@@ -6,19 +6,15 @@ from app.profiling_functions.headergen import HeaderGenProfiler
 from app.profiling_functions.llm import LLMProfiler
 
 
-def get_profiler(
-        profiler_name: ProfilerFunction,
-        python_content: str,
-        taxonomy: Taxonomy,
-) -> BaseMLProfiler:
+def get_profiler(source_code: str, taxonomy: Taxonomy, profiler_name: ProfilerFunction) -> BaseMLProfiler:
     match profiler_name:
         case "embedding":
-            return EmbeddingProfiler(python_content=python_content, taxonomy=taxonomy)
+            return EmbeddingProfiler(source_code=source_code, taxonomy=taxonomy)
         case "llm":
-            return LLMProfiler(python_content=python_content, taxonomy=taxonomy)
+            return LLMProfiler(source_code=source_code, taxonomy=taxonomy)
         case "dspipelines":
-            return DSPipelinesProfiler(python_content=python_content, taxonomy=taxonomy)
+            return DSPipelinesProfiler(source_code=source_code, taxonomy=taxonomy)
         case "headergen":
-            return HeaderGenProfiler(python_content=python_content, taxonomy=taxonomy)
+            return HeaderGenProfiler(source_code=source_code, taxonomy=taxonomy)
         case _:
             raise ValueError(f"Invalid profiler name [{profiler_name}].")

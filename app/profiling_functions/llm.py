@@ -1,6 +1,5 @@
-# Templating configuration
-
 import json
+from typing import Any
 
 import numpy as np
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -12,6 +11,8 @@ try:
 
     langfuse = get_client()
 except ValueError:
+    from contextlib import contextmanager
+
     from openai import AsyncOpenAI
 
 
@@ -20,11 +21,9 @@ except ValueError:
 
 
     class LangfuseMock:
-        def __enter__(self): ...
-
-        def __exit__(self): ...
-
-        def start_as_current_observation(self, *args, **kwargs): ...
+        @contextmanager
+        def start_as_current_observation(self, *args, **kwargs):
+            ...
 
 
     langfuse = LangfuseMock()
@@ -33,6 +32,7 @@ from openai.types.chat import ChatCompletion
 
 from app.constants import INFERENCE_API_URL_PREFIX
 from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 env = Environment(
@@ -41,29 +41,28 @@ env = Environment(
 
 
 class InferenceClientSingleton:
-    __INSTANCE: AsyncOpenAI | None = None
-    __INSTANCE_NAME: str = ""
-    __MODEL_ID: str = ""
+    _INSTANCE_BY_NAME: dict[str, dict[str, Any]] = {}
 
     @classmethod
-    async def get_instance(cls, instance_name: str) -> tuple[AsyncOpenAI, str]:
-        if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
-            return cls.__INSTANCE, cls.__MODEL_ID
-        cls.__INSTANCE_NAME = instance_name
-        cls.__INSTANCE = AsyncOpenAI(
-            base_url=f"{INFERENCE_API_URL_PREFIX}/v1", api_key="inference-key"
-        )
-        cls.__MODEL_ID = (await cls.__INSTANCE.models.list()).data[0].id
-        return cls.__INSTANCE, cls.__MODEL_ID
+    async def get_instance(cls, name: str) -> tuple[AsyncOpenAI, str]:
+        instance = cls._INSTANCE_BY_NAME.get(name)
+        if instance is None:
+            client = AsyncOpenAI(base_url=name, api_key="inference-key")
+            cls._INSTANCE_BY_NAME[name] = {
+                'client': client,
+                'model_id': (await client.models.list()).data[0].id,
+            }
+            instance = cls._INSTANCE_BY_NAME[name]
+        return instance['client'], instance['model_id']
 
 
 class LLMProfiler(BaseMLProfiler):
-    def __init__(self, python_content: str, taxonomy: Taxonomy):
-        super().__init__(python_content, taxonomy)
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
         # loading the LLM system and user prompt templates
-        self.__system_prompt_template = env.get_template("system_prompt.jinja")
-        self.__user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
+        self._system_prompt_template = env.get_template("system_prompt.jinja")
+        self._user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
@@ -74,47 +73,20 @@ class LLMProfiler(BaseMLProfiler):
                 compatible_step_names=self.taxonomy.get_steps_names()
             )
         )
-        self.__system_prompt_content = self.__system_prompt_template.render(
-            all_python_code=self._python_content
-        )
 
-    @BaseMLProfiler.python_content.setter # type: ignore
-    def python_content(self, new_content):
-        self._python_content = new_content
-        self.__system_prompt_content = self.__system_prompt_template.render(
-            all_python_code=self._python_content
+    async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
+        context_source_code = self.compute_source_code_context(target_line=subgraph.line.start)
+        system_prompt_content = self._system_prompt_template.render(
+            all_python_code=context_source_code
         )
-
-    async def profile_subgraph(
-            self,
-            subgraph: ParserSubgraph,
-            default_step: str,
-            expected: str | list[str] | None = None,
-    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        if self.__system_prompt_content:
-            user_prompt_content = self.__user_prompt_template.render(
-                taxonomy=self.taxonomy,
-                python_code_line=subgraph.source,
-                expected_class=expected,
-                is_multi_class=isinstance(expected, list),
-            )
-        else:
-            # if no system prompt content, we pass it to the user prompt
-            # as the model may not support system messages (e.g., magicoder)
-            user_prompt_content = self.__user_prompt_template.render(
-                taxonomy=self.taxonomy,
-                python_code_line=subgraph.source,
-                expected_class=expected,
-                is_multi_class=isinstance(expected, list),
-                all_python_code=self._python_content,
-            )
-
-        client, model_id = await InferenceClientSingleton.get_instance(
-            "http://{INFERENCE_API_URL}/v1"
+        user_prompt_content = self._user_prompt_template.render(
+            taxonomy=self.taxonomy,
+            python_code_line=subgraph.source,
+            expected_class=None,
+            is_multi_class=False
         )
-        with langfuse.start_as_current_observation(
-                as_type="span", name="OpenAI-generation"
-        ):
+        client, model_id = await InferenceClientSingleton.get_instance(INFERENCE_API_URL_PREFIX)
+        with langfuse.start_as_current_observation(as_type="span", name="OpenAI-generation"):
             # Propagate session_id to all observations including OpenAI generation
             with propagate_attributes(session_id=self.session_id):
                 completion: ChatCompletion = await client.chat.completions.create(
@@ -122,12 +94,13 @@ class LLMProfiler(BaseMLProfiler):
                     messages=[
                         {
                             "role": "system",
-                            "content": self.__system_prompt_content,
+                            "content": system_prompt_content,
                         },
-                        {"role": "user", "content": user_prompt_content},
-                    ]
-                    if self.__system_prompt_content
-                    else [{"role": "user", "content": user_prompt_content}],
+                        {
+                            "role": "user",
+                            "content": user_prompt_content
+                        },
+                    ],
                     response_format=json.loads(self.__classification_response_schema),
                     extra_body={
                         "chat_template_kwargs": {"enable_thinking": False},
@@ -146,24 +119,26 @@ class LLMProfiler(BaseMLProfiler):
                 completion_content = completion.choices[0].message.content
 
         if not completion_content:
-            return default_step, -1, []
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
         try:
             classified_line = json.loads(completion_content)
             predicted_class = classified_line["class"]
         except (json.JSONDecodeError, TypeError):
             print("Bad format response")
-            return default_step, -1, []
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
         # excluding json structured output specific tokens to avoid biasing probs
         # and perplexity score (as the linear probs of these tokens are most of the
         # time close to 100) leading to a low perplexity score
+        """
         relevant_top_logprobs = [
             logprob_content.top_logprobs
             for logprob_content in completion.choices[0].logprobs.content
             if logprob_content.top_logprobs[0].token
                and logprob_content.top_logprobs[0].token in predicted_class
         ]
+        """
         relevant_content_logprobs = [
             token.logprob
             for token in completion.choices[0].logprobs.content
@@ -171,6 +146,7 @@ class LLMProfiler(BaseMLProfiler):
         ]
 
         # converting all logprobs to linear probabilities
+        """
         all_linear_probs = [
             [
                 linear_prob
@@ -186,6 +162,7 @@ class LLMProfiler(BaseMLProfiler):
                 for top_logprob in relevant_top_logprobs
             ]
         ]
+        """
 
         # we compute the perplexity_score (excluding the json structured output specific tokens to avoid biases)
         perplexity_score = np.exp(
@@ -195,10 +172,6 @@ class LLMProfiler(BaseMLProfiler):
         retrieved_step = (
             predicted_class
             if predicted_class in self.taxonomy.get_steps_names()
-            else default_step
+            else self.taxonomy.default_step
         )
-        return (
-            retrieved_step,
-            perplexity_score,
-            all_linear_probs,
-        )
+        return ProfileResult(step=retrieved_step, perplexity=perplexity_score)

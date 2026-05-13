@@ -38,10 +38,10 @@
       "stage": "Model Building Layer"
     },
     {
-      "compatible_name": "Others",
-      "original_name": "Others",
+      "compatible_name": "Other",
+      "original_name": "Other",
       "definition": "",
-      "stage": "Others"
+      "stage": "Other"
     }
   ]
 }
