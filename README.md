@@ -51,28 +51,28 @@ cp .env.sample .env
 Then follow one of the below procedures :
 
 * Linux (vLLM image, requires the variable FORCE_VLLM=1)
-    ```bash
-    docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
-    ```
+  ```bash
+  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
+  ```
 * Linux (DMR)
   ```bash
   docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file .env up --build
   ```
 * Mac
-    ```bash
-    docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
-    ```
+  ```bash
+  docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
+  ```
 
 It's also possible to deploy the monitoring as follows:
 
 * Langfuse - [doc](https://langfuse.com/docs)
-    ```bash
-    docker compose -f docker-compose-monitor-langfuse.yml up
-    ```
+  ```bash
+  docker compose -f docker-compose-monitor-langfuse.yml up
+  ```
 * Grafana - [doc](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana#prometheus-and-grafana)
-    ```bash
-    docker compose -f docker-compose-monitor-grafana.yml up
-    ```
+  ```bash
+  docker compose -f docker-compose-monitor-grafana.yml up
+  ```
 
 ## Troubleshooting
 
