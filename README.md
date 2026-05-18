@@ -74,6 +74,13 @@ It's also possible to deploy the monitoring as follows:
   docker compose -f docker-compose-monitor-grafana.yml up
   ```
 
+## Development
+
+We use pre-commit to ensure code quality. Install pre-commit hooks locally:
+```bash
+uv run --with pre-commit pre-commit install
+```
+
 ## Troubleshooting
 
 ### Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
