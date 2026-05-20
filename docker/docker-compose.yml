@@ -36,11 +36,11 @@ services:
           initial_sync: true
 
   vespucci_parser_api:
-    build:
-      context: ../../FAST-Parsing-Service
-      dockerfile: ./dockerfile
+    image: ghcr.io/mlprofile/fast-parsing-service:v0.1.1
+    working_dir: /opt/pharo
+    command: [ "--headless", "Pharo.image", "eval", "--no-quit", "Server start" ]
     ports:
-      - 1701:1701
+      - "1701:1701"
     networks:
       - colombus-dev_network
 
