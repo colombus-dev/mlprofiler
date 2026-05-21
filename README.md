@@ -4,7 +4,7 @@
 
 * Docker (tested on version 28.5.1, build e180ab8)
 * Docker Compose (tested on version v2.40.0)
-* [Docker Model Runner](https://docs.docker.com/ai/model-runner/get-started/#docker-engine) (tested on version v1.1.37)
+* Docker Model Runner [through the Docker Engine on Linux](https://docs.docker.com/ai/model-runner/get-started/#docker-engine) (tested on version v1.1.37), or [through Docker Desktop on Mac](https://docs.docker.com/ai/model-runner/get-started/#docker-desktop)
 
 ## Configuring DMR
 
