@@ -17,7 +17,7 @@ The model and inference engine differ by platform.
 docker model install-runner --backend vllm --gpu cuda
 ```
 
-Configuring the model
+[Configuring the model](https://docs.docker.com/ai/model-runner/inference-engines/#vllm-configuration)
 ```bash
 docker model configure --hf_overrides '{
   "max_model_len": 8192,
@@ -35,7 +35,8 @@ docker model configure show
 ### 2. Mac
 
 No extra installation needed. DMR uses llama.cpp by default, which runs natively on Apple Silicon via Metal.
-Model configuration TBD.
+> [!NOTE]
+> Model configuration TBD.
 
 ## Starting the app
 
@@ -45,22 +46,24 @@ Prepare the env file
 ```bash
 cp .env.sample .env
 ```
-> [!IMPORTANT]
-> Make sure your edit '.env' to update the variable so that they fit your needs.
+> [!TIP]
+> Edit '.env' to update the variable so that they fit your needs. But the default config should work just fine.
 
 Then follow one of the below procedures :
 
-* Linux (vLLM image, requires the variable FORCE_VLLM=1)
-  ```bash
-  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
-  ```
 * Linux (DMR)
   ```bash
   docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file .env up --build
   ```
-* Mac
+* Mac (DMR)
   ```bash
   docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
+  ```
+* Linux (vLLM image)
+  > [!IMPORTANT]
+  > This configuration requires the variable FORCE_VLLM=1 in the .env file
+  ```bash
+  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
   ```
 
 It's also possible to deploy the monitoring as follows:
