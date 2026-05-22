@@ -1,9 +1,19 @@
+import platform
+
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 
 from app.models.parser import ParserSubgraph
 from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
+
+PROVIDERS = ["CPUExecutionProvider"]
+if platform.system() == "Linux" and platform.machine() == "x86_64":
+    PROVIDERS = ["CUDAExecutionProvider"] + PROVIDERS
+elif platform.system() == "Darwin":
+    PROVIDERS = ["CoreMLExecutionProvider"] + PROVIDERS
+else:
+    raise NotImplementedError(f"Unsupported platform: {platform.system()}")
 
 LABELS_NAMES = [
     "Data Preparation",
@@ -39,7 +49,7 @@ class InferenceSessionSingleton:
         cls.__INSTANCE_NAME = instance_name
         cls.__INSTANCE = rt.InferenceSession(
             instance_name,
-            providers=["CUDAExecutionProvider", "CPUExecutionProvider"],
+            providers=PROVIDERS,
         )
         return cls.__INSTANCE
 
