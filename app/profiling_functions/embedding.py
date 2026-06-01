@@ -24,7 +24,7 @@ class EmbeddingModelSingleton:
         if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
             return cls.__INSTANCE
         cls.__INSTANCE_NAME = instance_name
-        cls.__INSTANCE = SentenceTransformer(instance_name, device="cuda")
+        cls.__INSTANCE = SentenceTransformer(instance_name)
         return cls.__INSTANCE
 
 

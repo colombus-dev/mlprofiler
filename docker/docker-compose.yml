@@ -22,8 +22,8 @@ services:
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
       LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
-    models:
-      - llm_inference_api
+    #models:
+    #  - llm_inference_api
     develop:
       watch:
         - action: sync+restart
