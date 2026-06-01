@@ -1,23 +1,43 @@
-# ML Profiler setup guide
+# ML Profiler
+
+Profiles ML pipelines by analyzing source code and classifying pipeline steps.
 
 ## Requirements
 
-* Docker (tested on version 28.5.1, build e180ab8)
-* Docker Compose (tested on version v2.40.0)
-* [Docker Model Runner](https://docs.docker.com/ai/model-runner/get-started/#docker-engine) (tested on version v1.1.37)
+- Docker ≥ 28.5.1
+- Docker Compose ≥ 2.40.0
+- _(Advanced)_ [Docker Model Runner](https://docs.docker.com/ai/model-runner/get-started/) ≥ 1.1.37 required for the LLM profiler function
 
-## Configuring DMR
+## Quick start
 
-The model and inference engine differ by platform.
+```bash
+cd docker
+cp .env.sample .env # edit .env if needed, the defaults work for basic setup
+docker compose --env-file .env up --build
+```
 
-### 1. Linux:
+## Advanced setup (LLM profiler)
 
-[Setup vLLM](https://docs.docker.com/ai/model-runner/inference-engines/#setting-up-vllm)
+The LLM profiler function requires Docker Model Runner (DMR). Setup differs by platform.
+
+### Mac DMR
+
+No extra installation needed. DMR uses llama.cpp natively via Metal (Apple Silicon).
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
+```
+
+### Linux DMR
+
+[Set up the vLLM inference backend](https://docs.docker.com/ai/model-runner/inference-engines/#setting-up-vllm):
+
 ```bash
 docker model install-runner --backend vllm --gpu cuda
 ```
 
-Configuring the model
+[Configure the model](https://docs.docker.com/ai/model-runner/inference-engines/#vllm-configuration):
+
 ```bash
 docker model configure --hf_overrides '{
   "max_model_len": 8192,
@@ -27,92 +47,59 @@ docker model configure --hf_overrides '{
 }' hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-AWQ
 ```
 
-Inspecting the configuration
 ```bash
-docker model configure show
+docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file .env up --build
 ```
 
-### 2. Mac
+### Linux vLLM (standalone)
 
-No extra installation needed. DMR uses llama.cpp by default, which runs natively on Apple Silicon via Metal.
-Model configuration TBD.
+Set `VLLM_FORCE=1` in `.env`, then:
 
-## Starting the app
-
-Go inside the docker folder by running : ```cd docker```
-
-Prepare the env file
 ```bash
-cp .env.sample .env
+docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
 ```
-> [!IMPORTANT]
-> Make sure your edit '.env' to update the variable so that they fit your needs.
 
-Then follow one of the below procedures :
+## Monitoring (optional)
 
-* Linux (vLLM image, requires the variable FORCE_VLLM=1)
-  ```bash
-  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build
-  ```
-* Linux (DMR)
-  ```bash
-  docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file .env up --build
-  ```
-* Mac
-  ```bash
-  docker compose -f docker-compose.yml -f docker-compose.mac.yml --env-file .env up --build
-  ```
-
-It's also possible to deploy the monitoring as follows:
-
-* Langfuse - [doc](https://langfuse.com/docs)
-  ```bash
-  docker compose -f docker-compose-monitor-langfuse.yml up
-  ```
-* Grafana - [doc](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana#prometheus-and-grafana)
-  ```bash
-  docker compose -f docker-compose-monitor-grafana.yml up
-  ```
+| Stack | Command |
+|---|---|
+| Langfuse ([docs](https://langfuse.com/docs)) | `docker compose -f docker-compose-monitor-langfuse.yml up` |
+| Grafana/Prometheus ([docs](https://github.com/vllm-project/vllm/tree/main/examples/online_serving/prometheus_grafana)) | `docker compose -f docker-compose-monitor-grafana.yml up` |
 
 ## Development
 
-We use pre-commit to ensure code quality. Install pre-commit hooks locally:
+Install pre-commit hooks:
+
 ```bash
 uv run --with pre-commit pre-commit install
 ```
 
 ## Troubleshooting
 
-### Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
-
-Allow your user to use the socket:
+**`permission denied` connecting to Docker socket**
 ```bash
-sudo usermod -a -G docker $USER
-newgrp docker
-reboot
+sudo usermod -a -G docker $USER && newgrp docker
 ```
+Then reboot.
 
-### Failed to solve: process "/bin/sh -c uv sync --locked --no-install-project" did not complete successfully: exit code: 1
+---
 
-Regenerate the lock file by executing:
+**`uv sync` fails during build**
+
+Regenerate the lockfile:
 ```bash
 uv lock
 ```
 
-### Network colombus-dev_network declared as external, but could not be found
+---
 
-Create the missing network:
+**`colombus-dev_network` not found**
 ```bash
-docker network create "colombus-dev_network"
+docker network create colombus-dev_network
 ```
 
-### Error response from daemon: could not select device driver "nvidia" with capabilities: [[gpu]]
+---
 
-Install the nvidia toolkit
-https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian
+**`could not select device driver "nvidia"`**
 
-Configure Docker to use the NVIDIA runtime
-https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
-
-Verify GPU is accessible inside Docker
-https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/sample-workload.html
+Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and [configure Docker to use the NVIDIA runtime](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker).
