@@ -93,13 +93,6 @@ uv lock
 
 ---
 
-**`colombus-dev_network` not found**
-```bash
-docker network create colombus-dev_network
-```
-
----
-
 **`could not select device driver "nvidia"`**
 
 Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and [configure Docker to use the NVIDIA runtime](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker).
