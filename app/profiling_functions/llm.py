@@ -1,113 +1,144 @@
-# Templating configuration
-
 import json
-import os
+from typing import Any
 
 import numpy as np
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 try:
     # trying monitored by default
-    from langfuse.openai import OpenAI
-except:
-    from openai import OpenAI
-    from openai.types.chat import ChatCompletion
+    from langfuse import get_client, propagate_attributes
+    from langfuse.openai import AsyncOpenAI
 
-from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
-from app.profiling_functions._base import BaseMLProfiler
+    langfuse = get_client()
+except ValueError:
+    from contextlib import contextmanager
+
+    from openai import AsyncOpenAI
 
 
-INFERENCE_API_URL = os.getenv("INFERENCE_API_URL", "mlprofiler_vllm:11434")
-MODEL_ID = os.getenv("MODEL_ID", "qwen2.5-coder:7b")
+    def propagate_attributes(*args, **kwargs):
+        ...
+
+
+    class LangfuseMock:
+        @contextmanager
+        def start_as_current_observation(self, *args, **kwargs):
+            ...
+
+
+    langfuse = LangfuseMock()
+
+from openai.types.chat import ChatCompletion
+
+from app.constants import INFERENCE_API_URL_PREFIX
+from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
+from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
 )
 
 
-class LLMProfiler(BaseMLProfiler):
+class InferenceClientSingleton:
+    _INSTANCE_BY_NAME: dict[str, dict[str, Any]] = {}
 
-    def __init__(self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction):
-        super().__init__(python_content, taxonomy_name)
+    @classmethod
+    async def get_instance(cls, name: str) -> tuple[AsyncOpenAI, str]:
+        instance = cls._INSTANCE_BY_NAME.get(name)
+        if instance is None:
+            client = AsyncOpenAI(base_url=name, api_key="inference-key")
+            cls._INSTANCE_BY_NAME[name] = {
+                'client': client,
+                'model_id': (await client.models.list()).data[0].id,
+            }
+            instance = cls._INSTANCE_BY_NAME[name]
+        return instance['client'], instance['model_id']
+
+
+class LLMProfiler(BaseMLProfiler):
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
         # loading the LLM system and user prompt templates
-        system_prompt_template = env.get_template("system_prompt.jinja")
-        self.user_prompt_template = env.get_template(
-            f"user_prompt_{taxonomy_name}_taxonomy.jinja"
-        )
+        self._system_prompt_template = env.get_template("system_prompt.jinja")
+        self._user_prompt_template = env.get_template("user_prompt_taxonomy.jinja")
 
         # loading the LLM classification response schema
         classification_response_schema_template = env.get_template(
             "classification_response_schema.jinja"
         )
-        self.classification_response_schema = (
+        self.__classification_response_schema = (
             classification_response_schema_template.render(
-                compatible_step_names=self.taxonomy.get_compatible_steps_names()
+                compatible_step_names=self.taxonomy.get_steps_names()
             )
         )
-        self.system_prompt_content = system_prompt_template.render(
-            all_python_code=python_content
+
+    async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
+        context_source_code = self.compute_source_code_context(target_line=subgraph.line.start)
+        system_prompt_content = self._system_prompt_template.render(
+            all_python_code=context_source_code
         )
-
-        # LLM client
-
-        self.client: OpenAI = OpenAI(
-            base_url=f"http://{INFERENCE_API_URL}/v1", api_key="inference-key"
-        )
-
-    def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str
-    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
-        user_prompt_content = self.user_prompt_template.render(
+        user_prompt_content = self._user_prompt_template.render(
             taxonomy=self.taxonomy,
             python_code_line=subgraph.source,
-            subgraph_library=subgraph.library,
-            subgraph_function=subgraph.function,
+            expected_class=None,
+            is_multi_class=False
         )
+        client, model_id = await InferenceClientSingleton.get_instance(INFERENCE_API_URL_PREFIX)
+        with langfuse.start_as_current_observation(as_type="span", name="OpenAI-generation"):
+            # Propagate session_id to all observations including OpenAI generation
+            with propagate_attributes(session_id=self.session_id):
+                completion: ChatCompletion = await client.chat.completions.create(
+                    model=model_id,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": system_prompt_content,
+                        },
+                        {
+                            "role": "user",
+                            "content": user_prompt_content
+                        },
+                    ],
+                    response_format=json.loads(self.__classification_response_schema),
+                    extra_body={
+                        "chat_template_kwargs": {"enable_thinking": False},
+                    },
+                    # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
+                    temperature=0,
+                    max_tokens=15,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    # see https://cookbook.openai.com/examples/using_logprobs
+                    logprobs=True,
+                    top_logprobs=len(self.taxonomy.get_steps_names()),
+                )
 
-        completion: ChatCompletion = self.client.chat.completions.create(
-            model=MODEL_ID,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.system_prompt_content,
-                },
-                {"role": "user", "content": user_prompt_content},
-            ],
-            response_format=json.loads(self.classification_response_schema),
-            extra_body={
-                # "guided_choice": self.taxonomy.compatible_steps_names,
-                "chat_template_kwargs": {"enable_thinking": False},
-            },
-            # see https://cookbook.openai.com/examples/multiclass_classification_for_transactions
-            temperature=0,
-            max_tokens=15,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
-            # see https://cookbook.openai.com/examples/using_logprobs
-            logprobs=True,
-            top_logprobs=len(self.taxonomy.get_compatible_steps_names()),
-        )
-
-        completion_content = completion.choices[0].message.content
+                completion_content = completion.choices[0].message.content
 
         if not completion_content:
-            return default_step, -1, []
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
-        classified_line = json.loads(completion_content)
-        predicted_class = classified_line["class"]
+        try:
+            classified_line = json.loads(completion_content)
+            predicted_class = classified_line["class"]
+        except (json.JSONDecodeError, TypeError):
+            print("Bad format response")
+            return ProfileResult(step=self.taxonomy.default_step, perplexity=-1)
 
         # excluding json structured output specific tokens to avoid biasing probs
         # and perplexity score (as the linear probs of these tokens are most of the
         # time close to 100) leading to a low perplexity score
+        """
         relevant_top_logprobs = [
             logprob_content.top_logprobs
             for logprob_content in completion.choices[0].logprobs.content
             if logprob_content.top_logprobs[0].token
-            and logprob_content.top_logprobs[0].token in predicted_class
+               and logprob_content.top_logprobs[0].token in predicted_class
         ]
+        """
         relevant_content_logprobs = [
             token.logprob
             for token in completion.choices[0].logprobs.content
@@ -115,6 +146,7 @@ class LLMProfiler(BaseMLProfiler):
         ]
 
         # converting all logprobs to linear probabilities
+        """
         all_linear_probs = [
             [
                 linear_prob
@@ -130,16 +162,16 @@ class LLMProfiler(BaseMLProfiler):
                 for top_logprob in relevant_top_logprobs
             ]
         ]
+        """
 
         # we compute the perplexity_score (excluding the json structured output specific tokens to avoid biases)
         perplexity_score = np.exp(
             -np.mean([logprob for logprob in relevant_content_logprobs])
         )
 
-        return (
-            self.taxonomy.get_original_name_from_compatible(
-                predicted_class, default_step
-            ),
-            perplexity_score,
-            all_linear_probs,
+        retrieved_step = (
+            predicted_class
+            if predicted_class in self.taxonomy.get_steps_names()
+            else self.taxonomy.default_step
         )
+        return ProfileResult(step=retrieved_step, perplexity=perplexity_score)

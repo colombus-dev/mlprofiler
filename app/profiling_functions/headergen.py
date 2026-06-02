@@ -1,35 +1,37 @@
-import httpx
-
 from collections import Counter
 
-from app.custom_types import ParserSubgraph, SupportedTaxonomiesFunction
-from app.profiling_functions._base import BaseMLProfiler
+import httpx
+
+from app.models.parser import ParserSubgraph
+from app.models.profiler import ProfileResult
+from app.profiling_functions.base import BaseMLProfiler, Taxonomy
 
 
 class HeaderGenProfiler(BaseMLProfiler):
+    def __init__(self, source_code: str, taxonomy: Taxonomy):
+        super().__init__(source_code, taxonomy)
 
-    def __init__(self, python_content: str, taxonomy_name: SupportedTaxonomiesFunction):
-        super().__init__(python_content, taxonomy_name)
-
-    def profile_subgraph(
-        self, subgraph: ParserSubgraph, default_step: str
-    ) -> tuple[str, float | None, list[list[tuple[str, float]]]]:
+    async def profile_subgraph(self, subgraph: ParserSubgraph) -> ProfileResult:
         # TODO: add docstring to payload for fair comparison
         ml_label_response = httpx.post(
             "http://headergen:54068/get_ml_labels",
             json={f"{subgraph.library}.{subgraph.function}": {"docstring": ""}},
         )
         if ml_label_response.is_error:
-            return (default_step, 1, [[(default_step, 1.0)]])
-        retrieved_steps = ml_label_response.json()
-        compatible_steps = [
-            step
-            for step in retrieved_steps
-            if step in self.taxonomy.get_original_steps_names()
-        ]
-        if not compatible_steps:
-            return (default_step, 1, [[(default_step, 1.0)]])
-        compatible_steps_counter = Counter(compatible_steps)
+            return ProfileResult(
+                step=self.taxonomy.default_step,
+                perplexity=1
+            )
+        retrieved_steps: list[str] = ml_label_response.json()
+        if not retrieved_steps:
+            return ProfileResult(
+                step=self.taxonomy.default_step,
+                perplexity=1
+            )
+        retrieved_steps_counter = Counter(retrieved_steps)
         # TODO: currently only supporting the first step
-        retrieved_step = compatible_steps_counter.most_common(1)[0][0]
-        return (retrieved_step, 1, [[(retrieved_step, 1.0)]])
+        retrieved_step = retrieved_steps_counter.most_common(1)[0][0]
+        return ProfileResult(
+            step=retrieved_step,
+            perplexity=1
+        )

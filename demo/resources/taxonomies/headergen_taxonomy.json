@@ -1,0 +1,77 @@
+{
+  "name": "headergen",
+  "elements": [
+    {
+      "compatible_name": "Library Loading",
+      "original_name": "Library Loading",
+      "definition": "",
+      "stage": "Library Loading"
+    },
+    {
+      "compatible_name": "Visualization",
+      "original_name": "Visualization",
+      "definition": "",
+      "stage": "Visualization"
+    },
+    {
+      "compatible_name": "Data Loading",
+      "original_name": "Data Loading",
+      "definition": "",
+      "stage": "Data Preparation"
+    },
+    {
+      "compatible_name": "Exploratory Data Analysis",
+      "original_name": "Exploratory Data Analysis",
+      "definition": "",
+      "stage": "Data Preparation"
+    },
+    {
+      "compatible_name": "Data Preparation",
+      "original_name": "Data Preparation",
+      "definition": "",
+      "stage": "Data Preparation"
+    },
+    {
+      "compatible_name": "Data Sub-sampling and Train-test Splitting",
+      "original_name": "Data Sub-sampling and Train-test Splitting",
+      "definition": "",
+      "stage": "Data Preparation"
+    },
+    {
+      "compatible_name": "Feature Transformation",
+      "original_name": "Feature Transformation",
+      "definition": "",
+      "stage": "Feature Engineering"
+    },
+    {
+      "compatible_name": "Feature Selection",
+      "original_name": "Feature Selection",
+      "definition": "",
+      "stage": "Feature Engineering"
+    },
+    {
+      "compatible_name": "Model Assembling",
+      "original_name": "Model Assembling",
+      "definition": "",
+      "stage": "Model Building and Training"
+    },
+    {
+      "compatible_name": "Model Parameter Tuning",
+      "original_name": "Model Parameter Tuning",
+      "definition": "",
+      "stage": "Model Building and Training"
+    },
+    {
+      "compatible_name": "Model Training",
+      "original_name": "Model Training",
+      "definition": "",
+      "stage": "Model Building and Training"
+    },
+    {
+      "compatible_name": "Model Validation",
+      "original_name": "Model Validation",
+      "definition": "",
+      "stage": "Model Building and Training"
+    }
+  ]
+}

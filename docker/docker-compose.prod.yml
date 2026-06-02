@@ -1,0 +1,37 @@
+services:
+  mlprofiler_api:
+    image: ghcr.io/colombus-dev/mlprofiler:latest
+    restart: unless-stopped
+    environment:
+      VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
+      LANGFUSE_PUBLIC_KEY: LANGFUSE_PUBLIC_KEY
+      LANGFUSE_SECRET_KEY: LANGFUSE_SECRET_KEY
+      LANGFUSE_BASE_URL: LANGFUSE_BASE_URL
+      LANGFUSE_FLUSH_AT: LANGFUSE_FLUSH_AT
+    volumes:
+      - mlprofiler_out:/app/out:rw
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - colombus-net
+    depends_on:
+      - vespucci_parser_api
+
+  vespucci_parser_api:
+    image: ghcr.io/mlprofile/fast-parsing-service:v0.1.1
+    working_dir: /opt/pharo
+    command: ["--headless", "Pharo.image", "eval", "--no-quit", "Server start"]
+    restart: unless-stopped
+    networks:
+      - colombus-net
+
+networks:
+  colombus-net:
+    name: colombus-net
+
+volumes:
+  mlprofiler_out:

@@ -1,0 +1,28 @@
+services:
+  vllm_inference_api:
+    image: vllm/vllm-openai:v0.10.2
+    command: [--port, '11434', --model, '${VLLM_LLM_MODEL_ID}', --quantization, '${VLLM_LLM_QUANTIZATION}', --max_model_len, '4096', --max_num_seqs, '10', --gpu-memory-utilization, '0.8', --enforce-eager, --logprobs-mode, processed_logprobs]
+    environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      # VLLM_BATCH_INVARIANT: 1
+      # VLLM_USE_V1: 0
+    ports:
+    - 11434:11434
+    networks:
+    - colombus-dev_network
+    volumes:
+    - vllm_cache_data:/root/.cache/huggingface:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: [gpu]
+
+networks:
+  colombus-dev_network:
+    external: true
+
+volumes:
+  vllm_cache_data:
+    driver: local
