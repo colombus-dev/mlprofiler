@@ -13,6 +13,7 @@ services:
       LANGFUSE_FLUSH_AT: "${LANGFUSE_FLUSH_AT:-1}"
     volumes:
       - mlprofiler_out:/app/out:rw
+      - huggingface_cache:/app/.cache/huggingface:rw
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"]
       interval: 30s
@@ -39,3 +40,4 @@ networks:
 
 volumes:
   mlprofiler_out:
+  huggingface_cache:
