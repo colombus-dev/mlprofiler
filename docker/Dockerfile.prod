@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
-WORKDIR /build
+WORKDIR /app
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
@@ -15,7 +15,7 @@ WORKDIR /app
 
 RUN useradd --no-create-home --shell /bin/false appuser
 
-COPY --from=builder /build/.venv /app/.venv
+COPY --from=builder /app/.venv /app/.venv
 
 COPY --chown=appuser:appuser ./templates/ /app/templates/
 COPY --chown=appuser:appuser ./resources/ /app/resources/
