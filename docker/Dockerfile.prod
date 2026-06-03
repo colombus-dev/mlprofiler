@@ -13,7 +13,9 @@ LABEL description="mlprofiler - ML pipeline profiler API"
 
 WORKDIR /app
 
-RUN useradd --no-create-home --shell /bin/false appuser
+RUN useradd --no-create-home --shell /bin/false appuser && \
+    mkdir -p /app/.cache/huggingface && \
+    chown -R appuser:appuser /app/.cache
 
 COPY --from=builder /app/.venv /app/.venv
 
@@ -23,7 +25,8 @@ COPY --chown=appuser:appuser ./app/ /app/app/
 
 USER appuser
 
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH" \
+    HF_HOME=/app/.cache/huggingface
 
 EXPOSE 8081
 
