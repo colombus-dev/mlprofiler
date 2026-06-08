@@ -4,14 +4,18 @@ services:
     restart: unless-stopped
     environment:
       VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
-      LANGFUSE_PUBLIC_KEY: LANGFUSE_PUBLIC_KEY
-      LANGFUSE_SECRET_KEY: LANGFUSE_SECRET_KEY
-      LANGFUSE_BASE_URL: LANGFUSE_BASE_URL
-      LANGFUSE_FLUSH_AT: LANGFUSE_FLUSH_AT
+      VLLM_FORCE: "${VLLM_FORCE:-0}"
+      LLM_INFERENCE_API_URL: "${LLM_INFERENCE_API_URL:-}"
+      vLLM_INFERENCE_API_URL_PREFIX: "${vLLM_INFERENCE_API_URL_PREFIX:-}"
+      LANGFUSE_PUBLIC_KEY: "${LANGFUSE_PUBLIC_KEY:-}"
+      LANGFUSE_SECRET_KEY: "${LANGFUSE_SECRET_KEY:-}"
+      LANGFUSE_BASE_URL: "${LANGFUSE_BASE_URL:-}"
+      LANGFUSE_FLUSH_AT: "${LANGFUSE_FLUSH_AT:-1}"
     volumes:
       - mlprofiler_out:/app/out:rw
+      - huggingface_cache:/app/.cache/huggingface:rw
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -31,7 +35,9 @@ services:
 
 networks:
   colombus-net:
+    external: true
     name: colombus-net
 
 volumes:
   mlprofiler_out:
+  huggingface_cache:
