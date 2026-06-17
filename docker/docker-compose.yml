@@ -15,13 +15,14 @@ services:
       - ../out:/mlprofiler-builder/out:rw
       - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      vLLM_INFERENCE_API_URL_PREFIX: http://vllm_inference_api:11434/v1
       VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
-      VLLM_FORCE: ${VLLM_FORCE}
-      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
-      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
-      LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
-      LANGFUSE_FLUSH_AT: ${LANGFUSE_FLUSH_AT}
+      VLLM_FORCE: "${VLLM_FORCE:-0}"
+      LLM_INFERENCE_API_URL: "${LLM_INFERENCE_API_URL:-}"
+      vLLM_INFERENCE_API_URL_PREFIX: "${vLLM_INFERENCE_API_URL_PREFIX:-}"
+      LANGFUSE_PUBLIC_KEY: "${LANGFUSE_PUBLIC_KEY:-}"
+      LANGFUSE_SECRET_KEY: "${LANGFUSE_SECRET_KEY:-}"
+      LANGFUSE_BASE_URL: "${LANGFUSE_BASE_URL:-}"
+      LANGFUSE_FLUSH_AT: "${LANGFUSE_FLUSH_AT:-1}"
     #models:
     #  - llm_inference_api
     develop:
@@ -47,6 +48,7 @@ services:
 networks:
   colombus-dev_network:
     name: colombus-dev_network
+    external: true
 
 volumes:
   huggingface_cache_data:
