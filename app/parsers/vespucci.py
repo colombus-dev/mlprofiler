@@ -1,9 +1,10 @@
 import httpx
 
-from app.constants import PARSER_API_URL_PREFIX
 from app.models.parser import ParserSubgraph, ParserSubgraphList
 from app.parsers.base import BaseMLParser
+from app.settings import get_settings
 
+settings = get_settings()
 PARSER_API_TIMEOUT = 2
 
 
@@ -15,7 +16,7 @@ class VespucciParser(BaseMLParser):
             self, python_code: str, parse_subscript: bool = True
     ) -> list[ParserSubgraph]:
         parser_response = httpx.post(
-            f"{PARSER_API_URL_PREFIX}/parse",
+            f"{settings.parser_api_url_prefix}/parse",
             json={
                 "source": python_code,
             },

@@ -33,7 +33,7 @@ class InferenceSessionSingleton:
     __INSTANCE_NAME: str = ""
 
     @classmethod
-    def get_instance(cls, instance_name: str) -> SentenceTransformer:
+    def get_instance(cls, instance_name: str) -> rt.InferenceSession:
         if cls.__INSTANCE and cls.__INSTANCE_NAME == instance_name:
             return cls.__INSTANCE
         cls.__INSTANCE_NAME = instance_name

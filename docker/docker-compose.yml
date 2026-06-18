@@ -15,16 +15,16 @@ services:
       - ../out:/mlprofiler-builder/out:rw
       - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
-      VLLM_FORCE: "${VLLM_FORCE:-0}"
-      LLM_INFERENCE_API_URL: "${LLM_INFERENCE_API_URL:-}"
-      vLLM_INFERENCE_API_URL_PREFIX: "${vLLM_INFERENCE_API_URL_PREFIX:-}"
+      PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
+      DMR_INFERENCE_API_URL: "${DMR_INFERENCE_API_URL:-}"
+      VLLM_INFERENCE_API_URL_PREFIX: http://vllm_inference_api:11434/v1
+      INFERENCE_MODE: "${INFERENCE_MODE:-dmr}"
       LANGFUSE_PUBLIC_KEY: "${LANGFUSE_PUBLIC_KEY:-}"
       LANGFUSE_SECRET_KEY: "${LANGFUSE_SECRET_KEY:-}"
       LANGFUSE_BASE_URL: "${LANGFUSE_BASE_URL:-}"
       LANGFUSE_FLUSH_AT: "${LANGFUSE_FLUSH_AT:-1}"
     #models:
-    #  - llm_inference_api
+    #  - dmr_inference_api
     develop:
       watch:
         - action: sync+restart

@@ -3,38 +3,15 @@ from typing import Any
 
 import numpy as np
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-try:
-    # trying monitored by default
-    from langfuse import get_client, propagate_attributes
-    from langfuse.openai import AsyncOpenAI
-
-    langfuse = get_client()
-except ValueError:
-    from contextlib import contextmanager
-
-    from openai import AsyncOpenAI
-
-
-    def propagate_attributes(*args, **kwargs):
-        ...
-
-
-    class LangfuseMock:
-        @contextmanager
-        def start_as_current_observation(self, *args, **kwargs):
-            ...
-
-
-    langfuse = LangfuseMock()
-
+from openai import AsyncOpenAI
 from openai.types.chat import ChatCompletion
 
-from app.constants import INFERENCE_API_URL_PREFIX
 from app.models.parser import ParserSubgraph
 from app.models.profiler import ProfileResult
 from app.profiling_functions.base import BaseMLProfiler, Taxonomy
+from app.settings import get_settings
 
+settings = get_settings()
 env = Environment(
     loader=FileSystemLoader("./templates"), autoescape=select_autoescape()
 )
@@ -85,10 +62,10 @@ class LLMProfiler(BaseMLProfiler):
             expected_class=None,
             is_multi_class=False
         )
-        client, model_id = await InferenceClientSingleton.get_instance(INFERENCE_API_URL_PREFIX)
-        with langfuse.start_as_current_observation(as_type="span", name="OpenAI-generation"):
+        client, model_id = await InferenceClientSingleton.get_instance(settings.inference_api_url_prefix)
+        with settings.langfuse_client.start_as_current_observation(as_type="span", name="OpenAI-generation"):
             # Propagate session_id to all observations including OpenAI generation
-            with propagate_attributes(session_id=self.session_id):
+            with settings.langfuse_propagate_attributes(session_id=self.session_id):
                 completion: ChatCompletion = await client.chat.completions.create(
                     model=model_id,
                     messages=[

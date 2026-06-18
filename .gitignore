@@ -211,3 +211,4 @@ out/
 data/
 .idea/
 docker/.env
+.aleash*

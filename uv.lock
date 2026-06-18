@@ -768,7 +768,7 @@ wheels = [
 [[package]]
 name = "mlprofiler"
 version = "0.3.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
@@ -778,6 +778,7 @@ dependencies = [
     { name = "onnxruntime" },
     { name = "openai" },
     { name = "pydantic" },
+    { name = "pydantic-settings" },
     { name = "rich" },
     { name = "sentence-transformers" },
     { name = "tqdm" },
@@ -801,6 +802,7 @@ requires-dist = [
     { name = "onnxruntime", specifier = ">=1.24.4" },
     { name = "openai", specifier = ">=2.6.1" },
     { name = "pydantic", specifier = ">=2.12.3" },
+    { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "rich", specifier = ">=14.2.0" },
     { name = "sentence-transformers", specifier = ">=5.3.0" },
     { name = "tqdm", specifier = ">=4.67.1" },

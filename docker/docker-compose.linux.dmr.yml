@@ -1,4 +1,4 @@
 models:
   # https://docs.docker.com/ai/compose/models-and-compose/#model-configuration-options
-  llm_inference_api:
+  dmr_inference_api:
     model: hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-AWQ

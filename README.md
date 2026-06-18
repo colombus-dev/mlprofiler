@@ -53,7 +53,7 @@ docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml --env-file 
 
 ### Linux vLLM (standalone)
 
-Set `VLLM_FORCE=1` in `.env`, then:
+Set `INFERENCE_MODE=vllm` in `.env`, then:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.linux.dmr.yml -f docker-compose.linux.vllm.yml --env-file .env up --build

@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 
-from app.constants import APP_VERSION
 from app.routers import profile_router
+from app.settings import get_settings
 
-app = FastAPI(version=APP_VERSION)
+settings = get_settings()
+
+
+app = FastAPI(version=settings.app_version)
 app.include_router(profile_router.router, prefix="/v2/profile")
 
 

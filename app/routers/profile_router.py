@@ -5,13 +5,14 @@ from typing import Any, Generator
 import ujson
 from fastapi import APIRouter, UploadFile
 
-from app.constants import APP_VERSION
 from app.models.parser import ParserFunction
 from app.models.profiler import ProfilerFunction
 from app.models.taxonomy import TAXONOMY_BY_NAME, TaxonomyFunction
 from app.parsers.factory import get_parser
 from app.profiling_functions.factory import get_profiler
+from app.settings import get_settings
 
+settings = get_settings()
 router = APIRouter()
 
 
@@ -37,7 +38,7 @@ class NotebookCellIterator:
                     yield cell
 
 
-async def _profile_notebook(
+async def profile_notebook(
         notebook_file: UploadFile,
         taxonomy_name: TaxonomyFunction,
         profiler_name: ProfilerFunction,
@@ -73,7 +74,7 @@ async def _profile_notebook(
     return {
         "name": notebook_file.filename,
         "metadata": {
-            "version": APP_VERSION,
+            "version": settings.app_version,
             "generation_date": datetime.datetime.now().isoformat(),
             "session_id": profiler.session_id,
             "taxonomy": taxonomy_name,
@@ -92,6 +93,6 @@ async def profile(
         profiler: ProfilerFunction,
 ):
     profiles = await asyncio.gather(
-        *[_profile_notebook(notebook_file, taxonomy, profiler) for notebook_file in notebook_files]
+        *[profile_notebook(notebook_file, taxonomy, profiler) for notebook_file in notebook_files]
     )
     return profiles
