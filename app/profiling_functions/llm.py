@@ -3,7 +3,6 @@ from typing import Any
 
 import numpy as np
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from openai import AsyncOpenAI
 from openai.types.chat import ChatCompletion
 
 from app.models.parser import ParserSubgraph
@@ -21,10 +20,10 @@ class InferenceClientSingleton:
     _INSTANCE_BY_NAME: dict[str, dict[str, Any]] = {}
 
     @classmethod
-    async def get_instance(cls, name: str) -> tuple[AsyncOpenAI, str]:
+    async def get_instance(cls, name: str) -> tuple[Any, str]:
         instance = cls._INSTANCE_BY_NAME.get(name)
         if instance is None:
-            client = AsyncOpenAI(base_url=name, api_key="inference-key")
+            client = settings.openai_client_class(base_url=name, api_key="inference-key")
             cls._INSTANCE_BY_NAME[name] = {
                 'client': client,
                 'model_id': (await client.models.list()).data[0].id,

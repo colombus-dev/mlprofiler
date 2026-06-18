@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     langfuse_client: Any = None
     langfuse_propagate_attributes: Any = None
+    openai_client_class: Any = None
 
     @property
     def inference_api_url_prefix(self):
@@ -39,10 +40,14 @@ class Settings(BaseSettings):
     def build_langfuse_client(self):
         if self.is_langfuse_enabled():
             from langfuse import get_client, propagate_attributes
+            from langfuse.openai import AsyncOpenAI
             self.langfuse_client = get_client()
             self.langfuse_propagate_attributes = propagate_attributes
+            self.openai_client_class = AsyncOpenAI
         else:
             from contextlib import contextmanager
+
+            from openai import AsyncOpenAI
 
             @contextmanager
             def propagate_attributes(*args, **kwargs):
@@ -55,6 +60,7 @@ class Settings(BaseSettings):
 
             self.langfuse_client = LangfuseMock()
             self.langfuse_propagate_attributes = propagate_attributes
+            self.openai_client_class = AsyncOpenAI
 
 
 @lru_cache()
