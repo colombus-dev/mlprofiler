@@ -15,7 +15,6 @@ services:
       - ../out:/mlprofiler-builder/out:rw
       - huggingface_cache_data:/home/standarduser/.cache/huggingface:rw
     environment:
-      VESPUCCI_PARSER_API_URL_PREFIX: http://vespucci_parser_api:1701
       VLLM_FORCE: "${VLLM_FORCE:-0}"
       LLM_INFERENCE_API_URL: "${LLM_INFERENCE_API_URL:-}"
       vLLM_INFERENCE_API_URL_PREFIX: "${vLLM_INFERENCE_API_URL_PREFIX:-}"
@@ -35,15 +34,6 @@ services:
           path: ../templates
           target: /mlprofiler-builder/templates/
           initial_sync: true
-
-  vespucci_parser_api:
-    image: ghcr.io/mlprofile/fast-parsing-service:v0.1.1
-    working_dir: /opt/pharo
-    command: [ "--headless", "Pharo.image", "eval", "--no-quit", "Server start" ]
-    ports:
-      - "1701:1701"
-    networks:
-      - colombus-dev_network
 
 networks:
   colombus-dev_network:

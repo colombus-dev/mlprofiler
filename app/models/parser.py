@@ -4,6 +4,8 @@ from pydantic import BaseModel, TypeAdapter
 
 
 class ParserFunction(str, Enum):
+    "Available parsing function"
+
     DSPIPELINES = "dspipelines"
     VESPUCCI = "vespucci"
 
@@ -19,6 +21,8 @@ class ParserSubgraphCursor(BaseModel):
 
 
 class ParserSubgraph(BaseModel):
+    "Model of subgraph element return by a parser"
+
     id: str
     library: str
     function: str
@@ -28,4 +32,4 @@ class ParserSubgraph(BaseModel):
     cursor: ParserSubgraphCursor
 
 
-ParserSubgraphList = TypeAdapter(list[ParserSubgraph])
+ParserSubgraphList: TypeAdapter = TypeAdapter(list[ParserSubgraph])

@@ -1,61 +1,32 @@
 import asyncio
 import datetime
-from typing import Any, Generator
 
-import ujson
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter
 
 from app.constants import APP_VERSION
-from app.models.parser import ParserFunction
+from app.models.notebooks import NotebookInformation, NotebookList
 from app.models.profiler import ProfilerFunction
 from app.models.taxonomy import TAXONOMY_BY_NAME, TaxonomyFunction
-from app.parsers.factory import get_parser
 from app.profiling_functions.factory import get_profiler
 
 router = APIRouter()
 
-
-class NotebookCellIterator:
-    def __init__(self, content_raw: str):
-        self._content_parsed = ujson.loads(content_raw)
-        self._generator = self._iterate_cells()
-
-    def __iter__(self):
-        self._generator = self._iterate_cells()
-        return self
-
-    def __next__(self) -> dict:
-        return next(self._generator)
-
-    def _iterate_cells(self) -> Generator[dict, Any, None]:
-        # yield only cells with source code, also transform source code to str
-        for cell in self._content_parsed["cells"]:
-            if cell["cell_type"] == "code":
-                if isinstance(cell["source"], list):
-                    cell["source"] = "".join(cell["source"])
-                if cell["source"]:
-                    yield cell
-
-
 async def _profile_notebook(
-        notebook_file: UploadFile,
+        notebook_info: NotebookInformation,
         taxonomy_name: TaxonomyFunction,
         profiler_name: ProfilerFunction,
-        parser_name: ParserFunction = ParserFunction.VESPUCCI,
 ):
-    file_content = await notebook_file.read()
-    source_code = "\n".join(
-        c["source"] for c in NotebookCellIterator(file_content.decode("utf8"))
-    )
+    """
+        Return the profile of a notebook file (represented by the object containing all needed information) given a profiling function and a taxonomy
+    """
 
-    subgraphs = get_parser(parser_name).parse_code(source_code)
-
+    parser_model = notebook_info.parser_model
     taxonomy = TAXONOMY_BY_NAME[taxonomy_name]
-    profiler = get_profiler(source_code, taxonomy, profiler_name)
-    results = await profiler.profile_multiple_subgraphs(subgraphs)
+    profiler = get_profiler(notebook_info.source_code, taxonomy, profiler_name)
+    results = await profiler.profile_multiple_subgraphs(parser_model)
 
     source: list[dict] = []
-    for subgraph, profiler_result in zip(subgraphs, results):
+    for subgraph, profiler_result in zip(parser_model, results):
         element = {
             "id": subgraph.id,
             "algoFamily": None,
@@ -71,14 +42,14 @@ async def _profile_notebook(
             step = {"name": profiler_result.step, "tasks": [element], "outputs_ids": []}
             source.append(step)
     return {
-        "name": notebook_file.filename,
+        "name": notebook_info.name,
         "metadata": {
             "version": APP_VERSION,
             "generation_date": datetime.datetime.now().isoformat(),
             "session_id": profiler.session_id,
             "taxonomy": taxonomy_name,
             "profiler": profiler_name,
-            "parser": parser_name.value,
+            "parser": notebook_info.parser_function,
         },
         "source": source,
         "outputs": {},
@@ -87,11 +58,14 @@ async def _profile_notebook(
 
 @router.post("")
 async def profile(
-        notebook_files: list[UploadFile],
+        list_of_notebooks: NotebookList,
         taxonomy: TaxonomyFunction,
         profiler: ProfilerFunction,
 ):
+    """
+    Endpoint to get files' profiles according to their FAST model representation and given a profiler and a taxonomy
+    """
     profiles = await asyncio.gather(
-        *[_profile_notebook(notebook_file, taxonomy, profiler) for notebook_file in notebook_files]
+        *[_profile_notebook(notebook, taxonomy, profiler) for notebook in list_of_notebooks.data]
     )
     return profiles

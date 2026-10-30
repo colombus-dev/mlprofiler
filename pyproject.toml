@@ -2,6 +2,9 @@
 dev = [
     "pre-commit>=3.7",
     "pyright>=1.1.414",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1",
+    "pytest-env>=1.8.3",
     "types-ujson>=5.10.0.20250822",
 ]
 
@@ -38,3 +41,13 @@ required-environments = [
     "sys_platform == 'linux' and platform_machine == 'x86_64'",
     "sys_platform == 'darwin' and platform_machine == 'arm64'",
 ]
+
+[tool.pytest_env]
+LANGFUSE_SECRET_KEY=""
+LANGFUSE_PUBLIC_KEY=""
+LANGFUSE_BASE_URL="http://langfuse-web:3000"
+LANGFUSE_FLUSH_AT=1
+VLLM_FORCE=0
+VLLM_LLM_MODEL_ID='Qwen/Qwen2.5-7B-Instruct-AWQ'
+VLLM_LLM_QUANTIZATION='awq'
+LLM_INFERENCE_API_URL=''
